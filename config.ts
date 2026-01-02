@@ -1,9 +1,11 @@
 export const isDev = process.env.NODE_ENV === "development";
-export const url = isDev ? "http:localhost:3000" : "https://solai.vercel.app";
+export const url = isDev
+  ? "http:localhost:3000"
+  : "https://ApexAura.vercel.app";
 
 export const config = {
-  name: "SolAI",
-  description: "SolAI",
+  name: "ApexAura",
+  description: "ApexAura",
   url,
   creator: "Thunderbolt",
   themeColor: "#020202",
