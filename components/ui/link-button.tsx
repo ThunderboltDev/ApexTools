@@ -1,0 +1,21 @@
+import Link from "next/link";
+import type { ComponentProps } from "react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
+type ButtonLinkProps = ComponentProps<typeof Link> &
+  ComponentProps<typeof Button> & {
+    buttonClassName?: string;
+  };
+
+function LinkButton({ buttonClassName, className, ...props }: ButtonLinkProps) {
+  return (
+    <Button
+      className={buttonClassName}
+      render={<Link className={cn("no-underline", className)} {...props} />}
+      {...props}
+    />
+  );
+}
+
+export { LinkButton };
