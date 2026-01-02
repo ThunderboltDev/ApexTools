@@ -1,7 +1,7 @@
 export const isDev = process.env.NODE_ENV === "development";
 export const url = isDev
   ? "http:localhost:3000"
-  : "https://ApexAura.vercel.app";
+  : "https://apexaura.thunderboltdev.site";
 
 export const config = {
   name: "ApexAura",
