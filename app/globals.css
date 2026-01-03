@@ -210,8 +210,8 @@
 }
 
 @utility h-view {
-  height: calc(100vh - 4rem);
-  max-height: calc(100vh - 4rem);
+  height: calc(100vh - 2rem);
+  max-height: calc(100vh - 2rem);
 }
 
 @utility all-unset {

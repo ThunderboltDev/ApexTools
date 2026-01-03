@@ -6,6 +6,7 @@ import { type ReactNode, useEffect } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { Toaster } from "@/components/ui/sonner";
 import { captureUtms } from "@/lib/analytics";
+import { TRPCProvider } from "@/trpc/trpc";
 
 // if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
 //   throw new Error("env variable NEXT_PUBLIC_CONVEX_URL is missing");
@@ -32,7 +33,7 @@ export function Providers({ children }: ProvidersProps) {
       <MotionConfig reducedMotion="user">
         <ThemeHotkeys />
         <Toaster />
-        {children}
+        <TRPCProvider>{children}</TRPCProvider>
       </MotionConfig>
     </ThemeProvider>
   );
