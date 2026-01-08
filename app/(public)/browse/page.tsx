@@ -22,22 +22,22 @@ import {
 } from "@/components/ui/page";
 import { Skeleton } from "@/components/ui/skeleton";
 import { categories, pricingModels } from "@/lib/constants";
-import type { CategoryFilter, PricingModel } from "@/lib/types";
+import type { CategoryFilter, PricingModelFilter } from "@/lib/types";
 import { trpc } from "@/trpc/provider";
 
 export default function BrowsePage() {
-  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("All");
-  const [pricingFilter, setPricingFilter] = useState<PricingModel | "All">(
-    "All"
-  );
+  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("all");
+  const [pricingFilter, setPricingFilter] = useState<
+    PricingModelFilter | "all"
+  >("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
 
   const { data, isLoading, isFetching } = trpc.browse.getAll.useQuery({
     page,
     limit: 18,
-    category: categoryFilter !== "All" ? categoryFilter : undefined,
-    pricing: pricingFilter !== "All" ? pricingFilter : undefined,
+    category: categoryFilter !== "all" ? categoryFilter : undefined,
+    pricing: pricingFilter !== "all" ? pricingFilter : undefined,
     search: searchQuery || undefined,
   });
 
@@ -46,8 +46,8 @@ export default function BrowsePage() {
 
   const filtersLabel = useMemo(() => {
     const active: string[] = [];
-    if (categoryFilter !== "All") active.push(categoryFilter);
-    if (pricingFilter !== "All") active.push(pricingFilter);
+    if (categoryFilter !== "all") active.push(categoryFilter);
+    if (pricingFilter !== "all") active.push(pricingFilter);
     return active.join(" · ") || "Filters";
   }, [categoryFilter, pricingFilter]);
 
@@ -88,7 +88,7 @@ export default function BrowsePage() {
             <DropdownMenuLabel>Category</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => {
-                setCategoryFilter("All");
+                setCategoryFilter("all");
                 setPage(1);
               }}
             >
@@ -109,7 +109,7 @@ export default function BrowsePage() {
             <DropdownMenuLabel>Pricing</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => {
-                setPricingFilter("All");
+                setPricingFilter("all");
                 setPage(1);
               }}
             >

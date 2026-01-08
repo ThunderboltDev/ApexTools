@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
+import { LoadingScreen } from "@/components/ui/loading-screen";
 import { VerifyEmailForm } from "./verify-email";
 
 export const metadata: Metadata = {
@@ -7,5 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function VerifyEmailPage() {
-  return <VerifyEmailForm />;
+  return (
+    <Suspense fallback={<LoadingScreen />}>
+      <VerifyEmailForm />
+    </Suspense>
+  );
 }

@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
+import { LoadingScreen } from "@/components/ui/loading-screen";
 import { LogoutForm } from "./logout";
 
 export const metadata: Metadata = {
@@ -7,5 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function LogoutPage() {
-  return <LogoutForm />;
+  return (
+    <Suspense fallback={<LoadingScreen />}>
+      <LogoutForm />
+    </Suspense>
+  );
 }
