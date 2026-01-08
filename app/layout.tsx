@@ -76,7 +76,7 @@ export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
       <Script
         defer
         src="https://cloud.umami.is/script.js"
-        data-website-id=""
+        data-website-id="13e97afd-bff1-46db-8ae9-d5be587709dc"
       ></Script>
     </html>
   );
