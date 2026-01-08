@@ -1,6 +1,6 @@
 export const isDev = process.env.NODE_ENV === "development";
 export const url = isDev
-  ? "http:localhost:3000"
+  ? "http://localhost:3000"
   : "https://apexaura.thunderboltdev.site";
 
 export const config = {

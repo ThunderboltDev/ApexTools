@@ -1,9 +1,25 @@
 import { relations } from "drizzle-orm";
-import { boolean, index, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  index,
+  integer,
+  pgEnum,
+  pgTable,
+  primaryKey,
+  serial,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
+import {
+  analyticsEvents,
+  categories,
+  pricingModels,
+  status,
+} from "@/lib/constants";
 
-export const user = pgTable("user", {
+export const usersTable = pgTable("user", {
   id: text("id").primaryKey(),
-  name: text("name").notNull(),
+  name: text("name").default("You").notNull(),
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
   image: text("image"),
@@ -14,7 +30,7 @@ export const user = pgTable("user", {
     .notNull(),
 });
 
-export const session = pgTable(
+export const sessionsTable = pgTable(
   "session",
   {
     id: text("id").primaryKey(),
@@ -28,12 +44,12 @@ export const session = pgTable(
     userAgent: text("user_agent"),
     userId: text("user_id")
       .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
+      .references(() => usersTable.id, { onDelete: "cascade" }),
   },
   (table) => [index("session_userId_idx").on(table.userId)]
 );
 
-export const account = pgTable(
+export const accountsTable = pgTable(
   "account",
   {
     id: text("id").primaryKey(),
@@ -41,7 +57,7 @@ export const account = pgTable(
     providerId: text("provider_id").notNull(),
     userId: text("user_id")
       .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
+      .references(() => usersTable.id, { onDelete: "cascade" }),
     accessToken: text("access_token"),
     refreshToken: text("refresh_token"),
     idToken: text("id_token"),
@@ -57,7 +73,7 @@ export const account = pgTable(
   (table) => [index("account_userId_idx").on(table.userId)]
 );
 
-export const verification = pgTable(
+export const verificationsTable = pgTable(
   "verification",
   {
     id: text("id").primaryKey(),
@@ -73,21 +89,141 @@ export const verification = pgTable(
   (table) => [index("verification_identifier_idx").on(table.identifier)]
 );
 
-export const userRelations = relations(user, ({ many }) => ({
-  sessions: many(session),
-  accounts: many(account),
+export const userRelations = relations(usersTable, ({ many }) => ({
+  sessions: many(sessionsTable),
+  accounts: many(accountsTable),
+  tools: many(toolsTable),
 }));
 
-export const sessionRelations = relations(session, ({ one }) => ({
-  user: one(user, {
-    fields: [session.userId],
-    references: [user.id],
+export const sessionRelations = relations(sessionsTable, ({ one }) => ({
+  user: one(usersTable, {
+    fields: [sessionsTable.userId],
+    references: [usersTable.id],
   }),
 }));
 
-export const accountRelations = relations(account, ({ one }) => ({
-  user: one(user, {
-    fields: [account.userId],
-    references: [user.id],
+export const accountRelations = relations(accountsTable, ({ one }) => ({
+  user: one(usersTable, {
+    fields: [accountsTable.userId],
+    references: [usersTable.id],
   }),
 }));
+
+export const toolCategoryEnum = pgEnum("tool_category", categories);
+export const toolPricingEnum = pgEnum("tool_pricing", pricingModels);
+export const statusEnum = pgEnum("tool_status", status);
+
+export const toolAnalyticsEventTypeEnum = pgEnum(
+  "tool_analytics_event_type",
+  analyticsEvents
+);
+
+export const toolsTable = pgTable(
+  "tool",
+  {
+    id: text("id").primaryKey(),
+    slug: text("slug").unique().notNull(),
+    name: text("name").notNull(),
+    tagline: text("tagline").notNull(),
+    category: toolCategoryEnum("category").notNull(),
+    pricing: toolPricingEnum("pricing").notNull(),
+    description: text("description").notNull(),
+    logo: text("logo").notNull(),
+    url: text("url").notNull(),
+    status: statusEnum("status").default("approved").notNull(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => usersTable.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (table) => [
+    index("tool_userId_idx").on(table.userId),
+    index("tool_category_idx").on(table.category),
+  ]
+);
+
+export const toolAnalyticsTable = pgTable(
+  "tool_analytics",
+  {
+    id: serial("id").primaryKey(),
+    toolId: text("tool_id")
+      .notNull()
+      .references(() => toolsTable.id, { onDelete: "cascade" })
+      .unique(),
+    views: integer("views").default(0).notNull(),
+    visits: integer("visits").default(0).notNull(),
+    upvotes: integer("upvotes").default(0).notNull(),
+    impressions: integer("impressions").default(0).notNull(),
+  },
+  (table) => [
+    index("tool_analytics_toolId_idx").on(table.toolId),
+    index("tool_analytics_views_idx").on(table.views),
+    index("tool_analytics_visits_idx").on(table.visits),
+    index("tool_analytics_upvotes_idx").on(table.upvotes),
+  ]
+);
+export const toolAnalyticsEventsTable = pgTable(
+  "tool_analytics_events",
+  {
+    id: serial("id").primaryKey(),
+    toolId: text("tool_id")
+      .notNull()
+      .references(() => toolsTable.id, { onDelete: "cascade" }),
+
+    type: toolAnalyticsEventTypeEnum("type").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("tool_analytics_events_toolId_idx").on(table.toolId),
+    index("tool_analytics_events_createdAt_idx").on(table.createdAt),
+    index("tool_analytics_events_type_idx").on(table.type),
+  ]
+);
+
+export const upvotesTable = pgTable(
+  "upvote",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => usersTable.id, { onDelete: "cascade" }),
+    toolId: text("tool_id")
+      .notNull()
+      .references(() => toolsTable.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.userId, table.toolId] })]
+);
+
+export const toolRelations = relations(toolsTable, ({ one }) => ({
+  user: one(usersTable, {
+    fields: [toolsTable.userId],
+    references: [usersTable.id],
+  }),
+}));
+
+export const toolAnalyticsRelations = relations(
+  toolAnalyticsTable,
+  ({ one }) => ({
+    tool: one(toolsTable, {
+      fields: [toolAnalyticsTable.toolId],
+      references: [toolsTable.id],
+    }),
+  })
+);
+
+export const schema = {
+  user: usersTable,
+  session: sessionsTable,
+  account: accountsTable,
+  verification: verificationsTable,
+
+  tool: toolsTable,
+  upvote: upvotesTable,
+  analytics: toolAnalyticsTable,
+};

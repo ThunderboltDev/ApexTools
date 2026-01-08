@@ -6,15 +6,11 @@ import { type ReactNode, useEffect } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { Toaster } from "@/components/ui/sonner";
 import { captureUtms } from "@/lib/analytics";
-import { TRPCProvider } from "@/trpc/trpc";
-
-// if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
-//   throw new Error("env variable NEXT_PUBLIC_CONVEX_URL is missing");
-// }
+import { AuthProvider } from "@/lib/auth-context";
+import { TRPCProvider } from "@/trpc/provider";
 
 type ProvidersProps = {
   children: ReactNode;
-  // session: Session | null;
 };
 
 export function Providers({ children }: ProvidersProps) {
@@ -33,7 +29,9 @@ export function Providers({ children }: ProvidersProps) {
       <MotionConfig reducedMotion="user">
         <ThemeHotkeys />
         <Toaster />
-        <TRPCProvider>{children}</TRPCProvider>
+        <TRPCProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </TRPCProvider>
       </MotionConfig>
     </ThemeProvider>
   );

@@ -1,15 +1,14 @@
 "use client";
 
+import { Monitor, Moon, Sun } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { useTheme } from "next-themes";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
-import { Monitor, Moon, Sun } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { useTheme } from "next-themes";
 
 const config = {
   light: {
@@ -26,42 +25,30 @@ const config = {
   },
 };
 
-export function ThemeSelector() {
+export function ThemeDropdown() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <Select value={theme} onValueChange={(v) => v && setTheme(v)}>
-      <SelectTrigger className="border border-border w-fit">
-        <div className="flex items-center gap-2">
-          <SelectValue />
-        </div>
+    <Select
+      defaultValue={theme ?? "system"}
+      onChange={(value: string) => setTheme(value)}
+    >
+      <SelectTrigger id="theme-dropdown" className="w-fit">
+        {config[theme as "light" | "dark" | "system"].icon}
+        {config[theme as "light" | "dark" | "system"].name}
       </SelectTrigger>
-
-      <SelectContent
-        className="bg-secondary"
-        // position="si"
-        align="start"
-        side="top"
-      >
-        <SelectItem className="focus:bg-muted" value="light">
-          <div className="flex items-center gap-2">
-            {config.light.icon}
-            {config.light.name}
-          </div>
+      <SelectContent className="min-w-0 w-36">
+        <SelectItem value="light">
+          {config.light.icon}
+          {config.light.name}
         </SelectItem>
-
-        <SelectItem className="focus:bg-muted" value="dark">
-          <div className="flex items-center gap-2">
-            {config.dark.icon}
-            {config.dark.name}
-          </div>
+        <SelectItem value="dark">
+          {config.dark.icon}
+          {config.dark.name}
         </SelectItem>
-
-        <SelectItem className="focus:bg-muted" value="system">
-          <div className="flex items-center gap-2">
-            {config.system.icon}
-            {config.system.name}
-          </div>
+        <SelectItem value="system">
+          {config.system.icon}
+          {config.system.name}
         </SelectItem>
       </SelectContent>
     </Select>

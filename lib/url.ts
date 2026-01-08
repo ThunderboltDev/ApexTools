@@ -1,5 +1,4 @@
-export function normalizeCallbackUrl(url?: string) {
-  if (!url) return "/dashboard";
-
+export function normalizeCallbackUrl(url?: string | null) {
+  if (!url) return "/overview";
   return url;
 }

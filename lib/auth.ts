@@ -5,17 +5,20 @@ import { magicLink } from "better-auth/plugins";
 import type { ReactElement } from "react";
 import { Resend } from "resend";
 import { url } from "@/config";
+import { db } from "@/db/index";
+import { schema } from "@/db/schema";
 import { brand } from "@/emails/config";
 import MagicLinkEmail from "@/emails/magic-link";
-import { db } from "@/index";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const auth = betterAuth({
+  appName: "ApexAura",
+  baseURL: url,
   database: drizzleAdapter(db, {
     provider: "pg",
+    schema,
   }),
-  baseURL: url,
   plugins: [
     magicLink({
       sendMagicLink: async ({ url: magicLinkUrl, email }) => {
@@ -36,6 +39,7 @@ export const auth = betterAuth({
           text: emailText,
         });
       },
+      expiresIn: 60 * 60,
     }),
   ],
   socialProviders: {
@@ -47,5 +51,8 @@ export const auth = betterAuth({
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     },
+  },
+  onAPIError: {
+    errorURL: "/auth",
   },
 });
