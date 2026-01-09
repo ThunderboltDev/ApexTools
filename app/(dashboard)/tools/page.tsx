@@ -79,8 +79,10 @@ export default function ToolsPage() {
             </InputGroupAddon>
           </InputGroup>
           <Select
-            defaultValue="all"
-            onChange={(value) => setCategoryFilter(value as CategoryFilter)}
+            value="all"
+            onValueChange={(value) =>
+              setCategoryFilter(value as CategoryFilter)
+            }
           >
             <SelectTrigger>
               <HugeiconsIcon icon={GridViewIcon} />
@@ -96,8 +98,10 @@ export default function ToolsPage() {
             </SelectContent>
           </Select>
           <Select
-            defaultValue="all"
-            onChange={(value) => setPricingFilter(value as PricingModelFilter)}
+            value="all"
+            onValueChange={(value) =>
+              setPricingFilter(value as PricingModelFilter)
+            }
           >
             <SelectTrigger>
               <HugeiconsIcon icon={Tag01Icon} />

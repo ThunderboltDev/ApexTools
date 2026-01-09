@@ -4,6 +4,7 @@ import type {
   CategoryFilter,
   PricingModelFilter,
   StatusFilter,
+  TimePeriod,
 } from "@/lib/types";
 
 export const categories = [
@@ -64,6 +65,20 @@ export const analyticsEventLabels: Record<AnalyticsEventFilter, string> = {
   visit: "Visits",
   upvote: "Upvotes",
   impression: "Impressions",
+} as const;
+
+export const timePeriods = ["7d", "30d", "90d"] as const;
+
+export const timePeriodLabels: Record<TimePeriod, string> = {
+  "7d": "Last 7 days",
+  "30d": "Last 30 days",
+  "90d": "Last 90 days",
+} as const;
+
+export const timePeriodToDays: Record<TimePeriod, number> = {
+  "7d": 7,
+  "30d": 30,
+  "90d": 90,
 } as const;
 
 export const slugSchema = z

@@ -11,6 +11,7 @@ import type {
   categories,
   pricingModels,
   status,
+  timePeriods,
 } from "@/lib/constants";
 
 export type User = InferSelectModel<typeof usersTable>;
@@ -31,6 +32,8 @@ export type StatusFilter = Status | "all";
 
 export type AnalyticsEvent = (typeof analyticsEvents)[number];
 export type AnalyticsEventFilter = AnalyticsEvent | "all";
+
+export type TimePeriod = (typeof timePeriods)[number];
 
 export interface PaginationInput {
   page?: number;

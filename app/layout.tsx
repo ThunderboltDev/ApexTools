@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Figtree } from "next/font/google";
 import Script from "next/script";
 import type { PropsWithChildren } from "react";
-import { Providers } from "@/components/main/providers";
+import { Providers } from "@/components/app/providers";
 import { config, url } from "@/config";
 import "./globals.css";
 

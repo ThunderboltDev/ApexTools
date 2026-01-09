@@ -14,7 +14,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { ThemeDropdown } from "@/components/main/theme-dropdown";
+import { ThemeDropdown } from "@/components/app/theme-dropdown";
 import {
   AlertDialog,
   AlertDialogAction,

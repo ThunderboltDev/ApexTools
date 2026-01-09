@@ -2,22 +2,19 @@ import { TRPCError } from "@trpc/server";
 import { and, eq, ne, sql } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db/index";
-import {
-  toolAnalyticsEventsTable,
-  toolAnalyticsTable,
-  toolsTable,
-} from "@/db/schema";
+import { toolsTable } from "@/db/schema";
 import { getToolsSchema, slugSchema } from "@/lib/constants";
 import {
   createRateLimit,
   createTRPCRouter,
   publicProcedure,
 } from "@/trpc/init";
+import { insertEvent } from "@/trpc/utils/analytics";
 import { paginateTools } from "@/trpc/utils/paginate";
 
 export const browseRouter = createTRPCRouter({
   getAll: publicProcedure
-    .use(createRateLimit(80, 60, "browse.getAll"))
+    .use(createRateLimit(60, 60, "browse.getAll"))
     .input(getToolsSchema)
     .query(async ({ input }) => {
       return paginateTools({
@@ -27,7 +24,7 @@ export const browseRouter = createTRPCRouter({
     }),
 
   getBySlug: publicProcedure
-    .use(createRateLimit(100, 60, "browse.getBySlug"))
+    .use(createRateLimit(30, 60, "browse.getBySlug"))
     .input(z.object({ slug: slugSchema }))
     .query(async ({ input }) => {
       const tool = await db.query.tool.findFirst({
@@ -48,7 +45,7 @@ export const browseRouter = createTRPCRouter({
     }),
 
   getSimilarTools: publicProcedure
-    .use(createRateLimit(100, 60, "browse.getSimilarTools"))
+    .use(createRateLimit(30, 60, "browse.getSimilarTools"))
     .input(
       z.object({
         category: z.string(),
@@ -75,6 +72,47 @@ export const browseRouter = createTRPCRouter({
       return tools;
     }),
 
+  search: publicProcedure
+    .use(createRateLimit(30, 60, "browse.search"))
+    .input(
+      z.object({
+        query: z.string().min(1),
+        limit: z.number().min(1).max(20).default(10),
+      })
+    )
+    .query(async ({ input }) => {
+      return db
+        .select()
+        .from(toolsTable)
+        .where(
+          and(
+            eq(toolsTable.status, "approved"),
+            sql`
+            ${toolsTable.name} ILIKE ${`%${input.query}%`}
+            OR ${toolsTable.tagline} ILIKE ${`%${input.query}%`}
+          `
+          )
+        )
+        .limit(input.limit);
+    }),
+
+  trackImpression: publicProcedure
+    .use(createRateLimit(300, 60, "browse.trackImpression"))
+    .input(
+      z.object({
+        toolId: z.string().min(1),
+        visitorId: z.string().min(1),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      return insertEvent({
+        toolId: input.toolId,
+        visitorId: ctx.user?.id ?? input.visitorId,
+        type: "impression",
+        dedupePerDay: true,
+      });
+    }),
+
   trackView: publicProcedure
     .use(createRateLimit(200, 60, "browse.trackView"))
     .input(
@@ -83,44 +121,29 @@ export const browseRouter = createTRPCRouter({
         visitorId: z.string().min(1),
       })
     )
-    .mutation(async ({ input }) => {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-
-      const existingViewToday = await db
-        .select({ id: toolAnalyticsEventsTable.id })
-        .from(toolAnalyticsEventsTable)
-        .where(
-          and(
-            eq(toolAnalyticsEventsTable.toolId, input.toolId),
-            eq(toolAnalyticsEventsTable.type, "view"),
-            sql`${toolAnalyticsEventsTable.createdAt} >= ${today}`
-          )
-        )
-        .limit(1);
-
-      if (existingViewToday.length > 0) {
-        return { tracked: false, reason: "already_viewed_today" };
-      }
-
-      await db.insert(toolAnalyticsEventsTable).values({
+    .mutation(async ({ input, ctx }) => {
+      return insertEvent({
         toolId: input.toolId,
+        visitorId: ctx.user?.id ?? input.visitorId,
         type: "view",
+        dedupePerDay: true,
       });
+    }),
 
-      await db
-        .insert(toolAnalyticsTable)
-        .values({
-          toolId: input.toolId,
-          views: 1,
-        })
-        .onConflictDoUpdate({
-          target: toolAnalyticsTable.toolId,
-          set: {
-            views: sql`${toolAnalyticsTable.views} + 1`,
-          },
-        });
-
-      return { tracked: true };
+  incrementVisit: publicProcedure
+    .use(createRateLimit(150, 60, "browse.incrementVisit"))
+    .input(
+      z.object({
+        toolId: z.string().min(1),
+        visitorId: z.string().min(1),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      return insertEvent({
+        toolId: input.toolId,
+        visitorId: ctx.user?.id ?? input.visitorId,
+        type: "visit",
+        dedupePerDay: false,
+      });
     }),
 });

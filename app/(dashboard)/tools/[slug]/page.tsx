@@ -15,8 +15,8 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { toast } from "sonner";
+import { ToolAnalytics } from "@/components/tool/analytics";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -36,27 +36,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  type ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
+
 import { DetailGrid, DetailRow } from "@/components/ui/detail";
 import { LinkButton } from "@/components/ui/link-button";
 import { LoadingScreen } from "@/components/ui/loading-screen";
 import { PageContent, PageHeader, PageTitle } from "@/components/ui/page";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Spinner } from "@/components/ui/spinner";
 import { categoryLabels, pricingLabels, statusLabels } from "@/lib/constants";
 import { trpc } from "@/trpc/provider";
-
-const chartConfig = {
-  views: {
-    label: "Views",
-    color: "hsl(var(--accent))",
-  },
-} satisfies ChartConfig;
 
 export default function ToolOverviewPage() {
   const params = useParams<{ slug: string }>();
@@ -68,12 +55,6 @@ export default function ToolOverviewPage() {
     { slug },
     { enabled: !!slug }
   );
-
-  const { data: viewsOverTime, isLoading: isLoadingViews } =
-    trpc.analytics.getViewsOverTime.useQuery(
-      { toolId: tool?.id ?? "" },
-      { enabled: !!tool?.id }
-    );
 
   const { mutate: deleteTool, isPending: isDeleting } =
     trpc.tool.delete.useMutation({
@@ -131,52 +112,13 @@ export default function ToolOverviewPage() {
           </LinkButton>
           <LinkButton href={`/tool/${slug}`} theme="accent" className="gap-2">
             <HugeiconsIcon icon={LinkSquare02Icon} className="size-4" />
-            Visit
+            View Public Page
           </LinkButton>
         </div>
       </PageHeader>
 
       <PageContent className="grid gap-4 grid-cols-1 lg:grid-cols-3">
-        <Card className="lg:col-span-3">
-          <CardHeader>
-            <CardTitle>Views Over Time</CardTitle>
-            <CardDescription>Daily views for the last 30 days</CardDescription>
-          </CardHeader>
-          <CardContent className="pl-2">
-            {isLoadingViews ? (
-              <Skeleton className="h-[350px] w-full" />
-            ) : (
-              <ChartContainer config={chartConfig} className="h-[350px] w-full">
-                <BarChart data={viewsOverTime}>
-                  <CartesianGrid vertical={false} />
-                  <XAxis
-                    dataKey="date"
-                    tickLine={false}
-                    tickMargin={10}
-                    axisLine={false}
-                    tickFormatter={(value) => {
-                      const date = new Date(value);
-                      return date.toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                      });
-                    }}
-                  />
-                  <YAxis tickLine={false} axisLine={false} tickMargin={10} />
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent hideLabel />}
-                  />
-                  <Bar
-                    dataKey="count"
-                    fill="var(--color-views)"
-                    radius={[4, 4, 0, 0]}
-                  />
-                </BarChart>
-              </ChartContainer>
-            )}
-          </CardContent>
-        </Card>
+        <ToolAnalytics toolId={tool.id} className="lg:col-span-3" />
 
         <Card className="lg:col-span-2">
           <CardHeader>

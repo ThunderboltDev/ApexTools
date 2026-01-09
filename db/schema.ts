@@ -130,6 +130,7 @@ export const toolsTable = pgTable(
     description: text("description").notNull(),
     logo: text("logo").notNull(),
     url: text("url").notNull(),
+    upvotes: integer("upvotes").default(0).notNull(),
     status: statusEnum("status").default("approved").notNull(),
     userId: text("user_id")
       .notNull()
@@ -146,26 +147,6 @@ export const toolsTable = pgTable(
   ]
 );
 
-export const toolAnalyticsTable = pgTable(
-  "tool_analytics",
-  {
-    id: serial("id").primaryKey(),
-    toolId: text("tool_id")
-      .notNull()
-      .references(() => toolsTable.id, { onDelete: "cascade" })
-      .unique(),
-    views: integer("views").default(0).notNull(),
-    visits: integer("visits").default(0).notNull(),
-    upvotes: integer("upvotes").default(0).notNull(),
-    impressions: integer("impressions").default(0).notNull(),
-  },
-  (table) => [
-    index("tool_analytics_toolId_idx").on(table.toolId),
-    index("tool_analytics_views_idx").on(table.views),
-    index("tool_analytics_visits_idx").on(table.visits),
-    index("tool_analytics_upvotes_idx").on(table.upvotes),
-  ]
-);
 export const toolAnalyticsEventsTable = pgTable(
   "tool_analytics_events",
   {
@@ -174,15 +155,17 @@ export const toolAnalyticsEventsTable = pgTable(
       .notNull()
       .references(() => toolsTable.id, { onDelete: "cascade" }),
 
+    visitorId: text("visitor_id").notNull(),
     type: toolAnalyticsEventTypeEnum("type").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
       .notNull(),
   },
   (table) => [
-    index("tool_analytics_events_toolId_idx").on(table.toolId),
-    index("tool_analytics_events_createdAt_idx").on(table.createdAt),
-    index("tool_analytics_events_type_idx").on(table.type),
+    index("tool_events_tool_idx").on(table.toolId),
+    index("tool_events_visitor_idx").on(table.visitorId),
+    index("tool_events_type_idx").on(table.type),
+    index("tool_events_created_idx").on(table.createdAt),
   ]
 );
 
@@ -207,16 +190,6 @@ export const toolRelations = relations(toolsTable, ({ one }) => ({
   }),
 }));
 
-export const toolAnalyticsRelations = relations(
-  toolAnalyticsTable,
-  ({ one }) => ({
-    tool: one(toolsTable, {
-      fields: [toolAnalyticsTable.toolId],
-      references: [toolsTable.id],
-    }),
-  })
-);
-
 export const schema = {
   user: usersTable,
   session: sessionsTable,
@@ -225,5 +198,5 @@ export const schema = {
 
   tool: toolsTable,
   upvote: upvotesTable,
-  analytics: toolAnalyticsTable,
+  analyticsEvents: toolAnalyticsEventsTable,
 };

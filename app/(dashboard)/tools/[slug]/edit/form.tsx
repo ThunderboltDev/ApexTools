@@ -218,8 +218,8 @@ export function EditForm({ tool }: { tool: Tool }) {
                 <FormLabel>Category</FormLabel>
                 <FormContent>
                   <Select
-                    defaultValue="productivity"
-                    onChange={(category) =>
+                    value="productivity"
+                    onValueChange={(category) =>
                       form.setValue("category", category as Category)
                     }
                   >
@@ -248,8 +248,8 @@ export function EditForm({ tool }: { tool: Tool }) {
                 <FormLabel>Pricing model</FormLabel>
                 <FormContent>
                   <Select
-                    defaultValue="free"
-                    onChange={(pricing) =>
+                    value="free"
+                    onValueChange={(pricing) =>
                       form.setValue("pricing", pricing as PricingModel)
                     }
                   >

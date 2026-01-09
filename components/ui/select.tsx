@@ -16,21 +16,21 @@ type SelectContextType<T> = readonly [T, (value: T) => void];
 const SelectContext = createContext<SelectContextType<string> | null>(null);
 
 type SelectProviderProps<T> = {
-  defaultValue: T;
-  onChange?: (value: T) => void;
+  value: T;
+  onValueChange?: (value: T) => void;
   children: ReactNode;
 };
 
 export function SelectProvider({
-  defaultValue,
-  onChange,
+  value,
+  onValueChange,
   children,
 }: SelectProviderProps<string>) {
-  const [state, setState] = useState<string>(defaultValue);
+  const [state, setState] = useState<string>(value);
 
   const setSelectedValue = (value: string) => {
     setState(value);
-    onChange?.(value);
+    onValueChange?.(value);
   };
 
   return (
@@ -51,13 +51,13 @@ export function useSelect() {
 }
 
 type SelectProps = {
-  defaultValue: string;
-  onChange?: (value: string) => void;
+  value: string;
+  onValueChange?: (value: string) => void;
 } & ComponentProps<typeof DropdownMenu>;
 
-export function Select({ defaultValue, onChange, ...props }: SelectProps) {
+export function Select({ value, onValueChange, ...props }: SelectProps) {
   return (
-    <SelectProvider defaultValue={defaultValue} onChange={onChange}>
+    <SelectProvider value={value} onValueChange={onValueChange}>
       <DropdownMenu {...props} />
     </SelectProvider>
   );

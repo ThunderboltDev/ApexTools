@@ -1,12 +1,18 @@
 import { TRPCError } from "@trpc/server";
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, gte, inArray, sql } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db/index";
 import {
   toolAnalyticsEventsTable,
-  toolAnalyticsTable,
   toolsTable,
+  upvotesTable,
 } from "@/db/schema";
+import {
+  analyticsEvents,
+  timePeriods,
+  timePeriodToDays,
+} from "@/lib/constants";
+import { dateExpression } from "@/lib/date";
 import {
   createRateLimit,
   createTRPCRouter,
@@ -14,22 +20,60 @@ import {
 } from "@/trpc/init";
 
 export const analyticsRouter = createTRPCRouter({
-  getStats: privateProcedure
-    .use(createRateLimit(50, 60, "analytics.getStats"))
-    .query(async ({ ctx }) => {
-      const count = await db
-        .select({ count: sql<number>`count(*)` })
-        .from(toolsTable)
-        .where(eq(toolsTable.userId, ctx.user.id));
+  getStats: privateProcedure.query(async ({ ctx }) => {
+    const tools = await db.query.tool.findMany({
+      where: eq(toolsTable.userId, ctx.user.id),
+    });
 
+    return {
+      count: tools.length,
+    };
+  }),
+
+  getAggregateStats: privateProcedure.query(async ({ ctx }) => {
+    const tools = await db.query.tool.findMany({
+      where: eq(toolsTable.userId, ctx.user.id),
+    });
+
+    const toolIds = tools.map((t) => t.id);
+
+    if (toolIds.length === 0) {
       return {
-        count: Number(count[0]?.count ?? 0),
+        views: 0,
+        upvotes: 0,
       };
-    }),
+    }
 
-  getToolAnalytics: privateProcedure
-    .use(createRateLimit(50, 60, "analytics.getToolAnalytics"))
-    .input(z.object({ toolId: z.string().min(1) }))
+    const views = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(toolAnalyticsEventsTable)
+      .where(
+        and(
+          inArray(toolAnalyticsEventsTable.toolId, toolIds),
+          eq(toolAnalyticsEventsTable.type, "view")
+        )
+      );
+
+    const upvotes = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(upvotesTable)
+      .where(inArray(upvotesTable.toolId, toolIds));
+
+    return {
+      views: Number(views[0]?.count ?? 0),
+      upvotes: Number(upvotes[0]?.count ?? 0),
+    };
+  }),
+
+  getStatsOverTime: privateProcedure
+    .use(createRateLimit(50, 60, "analytics.getStatsOverTime"))
+    .input(
+      z.object({
+        toolId: z.string(),
+        period: z.enum(timePeriods),
+        eventType: z.enum(analyticsEvents),
+      })
+    )
     .query(async ({ ctx, input }) => {
       const tool = await db.query.tool.findFirst({
         where: and(
@@ -45,103 +89,47 @@ export const analyticsRouter = createTRPCRouter({
         });
       }
 
-      const analytics = await db.query.analytics.findFirst({
-        where: eq(toolAnalyticsTable.toolId, input.toolId),
-      });
+      const days = timePeriodToDays[input.period];
 
-      return {
-        views: analytics?.views ?? 0,
-        visits: analytics?.visits ?? 0,
-        upvotes: analytics?.upvotes ?? 0,
-        impressions: analytics?.impressions ?? 0,
-      };
-    }),
+      const fromDate = new Date();
+      fromDate.setDate(fromDate.getDate() - days);
 
-  getViewsOverTime: privateProcedure
-    .use(createRateLimit(50, 60, "analytics.getViewsOverTime"))
-    .input(z.object({ toolId: z.string().min(1) }))
-    .query(async ({ ctx, input }) => {
-      const tool = await db.query.tool.findFirst({
-        where: and(
-          eq(toolsTable.id, input.toolId),
-          eq(toolsTable.userId, ctx.user.id)
-        ),
-      });
-
-      if (!tool) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Tool not found or unauthorized",
-        });
-      }
-
-      const thirtyDaysAgo = new Date();
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
-      try {
-        const since = thirtyDaysAgo.toISOString();
-
-        const dateExpiration = sql<string>`to_char(${toolAnalyticsEventsTable.createdAt}, 'YYYY-MM-DD')`;
-
-        const views = await db
-          .select({
-            date: dateExpiration,
-            count: sql<number>`count(*)`,
-          })
-          .from(toolAnalyticsEventsTable)
-          .where(
-            and(
-              eq(toolAnalyticsEventsTable.toolId, input.toolId),
-              eq(toolAnalyticsEventsTable.type, "view"),
-              sql`${toolAnalyticsEventsTable.createdAt} >= ${since}`
-            )
-          )
-          .groupBy(dateExpiration)
-          .orderBy(dateExpiration);
-
-        return views.map((v) => ({
-          date: v.date,
-          count: Number(v.count),
-        }));
-      } catch (error) {
-        console.error(error);
-      }
-    }),
-
-  getAggregateStats: privateProcedure
-    .use(createRateLimit(50, 60, "analytics.getAggregateStats"))
-    .query(async ({ ctx }) => {
-      const stats = await db
+      const rows = await db
         .select({
-          totalViews: sql<number>`sum(${toolAnalyticsTable.views})`,
-          totalVisits: sql<number>`sum(${toolAnalyticsTable.visits})`,
-          totalUpvotes: sql<number>`sum(${toolAnalyticsTable.upvotes})`,
-          totalImpressions: sql<number>`sum(${toolAnalyticsTable.impressions})`,
+          date: dateExpression,
+          count: sql<number>`count(*)`,
         })
-        .from(toolAnalyticsTable)
-        .innerJoin(toolsTable, eq(toolAnalyticsTable.toolId, toolsTable.id))
-        .where(eq(toolsTable.userId, ctx.user.id));
+        .from(toolAnalyticsEventsTable)
+        .where(
+          and(
+            eq(toolAnalyticsEventsTable.toolId, input.toolId),
+            eq(toolAnalyticsEventsTable.type, input.eventType),
+            gte(toolAnalyticsEventsTable.createdAt, fromDate)
+          )
+        )
+        .groupBy(dateExpression)
+        .orderBy(dateExpression);
 
-      return {
-        views: Number(stats[0]?.totalViews ?? 0),
-        visits: Number(stats[0]?.totalVisits ?? 0),
-        upvotes: Number(stats[0]?.totalUpvotes ?? 0),
-        impressions: Number(stats[0]?.totalImpressions ?? 0),
-      };
+      return rows.map((row) => ({
+        date: row.date,
+        count: Number(row.count),
+      }));
     }),
 
-  getAggregateViewsOverTime: privateProcedure
-    .use(createRateLimit(50, 60, "analytics.getAggregateViewsOverTime"))
-    .query(async ({ ctx }) => {
-      const thirtyDaysAgo = new Date();
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-      const since = thirtyDaysAgo.toISOString();
+  getAggregateStatsOverTime: privateProcedure
+    .use(createRateLimit(50, 60, "analytics.getAggregateStatsOverTime"))
+    .input(
+      z.object({ type: z.enum(analyticsEvents), period: z.enum(timePeriods) })
+    )
+    .query(async ({ ctx, input }) => {
+      const days = timePeriodToDays[input.period];
 
-      const dateExpiration = sql<string>`to_char(${toolAnalyticsEventsTable.createdAt}, 'YYYY-MM-DD')`;
+      const fromDate = new Date();
+      fromDate.setDate(fromDate.getDate() - days);
 
-      const views = await db
+      const rows = await db
         .select({
-          date: dateExpiration,
+          date: dateExpression,
           count: sql<number>`count(*)`,
         })
         .from(toolAnalyticsEventsTable)
@@ -152,16 +140,16 @@ export const analyticsRouter = createTRPCRouter({
         .where(
           and(
             eq(toolsTable.userId, ctx.user.id),
-            eq(toolAnalyticsEventsTable.type, "view"),
-            sql`${toolAnalyticsEventsTable.createdAt} >= ${since}`
+            eq(toolAnalyticsEventsTable.type, input.type),
+            gte(toolAnalyticsEventsTable.createdAt, fromDate)
           )
         )
-        .groupBy(dateExpiration)
-        .orderBy(dateExpiration);
+        .groupBy(dateExpression)
+        .orderBy(dateExpression);
 
-      return views.map((v) => ({
-        date: v.date,
-        count: Number(v.count),
+      return rows.map((r) => ({
+        date: r.date,
+        count: Number(r.count),
       }));
     }),
 });

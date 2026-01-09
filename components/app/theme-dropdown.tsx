@@ -30,8 +30,8 @@ export function ThemeDropdown() {
 
   return (
     <Select
-      defaultValue={theme ?? "system"}
-      onChange={(value: string) => setTheme(value)}
+      value={theme ?? "system"}
+      onValueChange={(value: string) => setTheme(value)}
     >
       <SelectTrigger id="theme-dropdown" className="w-fit">
         {config[theme as "light" | "dark" | "system"].icon}
