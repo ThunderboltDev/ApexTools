@@ -11,7 +11,7 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="text-xl font-bold">
-              ApexAura
+              ApexTools
             </Link>
             <p className="mt-4 text-sm text-muted-foreground">
               The best AI tools directory for productivity, marketing, coding,
@@ -79,7 +79,7 @@ export function Footer() {
         </div>
 
         <div className="pt-8 border-t text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} ApexAura. All rights reserved.
+          © {new Date().getFullYear()} ApexTools. All rights reserved.
         </div>
       </div>
     </footer>

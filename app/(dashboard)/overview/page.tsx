@@ -50,7 +50,7 @@ export default function OverviewPage() {
     <>
       <PageHeader>
         <PageTitle>Overview</PageTitle>
-        <PageDescription>Welcome to your ApexAura dashboard</PageDescription>
+        <PageDescription>Welcome to your ApexTools dashboard</PageDescription>
       </PageHeader>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

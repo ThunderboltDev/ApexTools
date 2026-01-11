@@ -13,7 +13,7 @@ import MagicLinkEmail from "@/emails/magic-link";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const auth = betterAuth({
-  appName: "ApexAura",
+  appName: "ApexTools",
   baseURL: url,
   database: drizzleAdapter(db, {
     provider: "pg",
@@ -32,7 +32,9 @@ export const auth = betterAuth({
         );
 
         await resend.emails.send({
-          from: `"${brand.name}" <${process.env.RESEND_FROM_EMAIL || "noreply@apexaura.com"}>`,
+          from: `"${brand.name}" <${
+            process.env.RESEND_FROM_EMAIL || "noreply@apextools.com"
+          }>`,
           to: email,
           subject: `Sign in to ${brand.name}`,
           html: emailHtml,

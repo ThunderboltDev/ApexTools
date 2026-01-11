@@ -6,7 +6,7 @@ import { AuthForm } from "./auth-form";
 export const metadata: Metadata = {
   title: "Sign In",
   description:
-    "Sign in to your account on ApexAura using Google, GitHub or Email.",
+    "Sign in to your account on ApexTools using Google, GitHub or Email.",
 };
 
 export default function AuthPage() {

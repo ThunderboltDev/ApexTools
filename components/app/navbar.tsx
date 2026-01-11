@@ -59,13 +59,13 @@ export function Navbar({ children }: NavbarProps) {
           <div className="flex items-center gap-2 px-2 py-1 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:justify-center transition-all duration-300">
             <Image
               src="/logo.webp"
-              alt="ApexAura Logo"
+              alt="ApexTools Logo"
               width={500}
               height={500}
               className="size-8"
             />
             <span className="font-bold text-xl text-foreground group-data-[collapsible=icon]:hidden transition-all duration-300">
-              ApexAura
+              ApexTools
             </span>
           </div>
         </SidebarHeader>
