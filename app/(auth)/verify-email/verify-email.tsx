@@ -18,7 +18,7 @@ export function VerifyEmailForm() {
   const email = params.get("email") ?? "";
 
   return (
-    <div className="flex h-screen items-center justify-center p-4">
+    <main className="flex h-screen items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl">Check your email</CardTitle>
@@ -59,6 +59,6 @@ export function VerifyEmailForm() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </main>
   );
 }

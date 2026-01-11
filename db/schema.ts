@@ -130,6 +130,8 @@ export const toolsTable = pgTable(
     description: text("description").notNull(),
     logo: text("logo").notNull(),
     url: text("url").notNull(),
+    tags: text("tags").array(),
+    score: integer("score").default(0).notNull(),
     upvotes: integer("upvotes").default(0).notNull(),
     status: statusEnum("status").default("approved").notNull(),
     userId: text("user_id")

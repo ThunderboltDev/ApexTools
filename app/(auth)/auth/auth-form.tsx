@@ -128,7 +128,7 @@ export function AuthForm() {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center p-4">
+    <main className="flex h-screen items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl">Sign In</CardTitle>
@@ -257,6 +257,6 @@ export function AuthForm() {
           </Form>
         </CardContent>
       </Card>
-    </div>
+    </main>
   );
 }

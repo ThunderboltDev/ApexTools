@@ -11,7 +11,9 @@ export const metadata: Metadata = {
 export default function LogoutPage() {
   return (
     <Suspense fallback={<LoadingScreen />}>
-      <LogoutForm />
+      <main>
+        <LogoutForm />
+      </main>
     </Suspense>
   );
 }

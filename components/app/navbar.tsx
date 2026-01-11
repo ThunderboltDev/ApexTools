@@ -11,6 +11,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import type { PropsWithChildren } from "react";
 import { SubmitToolButton } from "@/components/tool/submit";
+import { Button } from "@/components/ui/button";
 import { PageWrapper } from "@/components/ui/page";
 import {
   Sidebar,
@@ -43,9 +44,13 @@ const navItems = [
   },
 ];
 
-export function Navbar({ children }: Readonly<PropsWithChildren>) {
+interface NavbarProps extends Readonly<PropsWithChildren> {
+  hideSearch?: boolean;
+}
+
+export function Navbar({ children }: NavbarProps) {
   const pathname = usePathname();
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
 
   return (
     <SidebarProvider>
@@ -88,50 +93,58 @@ export function Navbar({ children }: Readonly<PropsWithChildren>) {
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        <SidebarFooter>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                variant="transparent"
-                theme="danger"
-                href="/logout"
-              >
-                <HugeiconsIcon icon={LogoutSquare01Icon} />
-                <span>Sign Out</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                href="/profile"
-                tooltip="Profile"
-                className="group-data-[collapsible=icon]:p-1 group-data-[collapsible=icon]:rounded-full"
-              >
-                {user?.image ? (
-                  <Image
-                    src={user.image}
-                    alt={user.name ?? "User"}
-                    className="size-6 rounded-full"
-                    width={20}
-                    height={20}
-                  />
-                ) : (
-                  <div className="size-6 rounded-full bg-muted flex items-center justify-center">
-                    <HugeiconsIcon icon={UserIcon} className="size-4" />
-                  </div>
-                )}
-                <span className="truncate">{user?.name ?? "User"}</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarFooter>
+        {!isLoading && user && (
+          <SidebarFooter>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  variant="transparent"
+                  theme="danger"
+                  href="/logout"
+                >
+                  <HugeiconsIcon icon={LogoutSquare01Icon} />
+                  <span>Sign Out</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  href="/profile"
+                  tooltip="Profile"
+                  className="group-data-[collapsible=icon]:p-1 group-data-[collapsible=icon]:rounded-full"
+                >
+                  {user?.image ? (
+                    <Image
+                      src={user.image}
+                      alt={user.name ?? "User"}
+                      className="size-6 rounded-full"
+                      width={20}
+                      height={20}
+                    />
+                  ) : (
+                    <div className="size-6 rounded-full bg-muted flex items-center justify-center">
+                      <HugeiconsIcon icon={UserIcon} className="size-4" />
+                    </div>
+                  )}
+                  <span className="truncate">{user?.name ?? "User"}</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarFooter>
+        )}
         <SidebarRail />
       </Sidebar>
       <SidebarInset>
         <header className="flex sticky z-25 top-0 h-14 shrink-0 items-center justify-between gap-2 bg-background/50 backdrop-blur-md border-b px-3">
           <SidebarTrigger />
-          <SubmitToolButton />
+          {!isLoading && user ? (
+            <SubmitToolButton />
+          ) : (
+            <Button theme="accent">Sign In</Button>
+          )}
         </header>
-        <PageWrapper>{children}</PageWrapper>
+        <main>
+          <PageWrapper>{children}</PageWrapper>
+        </main>
       </SidebarInset>
     </SidebarProvider>
   );

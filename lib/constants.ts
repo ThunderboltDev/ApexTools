@@ -31,6 +31,8 @@ export const analyticsEvents = [
   "impression",
 ] as const;
 
+export const sortOptions = ["latest", "hot", "trending"] as const;
+
 export const categoryLabels: Record<CategoryFilter, string> = {
   all: "All",
   productivity: "Productivity",
@@ -137,6 +139,7 @@ export const toolSubmitSchema = toolSchema.omit({ logo: true }).extend({
 export const getToolsSchema = z.object({
   category: z.enum(categories).optional(),
   pricing: z.enum(pricingModels).optional(),
+  sort: z.enum(sortOptions).optional(),
   page: z.number().min(1).default(1),
   limit: z.number().min(1).max(100).default(20),
   search: z.string().optional(),

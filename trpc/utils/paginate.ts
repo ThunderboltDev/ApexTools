@@ -37,13 +37,24 @@ export async function paginateTools(input: PaginationInput) {
       conditions.push(searchCondition);
     }
   }
+
   const where = conditions.length > 0 ? and(...conditions) : undefined;
+
+  let orderBy: SQL | SQL[];
+
+  if (input.sort === "hot") {
+    orderBy = desc(toolsTable.upvotes);
+  } else if (input.sort === "trending") {
+    orderBy = desc(toolsTable.score);
+  } else {
+    orderBy = desc(toolsTable.createdAt);
+  }
 
   const tools = await db
     .select()
     .from(toolsTable)
     .where(where)
-    .orderBy(desc(toolsTable.createdAt))
+    .orderBy(orderBy)
     .limit(limit)
     .offset(offset);
 

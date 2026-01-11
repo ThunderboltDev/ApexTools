@@ -10,6 +10,7 @@ import type {
   analyticsEvents,
   categories,
   pricingModels,
+  sortOptions,
   status,
   timePeriods,
 } from "@/lib/constants";
@@ -34,10 +35,12 @@ export type AnalyticsEvent = (typeof analyticsEvents)[number];
 export type AnalyticsEventFilter = AnalyticsEvent | "all";
 
 export type TimePeriod = (typeof timePeriods)[number];
+export type SortOptions = (typeof sortOptions)[number];
 
 export interface PaginationInput {
   page?: number;
   limit?: number;
+  sort?: SortOptions;
   category?: Category;
   pricing?: PricingModel;
   status?: Status;
