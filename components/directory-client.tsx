@@ -16,11 +16,8 @@ import { useDebounce } from "use-debounce";
 import { ToolGrid } from "@/components/tool/grid";
 import { Input } from "@/components/ui/input";
 import { trackFilterApplied } from "@/lib/analytics";
-import {
-  sortOptions,
-  sortOptionsIcon,
-  sortOptionsLabel,
-} from "@/lib/constants";
+import { sortOptions, sortOptionsLabel } from "@/lib/constants";
+import { sortOptionsIcons } from "@/lib/icons";
 import type { Category, SortOption } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/provider";
@@ -29,17 +26,17 @@ const options = [
   {
     value: "hot",
     label: sortOptionsLabel.hot,
-    icon: <HugeiconsIcon icon={sortOptionsIcon.hot} className="size-4" />,
+    icon: <HugeiconsIcon icon={sortOptionsIcons.hot} className="size-4" />,
   },
   {
     value: "trending",
     label: sortOptionsLabel.trending,
-    icon: <HugeiconsIcon icon={sortOptionsIcon.trending} className="size-4" />,
+    icon: <HugeiconsIcon icon={sortOptionsIcons.trending} className="size-4" />,
   },
   {
     value: "latest",
     label: sortOptionsLabel.latest,
-    icon: <HugeiconsIcon icon={sortOptionsIcon.latest} className="size-4" />,
+    icon: <HugeiconsIcon icon={sortOptionsIcons.latest} className="size-4" />,
   },
 ] as const;
 
