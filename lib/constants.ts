@@ -1,29 +1,3 @@
-import {
-  AnalyticsUpIcon,
-  ArrowUpBigIcon,
-  BrainIcon,
-  Cancel01Icon,
-  CheckListIcon,
-  Clock02Icon,
-  CodeSimpleIcon,
-  CreditCardIcon,
-  EyeIcon,
-  Fire03Icon,
-  GiftIcon,
-  GridViewIcon,
-  Image02Icon,
-  Layers01Icon,
-  LinkSquare02Icon,
-  Megaphone01Icon,
-  MusicNote01Icon,
-  PenTool01Icon,
-  Radar01Icon,
-  Search02Icon,
-  Tick02Icon,
-  Video01Icon,
-  VolumeHighIcon,
-} from "@hugeicons/core-free-icons";
-import type { IconSvgElement } from "@hugeicons/react";
 import z from "zod";
 import type {
   AnalyticsEventFilter,
@@ -82,33 +56,12 @@ export const categoryLabels: Record<CategoryFilter, string> = {
   research: "Research",
 } as const;
 
-export const categoryIcons: Record<CategoryFilter, IconSvgElement> = {
-  all: GridViewIcon,
-  productivity: CheckListIcon,
-  marketing: Megaphone01Icon,
-  llm: BrainIcon,
-  image: Image02Icon,
-  code: CodeSimpleIcon,
-  video: Video01Icon,
-  audio: VolumeHighIcon,
-  music: MusicNote01Icon,
-  writing: PenTool01Icon,
-  research: Search02Icon,
-};
-
 export const pricingLabels: Record<PricingModelFilter, string> = {
   all: "All",
   free: "Free",
   freemium: "Freemium",
   paid: "Paid",
 } as const;
-
-export const pricingModelIcons: Record<PricingModelFilter, IconSvgElement> = {
-  all: GridViewIcon,
-  free: GiftIcon,
-  freemium: Layers01Icon,
-  paid: CreditCardIcon,
-};
 
 export const statusLabels: Record<StatusFilter, string> = {
   all: "All",
@@ -117,13 +70,6 @@ export const statusLabels: Record<StatusFilter, string> = {
   rejected: "Rejected",
 } as const;
 
-export const statusIcons: Record<StatusFilter, IconSvgElement> = {
-  all: GridViewIcon,
-  pending: Clock02Icon,
-  approved: Tick02Icon,
-  rejected: Cancel01Icon,
-};
-
 export const analyticsEventLabels: Record<AnalyticsEventFilter, string> = {
   all: "All",
   view: "Views",
@@ -131,15 +77,6 @@ export const analyticsEventLabels: Record<AnalyticsEventFilter, string> = {
   upvote: "Upvotes",
   impression: "Impressions",
 } as const;
-
-export const analyticsEventIcons: Record<AnalyticsEventFilter, IconSvgElement> =
-  {
-    all: GridViewIcon,
-    view: EyeIcon,
-    visit: LinkSquare02Icon,
-    upvote: ArrowUpBigIcon,
-    impression: Radar01Icon,
-  };
 
 export const timePeriods = ["7d", "30d", "90d"] as const;
 
@@ -163,15 +100,6 @@ export const sortOptionsLabel: Record<SortOptionFilter, string> = {
   upvotes: "Upvotes",
   views: "Views",
 } as const;
-
-export const sortOptionsIcon: Record<SortOptionFilter, IconSvgElement> = {
-  all: GridViewIcon,
-  latest: Clock02Icon,
-  hot: Fire03Icon,
-  trending: AnalyticsUpIcon,
-  upvotes: ArrowUpBigIcon,
-  views: EyeIcon,
-};
 
 export const slugSchema = z
   .string()

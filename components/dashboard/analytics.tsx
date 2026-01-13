@@ -23,12 +23,12 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
-  analyticsEventIcons,
   analyticsEventLabels,
   analyticsEvents,
   timePeriodLabels,
   timePeriods,
 } from "@/lib/constants";
+import { analyticsEventIcons } from "@/lib/icons";
 import type { AnalyticsEvent, TimePeriod } from "@/lib/types";
 import { trpc } from "@/trpc/provider";
 

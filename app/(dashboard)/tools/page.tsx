@@ -30,15 +30,17 @@ import {
 import { trackFilterApplied } from "@/lib/analytics";
 import {
   categories,
-  categoryIcons,
   categoryLabels,
   pricingLabels,
-  pricingModelIcons,
   pricingModels,
   sortOptions,
-  sortOptionsIcon,
   sortOptionsLabel,
 } from "@/lib/constants";
+import {
+  categoryIcons,
+  pricingModelIcons,
+  sortOptionsIcons,
+} from "@/lib/icons";
 import type {
   CategoryFilter,
   PricingModelFilter,
@@ -189,13 +191,13 @@ export default function ToolsPage() {
                 <FieldLabel htmlFor="sort-filter">Sort:</FieldLabel>
                 <Select value={sort} onValueChange={handleSortChange}>
                   <SelectTrigger id="sort-filter">
-                    <HugeiconsIcon icon={sortOptionsIcon[sort]} />
+                    <HugeiconsIcon icon={sortOptionsIcons[sort]} />
                     {sortOptionsLabel[sort]}
                   </SelectTrigger>
                   <SelectContent>
                     {sortOptions.map((sortOption) => (
                       <SelectItem key={sortOption} value={sortOption}>
-                        <HugeiconsIcon icon={sortOptionsIcon[sortOption]} />
+                        <HugeiconsIcon icon={sortOptionsIcons[sortOption]} />
                         {sortOptionsLabel[sortOption]}
                       </SelectItem>
                     ))}

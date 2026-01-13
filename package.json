@@ -11,7 +11,7 @@
     "db": "postgres -D E:\\postgresql\\data",
     "db:push:dev": "cross-env NODE_ENV=development pnpm db:push",
     "db:push:prod": "cross-env NODE_ENV=production pnpm db:push",
-    "db:push": " drizzle-kit push --config=db/drizzle.config.ts --force",
+    "db:push": "drizzle-kit push --config=db/drizzle.config.ts --force",
     "db:studio": "drizzle-kit studio",
     "seed": "pnpm tsx -r tsconfig-paths/register -r dotenv/config db/seed.ts"
   },
