@@ -1,5 +1,6 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
 import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
@@ -22,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
+  analyticsEventIcons,
   analyticsEventLabels,
   analyticsEvents,
   timePeriodLabels,
@@ -57,12 +59,14 @@ export function ToolAnalytics({ toolId, className }: ToolAnalyticsProps) {
             value={eventType}
             onValueChange={(value) => setEventType(value as AnalyticsEvent)}
           >
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-[180px]">
+              <HugeiconsIcon icon={analyticsEventIcons[eventType]} />
               {analyticsEventLabels[eventType]}
             </SelectTrigger>
             <SelectContent>
               {analyticsEvents.map((event) => (
                 <SelectItem key={event} value={event}>
+                  <HugeiconsIcon icon={analyticsEventIcons[event]} />
                   {analyticsEventLabels[event]}
                 </SelectItem>
               ))}
@@ -87,7 +91,7 @@ export function ToolAnalytics({ toolId, className }: ToolAnalyticsProps) {
         </div>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="mt-2">
         {isLoading ? (
           <Skeleton className="h-[350px] w-full" />
         ) : (
@@ -95,7 +99,7 @@ export function ToolAnalytics({ toolId, className }: ToolAnalyticsProps) {
             config={{
               count: {
                 label: analyticsEventLabels[eventType],
-                color: "hsl(var(--primary))",
+                color: "var(--accent)",
               },
             }}
             className="h-[350px] w-full"
@@ -114,7 +118,12 @@ export function ToolAnalytics({ toolId, className }: ToolAnalyticsProps) {
                   })
                 }
               />
-              <YAxis tickLine={false} axisLine={false} tickMargin={10} />
+              <YAxis
+                width={24}
+                tickMargin={10}
+                tickLine={false}
+                axisLine={false}
+              />
               <ChartTooltip
                 cursor={false}
                 content={<ChartTooltipContent hideLabel />}

@@ -59,7 +59,7 @@ import {
 } from "@/components/ui/page";
 import { Spinner } from "@/components/ui/spinner";
 import { UserAvatar } from "@/components/user/avatar";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/lib/auth/context";
 import { trpc } from "@/trpc/provider";
 
 const updateProfileSchema = z.object({

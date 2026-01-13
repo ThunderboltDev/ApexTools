@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
-import { and, eq, ne, sql } from "drizzle-orm";
+import { and, eq, getTableColumns, ne, sql } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db/index";
-import { toolsTable } from "@/db/schema";
+import { toolsTable, upvotesTable } from "@/db/schema";
 import { getToolsSchema, slugSchema } from "@/lib/constants";
 import {
   createRateLimit,
@@ -16,9 +16,10 @@ export const browseRouter = createTRPCRouter({
   getAll: publicProcedure
     .use(createRateLimit(60, 60, "browse.getAll"))
     .input(getToolsSchema)
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       return paginateTools({
         ...input,
+        viewerId: ctx.user?.id,
         status: "approved",
       });
     }),
@@ -26,13 +27,29 @@ export const browseRouter = createTRPCRouter({
   getBySlug: publicProcedure
     .use(createRateLimit(30, 60, "browse.getBySlug"))
     .input(z.object({ slug: slugSchema }))
-    .query(async ({ input }) => {
-      const tool = await db.query.tool.findFirst({
-        where: and(
-          eq(toolsTable.slug, input.slug),
-          eq(toolsTable.status, "approved")
-        ),
-      });
+    .query(async ({ input, ctx }) => {
+      const isUpvotedSelect = ctx.user
+        ? sql<boolean>`EXISTS (
+          SELECT 1
+          FROM ${upvotesTable}
+          WHERE ${upvotesTable.toolId} = ${toolsTable.id}
+            AND ${upvotesTable.userId} = ${ctx.user.id}
+        )`
+        : sql<boolean>`FALSE`;
+
+      const [tool] = await db
+        .select({
+          ...getTableColumns(toolsTable),
+          isUpvoted: isUpvotedSelect,
+        })
+        .from(toolsTable)
+        .where(
+          and(
+            eq(toolsTable.slug, input.slug),
+            eq(toolsTable.status, "approved")
+          )
+        )
+        .limit(1);
 
       if (!tool) {
         throw new TRPCError({
@@ -44,6 +61,33 @@ export const browseRouter = createTRPCRouter({
       return tool;
     }),
 
+  getBySlugs: publicProcedure
+    .use(createRateLimit(30, 60, "browse.getBySlugs"))
+    .input(
+      getToolsSchema.extend({
+        slugs: z.array(slugSchema),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      if (input.slugs.length === 0) {
+        return {
+          tools: [],
+          pagination: {
+            page: 1,
+            limit: 24,
+            total: 0,
+            hasMore: false,
+          },
+        };
+      }
+
+      return paginateTools({
+        ...input,
+        viewerId: ctx.user?.id,
+        status: "approved",
+      });
+    }),
+
   getSimilarTools: publicProcedure
     .use(createRateLimit(30, 60, "browse.getSimilarTools"))
     .input(
@@ -53,9 +97,21 @@ export const browseRouter = createTRPCRouter({
         limit: z.number().min(1).max(10).default(4),
       })
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
+      const isUpvotedSelect = ctx.user
+        ? sql<boolean>`EXISTS (
+          SELECT 1
+          FROM ${upvotesTable}
+          WHERE ${upvotesTable.toolId} = ${toolsTable.id}
+            AND ${upvotesTable.userId} = ${ctx.user.id}
+        )`
+        : sql<boolean>`FALSE`;
+
       const tools = await db
-        .select()
+        .select({
+          ...getTableColumns(toolsTable),
+          isUpvoted: isUpvotedSelect,
+        })
         .from(toolsTable)
         .where(
           and(
@@ -80,9 +136,21 @@ export const browseRouter = createTRPCRouter({
         limit: z.number().min(1).max(20).default(10),
       })
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
+      const isUpvotedSelect = ctx.user
+        ? sql<boolean>`EXISTS (
+          SELECT 1
+          FROM ${upvotesTable}
+          WHERE ${upvotesTable.toolId} = ${toolsTable.id}
+            AND ${upvotesTable.userId} = ${ctx.user.id}
+        )`
+        : sql<boolean>`FALSE`;
+
       return db
-        .select()
+        .select({
+          ...getTableColumns(toolsTable),
+          isUpvoted: isUpvotedSelect,
+        })
         .from(toolsTable)
         .where(
           and(

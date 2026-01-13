@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { getVisitorId } from "@/lib/visitor";
+import { getVisitorId } from "@/lib/store/visitor";
 import { trpc } from "@/trpc/provider";
 
 export function ViewTracker({ toolId }: { toolId: string }) {

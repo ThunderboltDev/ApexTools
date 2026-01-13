@@ -1,14 +1,15 @@
 "use client";
 
-import { ArrowUpBigIcon, LinkSquare02Icon } from "@hugeicons/core-free-icons";
+import { LinkSquare02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
 import { useTool } from "@/app/(public)/tool/[slug]/tool-context";
+import { BookmarkButton } from "@/components/tool/bookmark";
+import { ToolCard } from "@/components/tool/card";
+import { CategoryBadge } from "@/components/tool/category";
+import { UpvoteButton } from "@/components/tool/upvote";
 import { ViewTracker } from "@/components/tool/view-tracker";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { LinkButton } from "@/components/ui/link-button";
 import {
   PageContent,
@@ -16,16 +17,12 @@ import {
   PageHeader,
   PageTitle,
 } from "@/components/ui/page";
-import { categoryLabels, pricingLabels } from "@/lib/constants";
-import { cn } from "@/lib/utils";
-import { getVisitorId } from "@/lib/visitor";
+import { pricingLabels } from "@/lib/constants";
+import { getVisitorId } from "@/lib/store/visitor";
 import { trpc } from "@/trpc/provider";
 
 export default function ToolPage() {
-  const [isUpvoted, setIsUpvoted] = useState(false);
   const tool = useTool();
-
-  const { mutate: upvoteTool } = trpc.tool.upvote.useMutation();
 
   const { data: similarTools } = trpc.browse.getSimilarTools.useQuery({
     category: tool.category,
@@ -37,11 +34,6 @@ export default function ToolPage() {
 
   const handleVisit = () => {
     incrementVisit({ toolId: tool.id, visitorId: getVisitorId() });
-  };
-
-  const handleUpvote = () => {
-    upvoteTool({ toolId: tool.id });
-    setIsUpvoted((prev) => !prev);
   };
 
   return (
@@ -58,22 +50,14 @@ export default function ToolPage() {
         <PageTitle>{tool.name}</PageTitle>
         <PageDescription>{tool.tagline}</PageDescription>
         <div className="flex items-center gap-2">
-          <Badge>{categoryLabels[tool.category]}</Badge>
+          <CategoryBadge category={tool.category} />
           <Badge>{pricingLabels[tool.pricing]}</Badge>
         </div>
-        <div className="flex items-center gap-2 mt-4">
-          <Button
-            theme="default"
-            variant="outline"
-            size="icon"
-            className={cn("gap-2 [&>svg]:!size-5.5", {
-              "[&>svg]:fill-accent text-accent hover:text-accent": isUpvoted,
-            })}
-            onClick={handleUpvote}
-          >
-            <HugeiconsIcon icon={ArrowUpBigIcon} />
-            <span className="sr-only">Upvote Tool</span>
-          </Button>
+        <div className="flex items-center justify-between gap-2 mt-4">
+          <div className="flex items-center gap-2">
+            <UpvoteButton tool={tool} className="hover:bg-secondary" />
+            <BookmarkButton slug={tool.slug} />
+          </div>
           <LinkButton
             theme="accent"
             href={tool.url}
@@ -97,30 +81,8 @@ export default function ToolPage() {
         <h3 className="font-semibold mb-4">Similar Tools</h3>
         {similarTools && similarTools.length > 0 ? (
           <div className="grid gap-4">
-            {similarTools.map((similar) => (
-              <Link
-                key={similar.id}
-                href={`/tool/${similar.slug}`}
-                className="group flex items-start gap-3 rounded-lg p-2 hover:bg-muted/50 transition-colors"
-              >
-                <div className="size-10 shrink-0 overflow-hidden rounded-md border border-border bg-muted/40">
-                  <Image
-                    src={similar.logo}
-                    alt={`${similar.name} logo`}
-                    width={40}
-                    height={40}
-                    className="size-full object-cover"
-                  />
-                </div>
-                <div className="space-y-1 overflow-hidden">
-                  <p className="font-medium leading-none group-hover:text-primary transition-colors">
-                    {similar.name}
-                  </p>
-                  <p className="text-xs text-muted-foreground line-clamp-1">
-                    {similar.tagline}
-                  </p>
-                </div>
-              </Link>
+            {similarTools.map((tool) => (
+              <ToolCard key={tool.id} tool={tool} />
             ))}
           </div>
         ) : (

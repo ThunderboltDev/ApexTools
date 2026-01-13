@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/app/footer";
-import { ToolDirectory } from "@/components/tool/directory";
+import { Navbar } from "@/components/app/navbar";
+import { ToolDirectory } from "@/components/directory";
 import { FAQ } from "@/components/tool/faq";
 import { categoryContent } from "@/lib/category-data";
 import { categories } from "@/lib/constants";
@@ -52,21 +53,18 @@ export default async function CategoryPage({ params }: PageProps) {
   const content = categoryContent[category as Category];
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <main className="flex-1 container mx-auto px-4 py-12 md:py-16">
-        <div className="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
-            {content.headline}
-          </h1>
-          <p className="text-xl text-muted-foreground">{content.subheadline}</p>
-        </div>
-
-        <ToolDirectory category={category as Category} />
-
-        {content.faqs.length > 0 && <FAQ items={content.faqs} />}
-      </main>
-
+    <Navbar>
+      <div className="mt-4 mb-8 space-y-3">
+        <h1 className="md:text-5xl text-center text-balance">
+          {content.headline}
+        </h1>
+        <p className="text-center md:text-xl text-muted-foreground max-w-2xl mx-auto">
+          {content.subheadline}
+        </p>
+      </div>
+      <ToolDirectory category={category as Category} />
+      {content.faqs.length > 0 && <FAQ items={content.faqs} />}
       <Footer />
-    </div>
+    </Navbar>
   );
 }

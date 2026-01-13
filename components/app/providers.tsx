@@ -6,7 +6,7 @@ import { type ReactNode, useEffect } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { Toaster } from "@/components/ui/sonner";
 import { captureUtms } from "@/lib/analytics";
-import { AuthProvider } from "@/lib/auth-context";
+import { AuthProvider } from "@/lib/auth/context";
 import { TRPCProvider } from "@/trpc/provider";
 
 type ProvidersProps = {

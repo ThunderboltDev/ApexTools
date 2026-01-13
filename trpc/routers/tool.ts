@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db/index";
 import { toolsTable, upvotesTable } from "@/db/schema";
@@ -16,6 +16,58 @@ export const toolRouter = createTRPCRouter({
     .use(createRateLimit(30, 60, "tool.upvote"))
     .input(z.object({ toolId: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
+      return db.transaction(async (tx) => {
+        const existing = await tx
+          .select({ userId: upvotesTable.userId })
+          .from(upvotesTable)
+          .where(
+            and(
+              eq(upvotesTable.userId, ctx.user.id),
+              eq(upvotesTable.toolId, input.toolId)
+            )
+          )
+          .limit(1);
+
+        if (existing.length > 0) {
+          await tx
+            .delete(upvotesTable)
+            .where(
+              and(
+                eq(upvotesTable.userId, ctx.user.id),
+                eq(upvotesTable.toolId, input.toolId)
+              )
+            );
+
+          await tx
+            .update(toolsTable)
+            .set({
+              upvotes: sql`GREATEST(${toolsTable.upvotes} - 1, 0)`,
+            })
+            .where(eq(toolsTable.id, input.toolId));
+
+          return { upvoted: false };
+        }
+
+        await tx.insert(upvotesTable).values({
+          userId: ctx.user.id,
+          toolId: input.toolId,
+        });
+
+        await tx
+          .update(toolsTable)
+          .set({
+            upvotes: sql`${toolsTable.upvotes} + 1`,
+          })
+          .where(eq(toolsTable.id, input.toolId));
+
+        return { upvoted: true };
+      });
+    }),
+
+  getUpvoteStatus: privateProcedure
+    .use(createRateLimit(10, 60, "tool.getUpvoteStatus"))
+    .input(z.object({ toolId: z.string().min(1) }))
+    .query(async ({ ctx, input }) => {
       const existing = await db
         .select()
         .from(upvotesTable)
@@ -27,32 +79,18 @@ export const toolRouter = createTRPCRouter({
         )
         .limit(1);
 
-      if (existing.length > 0) {
-        await db
-          .delete(upvotesTable)
-          .where(
-            and(
-              eq(upvotesTable.userId, ctx.user.id),
-              eq(upvotesTable.toolId, input.toolId)
-            )
-          );
-
-        return { upvoted: false };
-      }
-
-      await db.insert(upvotesTable).values({
-        userId: ctx.user.id,
-        toolId: input.toolId,
-      });
-
-      return { upvoted: true };
+      return existing.length > 0;
     }),
 
   getAll: privateProcedure
-    .use(createRateLimit(50, 60, "tool.getMine"))
+    .use(createRateLimit(50, 60, "tool.getAll"))
     .input(getToolsSchema)
     .query(async ({ ctx, input }) => {
-      return paginateTools({ ...input, userId: ctx.user.id });
+      return paginateTools({
+        ...input,
+        ownerId: ctx.user.id,
+        viewerId: ctx.user.id,
+      });
     }),
 
   getBySlug: privateProcedure

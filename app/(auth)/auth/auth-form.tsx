@@ -29,7 +29,7 @@ import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { config } from "@/config";
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth/client";
 import { normalizeCallbackUrl } from "@/lib/url";
 
 const formSchema = z.object({

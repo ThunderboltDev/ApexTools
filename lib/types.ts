@@ -22,6 +22,10 @@ export type Account = InferSelectModel<typeof accountsTable>;
 export type Tool = InferSelectModel<typeof toolsTable>;
 export type Upvote = InferSelectModel<typeof upvotesTable>;
 
+export type ToolWithUpvoteStatus = Tool & {
+  isUpvoted: boolean;
+};
+
 export type Category = (typeof categories)[number];
 export type CategoryFilter = Category | "all";
 
@@ -34,18 +38,22 @@ export type StatusFilter = Status | "all";
 export type AnalyticsEvent = (typeof analyticsEvents)[number];
 export type AnalyticsEventFilter = AnalyticsEvent | "all";
 
+export type SortOption = (typeof sortOptions)[number];
+export type SortOptionFilter = (typeof sortOptions)[number] | "all";
+
 export type TimePeriod = (typeof timePeriods)[number];
-export type SortOptions = (typeof sortOptions)[number];
 
 export interface PaginationInput {
   page?: number;
   limit?: number;
-  sort?: SortOptions;
+  sort?: SortOption;
   category?: Category;
   pricing?: PricingModel;
   status?: Status;
+  slugs?: string[];
   search?: string;
-  userId?: string;
+  ownerId?: string;
+  viewerId?: string;
 }
 
 export interface PaginationOutput {

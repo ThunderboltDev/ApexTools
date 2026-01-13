@@ -3,6 +3,7 @@
 import { Monitor, Moon, Sun } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -28,14 +29,25 @@ const config = {
 export function ThemeDropdown() {
   const { theme, setTheme } = useTheme();
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  const currentTheme =
+    (theme as "system" | "light" | "dark" | undefined) ?? "system";
+
   return (
     <Select
-      value={theme ?? "system"}
+      value={currentTheme}
       onValueChange={(value: string) => setTheme(value)}
     >
       <SelectTrigger id="theme-dropdown" className="w-fit">
-        {config[theme as "light" | "dark" | "system"].icon}
-        {config[theme as "light" | "dark" | "system"].name}
+        {config[currentTheme].icon}
+        {config[currentTheme].name}
       </SelectTrigger>
       <SelectContent className="min-w-0 w-36">
         <SelectItem value="light">

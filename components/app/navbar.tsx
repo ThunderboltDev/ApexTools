@@ -1,7 +1,10 @@
 "use client";
 
 import {
-  DashboardSquareEditIcon,
+  AllBookmarkIcon,
+  DashboardBrowsingIcon,
+  DashboardSquare01Icon,
+  Globe02Icon,
   Home01Icon,
   LogoutSquare01Icon,
   UserIcon,
@@ -29,18 +32,36 @@ import {
   SidebarRail,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/lib/auth/context";
 
-const navItems = [
+const publicItems = [
   {
-    title: "Overview",
-    url: "/overview",
+    title: "Home",
+    url: "/",
     icon: Home01Icon,
   },
   {
-    title: "Tools",
+    title: "Browse",
+    url: "/browse",
+    icon: Globe02Icon,
+  },
+  {
+    title: "Bookmarks",
+    url: "/bookmarks",
+    icon: AllBookmarkIcon,
+  },
+];
+
+const dashboardItems = [
+  {
+    title: "Overview",
+    url: "/overview",
+    icon: DashboardBrowsingIcon,
+  },
+  {
+    title: "My Tools",
     url: "/tools",
-    icon: DashboardSquareEditIcon,
+    icon: DashboardSquare01Icon,
   },
 ];
 
@@ -54,7 +75,7 @@ export function Navbar({ children }: NavbarProps) {
 
   return (
     <SidebarProvider>
-      <Sidebar collapsible="icon">
+      <Sidebar>
         <SidebarHeader>
           <div className="flex items-center gap-2 px-2 py-1 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:justify-center transition-all duration-300">
             <Image
@@ -71,10 +92,32 @@ export function Navbar({ children }: NavbarProps) {
         </SidebarHeader>
         <SidebarContent>
           <SidebarGroup>
-            <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+            <SidebarGroupLabel>Public</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {navItems.map((item) => {
+                {publicItems.map((item) => {
+                  const isActive = pathname === item.url;
+                  return (
+                    <SidebarMenuItem key={item.url}>
+                      <SidebarMenuButton
+                        href={item.url}
+                        isActive={isActive}
+                        tooltip={item.title}
+                      >
+                        <HugeiconsIcon icon={item.icon} />
+                        <span>{item.title}</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+          <SidebarGroup>
+            <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {dashboardItems.map((item) => {
                   const isActive = pathname === item.url;
                   return (
                     <SidebarMenuItem key={item.url}>

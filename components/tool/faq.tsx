@@ -18,12 +18,12 @@ export function FAQ({ items }: FAQProps) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "mainEntity": items.map((item) => ({
+    mainEntity: items.map((item) => ({
       "@type": "Question",
-      "name": item.question,
-      "acceptedAnswer": {
+      name: item.question,
+      acceptedAnswer: {
         "@type": "Answer",
-        "text": item.answer,
+        text: item.answer,
       },
     })),
   };

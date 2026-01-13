@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { SubmitForm } from "@/app/(dashboard)/submit/form";
 import {
   PageContent,
@@ -5,6 +6,12 @@ import {
   PageHeader,
   PageTitle,
 } from "@/components/ui/page";
+
+export const metadata: Metadata = {
+  title: "Submit Tool",
+  description: "Submit your AI tool to the ApexTools directory.",
+  robots: { index: false, follow: false },
+};
 
 export default function SubmitToolPage() {
   return (

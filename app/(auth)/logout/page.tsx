@@ -6,6 +6,7 @@ import { LogoutForm } from "./logout";
 export const metadata: Metadata = {
   title: "Sign Out",
   description: "Sign out of your account",
+  robots: { index: false, follow: false },
 };
 
 export default function LogoutPage() {

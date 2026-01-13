@@ -1,15 +1,15 @@
 "use client";
 
 import { createContext, type ReactNode, useContext } from "react";
-import type { Tool } from "@/lib/types";
+import type { ToolWithUpvoteStatus } from "@/lib/types";
 
-const ToolContext = createContext<Tool | null>(null);
+const ToolContext = createContext<ToolWithUpvoteStatus | null>(null);
 
 export function ToolProvider({
   tool,
   children,
 }: {
-  tool: Tool;
+  tool: ToolWithUpvoteStatus;
   children: ReactNode;
 }) {
   return <ToolContext.Provider value={tool}>{children}</ToolContext.Provider>;

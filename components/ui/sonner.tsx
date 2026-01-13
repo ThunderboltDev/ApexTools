@@ -2,10 +2,10 @@
 
 import {
   Alert02Icon,
+  Cancel01Icon,
   CheckmarkCircle02Icon,
   InformationCircleIcon,
   Loading03Icon,
-  MultiplicationSignCircleIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useTheme } from "next-themes";
@@ -42,7 +42,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
         ),
         error: (
           <HugeiconsIcon
-            icon={MultiplicationSignCircleIcon}
+            icon={Cancel01Icon}
             strokeWidth={2}
             className="size-4"
           />
@@ -57,8 +57,8 @@ const Toaster = ({ ...props }: ToasterProps) => {
       }}
       style={
         {
-          "--normal-bg": "var(--popover)",
-          "--normal-text": "var(--popover-foreground)",
+          "--normal-bg": "var(--secondary)",
+          "--normal-text": "var(--secondary-foreground)",
           "--normal-border": "var(--border)",
           "--border-radius": "var(--radius)",
         } as React.CSSProperties

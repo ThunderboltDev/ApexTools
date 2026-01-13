@@ -8,44 +8,18 @@ export const ANALYTICS_EVENTS = {
     FAILED: "auth_failed",
     EMAIL_VERIFICATION_RETRY: "email_verification_retry",
   },
-  ONBOARDING: {
-    ORG_CREATED: "organization_created",
-    COMPLETED: "onboarding_completed",
-  },
-  BILLING: {
-    CHECKOUT_STARTED: "checkout_started",
-    CHECKOUT_COMPLETED: "checkout_completed",
-    CHECKOUT_CANCELLED: "checkout_cancelled",
-    CYCLE_TOGGLED: "billing_cycle_toggled",
-    UPGRADE_CLICKED: "upgrade_clicked",
-    DOWNGRADE_CLICKED: "downgrade_clicked",
-    CANCEL_CLICKED: "cancel_clicked",
-  },
-  WIDGET: {
-    LOADED: "widget_loaded",
-    OPENED: "widget_opened",
-    CLOSED: "widget_closed",
-    SETTINGS_UPDATED: "widget_settings_updated",
-  },
-  PRODUCT: {
-    CONVERSATION_STARTED: "conversation_started",
-    MESSAGE_SENT: "message_sent",
-    AI_RESPONSE_RENDERED: "ai_response_rendered",
-    SUGGESTION_CLICKED: "suggestion_clicked",
-    INBOX_VIEWED: "inbox_viewed",
-  },
-  NAVIGATION: {
-    CTA_CLICKED: "cta_clicked",
+  DIRECTORY: {
+    TOOL_CARD_CLICK: "tool_card_click",
+    OUTBOUND_CLICK: "outbound_click",
+    SEARCH_USED: "search_used",
+    FILTER_APPLIED: "filter_applied",
+    CATEGORY_SELECTED: "category_selected",
   },
 } as const;
 
 type EventName =
   | (typeof ANALYTICS_EVENTS.AUTH)[keyof typeof ANALYTICS_EVENTS.AUTH]
-  | (typeof ANALYTICS_EVENTS.ONBOARDING)[keyof typeof ANALYTICS_EVENTS.ONBOARDING]
-  | (typeof ANALYTICS_EVENTS.BILLING)[keyof typeof ANALYTICS_EVENTS.BILLING]
-  | (typeof ANALYTICS_EVENTS.WIDGET)[keyof typeof ANALYTICS_EVENTS.WIDGET]
-  | (typeof ANALYTICS_EVENTS.PRODUCT)[keyof typeof ANALYTICS_EVENTS.PRODUCT]
-  | (typeof ANALYTICS_EVENTS.NAVIGATION)[keyof typeof ANALYTICS_EVENTS.NAVIGATION];
+  | (typeof ANALYTICS_EVENTS.DIRECTORY)[keyof typeof ANALYTICS_EVENTS.DIRECTORY];
 
 interface EventProperties {
   [key: string]: string | number | boolean | undefined;
@@ -100,6 +74,43 @@ export const trackEvent = (name: EventName, properties?: EventProperties) => {
       });
     }
   }
+};
+
+export const trackToolCardClick = (toolSlug: string, toolName: string) => {
+  trackEvent(ANALYTICS_EVENTS.DIRECTORY.TOOL_CARD_CLICK, {
+    tool_slug: toolSlug,
+    tool_name: toolName,
+  });
+};
+
+export const trackOutboundClick = (toolSlug: string, url: string) => {
+  trackEvent(ANALYTICS_EVENTS.DIRECTORY.OUTBOUND_CLICK, {
+    tool_slug: toolSlug,
+    destination_url: url,
+  });
+};
+
+export const trackSearch = (query: string, resultCount?: number) => {
+  trackEvent(ANALYTICS_EVENTS.DIRECTORY.SEARCH_USED, {
+    search_query: query,
+    result_count: resultCount,
+  });
+};
+
+export const trackFilterApplied = (
+  filterType: "pricing" | "category" | "sort",
+  value: string
+) => {
+  trackEvent(ANALYTICS_EVENTS.DIRECTORY.FILTER_APPLIED, {
+    filter_type: filterType,
+    filter_value: value,
+  });
+};
+
+export const trackCategorySelected = (category: string) => {
+  trackEvent(ANALYTICS_EVENTS.DIRECTORY.CATEGORY_SELECTED, {
+    category,
+  });
 };
 
 declare global {

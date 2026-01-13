@@ -1,21 +1,20 @@
 "use client";
 
-import {
-  GridViewIcon,
-  Search01Icon,
-  Tag01Icon,
-} from "@hugeicons/core-free-icons";
+import { GridViewIcon, SearchIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
-import { SubmitToolButton } from "@/components/tool/submit";
-import { Badge } from "@/components/ui/badge";
+import { keepPreviousData } from "@tanstack/react-query";
 import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
+  parseAsInteger,
+  parseAsString,
+  parseAsStringEnum,
+  useQueryStates,
+} from "nuqs";
+import { useEffect, useRef } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
+import { useDebounce } from "use-debounce";
+import { DashboardToolGrid } from "@/components/dashboard/grid";
+import { Field, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import {
   PageContent,
   PageDescription,
@@ -28,32 +27,95 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
+import { trackFilterApplied } from "@/lib/analytics";
 import {
   categories,
+  categoryIcons,
   categoryLabels,
   pricingLabels,
+  pricingModelIcons,
   pricingModels,
-  statusLabels,
+  sortOptions,
+  sortOptionsIcon,
+  sortOptionsLabel,
 } from "@/lib/constants";
-import type { CategoryFilter, PricingModelFilter } from "@/lib/types";
+import type {
+  CategoryFilter,
+  PricingModelFilter,
+  SortOption,
+} from "@/lib/types";
 import { trpc } from "@/trpc/provider";
 
 export default function ToolsPage() {
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("all");
-  const [pricingFilter, setPricingFilter] = useState<PricingModelFilter>("all");
-
-  const { data, isLoading } = trpc.tool.getAll.useQuery({
-    page: 1,
-    limit: 20,
-    category: categoryFilter !== "all" ? categoryFilter : undefined,
-    pricing: pricingFilter !== "all" ? pricingFilter : undefined,
-    search: searchQuery || undefined,
+  const [params, setParams] = useQueryStates({
+    page: parseAsInteger.withDefault(1),
+    search: parseAsString.withDefault(""),
+    pricing: parseAsStringEnum([...pricingModels, "all"]).withDefault("all"),
+    category: parseAsStringEnum([...categories, "all"]).withDefault("all"),
+    sort: parseAsStringEnum([...sortOptions]).withDefault("trending"),
   });
 
-  const tools = data?.tools ?? [];
+  const { page, search, pricing, category, sort } = params;
+
+  const [debouncedSearch] = useDebounce(search, 500);
+
+  useHotkeys(
+    "ctrl+k, command+k",
+    () => {
+      inputRef.current?.focus();
+    },
+    { preventDefault: true }
+  );
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: search
+  useEffect(() => {
+    setParams({ search: debouncedSearch || null, page: 1 });
+  }, [debouncedSearch]);
+
+  const useQueryResults = trpc.tool.getAll.useQuery(
+    {
+      page: 1,
+      limit: 24,
+      search: debouncedSearch || undefined,
+      category: category === "all" ? undefined : category,
+      pricing: pricing === "all" ? undefined : pricing,
+      sort: sort,
+    },
+    {
+      placeholderData: keepPreviousData,
+    }
+  );
+
+  const handleSortChange = (sort: string) => {
+    setParams({ sort: sort as SortOption, page: 1 });
+    trackFilterApplied("sort", sort);
+  };
+
+  const handleCategoryChange = (category: string) => {
+    setParams({ category: category as CategoryFilter, page: 1 });
+    trackFilterApplied("category", category);
+  };
+
+  const handlePricingChange = (pricing: string) => {
+    setParams({ pricing: pricing as PricingModelFilter, page: 1 });
+    trackFilterApplied("pricing", pricing);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setParams({ page: newPage });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleClearFilters = () => {
+    setParams({
+      search: "",
+      page: 1,
+      pricing: "all",
+      category: "all",
+    });
+  };
 
   return (
     <>
@@ -62,111 +124,94 @@ export default function ToolsPage() {
         <PageDescription>Track and edit the tools you publish.</PageDescription>
       </PageHeader>
       <PageContent>
-        <div className="flex flex-wrap flex-row gap-2 mb-6">
-          <InputGroup className="sm:max-w-xs md:max-w-md">
-            <InputGroupInput
-              placeholder="Search by name or description..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <InputGroupAddon align="inline-end">
-              <div className="bg-primary text-primary-foreground flex size-4 items-center justify-center rounded-full">
-                <HugeiconsIcon
-                  icon={Search01Icon}
-                  className="size-4 text-muted-foreground"
-                />
-              </div>
-            </InputGroupAddon>
-          </InputGroup>
-          <Select
-            value="all"
-            onValueChange={(value) =>
-              setCategoryFilter(value as CategoryFilter)
-            }
-          >
-            <SelectTrigger>
-              <HugeiconsIcon icon={GridViewIcon} />
-              Category: {categoryLabels[categoryFilter]}
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              {categories.map((category) => (
-                <SelectItem key={category} value={category}>
-                  {categoryLabels[category]}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select
-            value="all"
-            onValueChange={(value) =>
-              setPricingFilter(value as PricingModelFilter)
-            }
-          >
-            <SelectTrigger>
-              <HugeiconsIcon icon={Tag01Icon} />
-              Pricing: {pricingLabels[pricingFilter]}
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              {pricingModels.map((pricing) => (
-                <SelectItem key={pricing} value={pricing}>
-                  {pricingLabels[pricing]}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="space-y-8">
+          <div className="flex flex-col gap-4 max-w-xl mx-auto">
+            <div className="relative flex-1">
+              <HugeiconsIcon
+                icon={SearchIcon}
+                className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground"
+              />
+              <Input
+                ref={inputRef}
+                value={search}
+                onChange={(e) => setParams({ search: e.target.value })}
+                placeholder="Search tools..."
+                className="pl-9"
+              />
+            </div>
+            <div className="flex flex-row flex-wrap gap-4">
+              <Field className="max-w-[160]">
+                <FieldLabel htmlFor="pricing-filter">Pricing:</FieldLabel>
+                <Select
+                  value={pricing ?? "all"}
+                  onValueChange={handlePricingChange}
+                >
+                  <SelectTrigger id="pricing-filter">
+                    <HugeiconsIcon icon={pricingModelIcons[pricing]} />
+                    {pricingLabels[pricing]}
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">
+                      <HugeiconsIcon icon={GridViewIcon} />
+                      All
+                    </SelectItem>
+                    {pricingModels.map((price) => (
+                      <SelectItem key={price} value={price}>
+                        <HugeiconsIcon icon={pricingModelIcons[price]} />
+                        {pricingLabels[price]}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </Field>
+              <Field className="max-w-[220px]">
+                <FieldLabel htmlFor="category-filter">Category:</FieldLabel>
+                <Select value={category} onValueChange={handleCategoryChange}>
+                  <SelectTrigger id="category-filter">
+                    <HugeiconsIcon icon={categoryIcons[category]} />
+                    {categoryLabels[category]}
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">
+                      <HugeiconsIcon icon={GridViewIcon} />
+                      All
+                    </SelectItem>
+                    {categories.map((category) => (
+                      <SelectItem key={category} value={category}>
+                        <HugeiconsIcon icon={categoryIcons[category]} />
+                        {categoryLabels[category]}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </Field>
+              <Field className="max-w-[160]">
+                <FieldLabel htmlFor="sort-filter">Sort:</FieldLabel>
+                <Select value={sort} onValueChange={handleSortChange}>
+                  <SelectTrigger id="sort-filter">
+                    <HugeiconsIcon icon={sortOptionsIcon[sort]} />
+                    {sortOptionsLabel[sort]}
+                  </SelectTrigger>
+                  <SelectContent>
+                    {sortOptions.map((sortOption) => (
+                      <SelectItem key={sortOption} value={sortOption}>
+                        <HugeiconsIcon icon={sortOptionsIcon[sortOption]} />
+                        {sortOptionsLabel[sortOption]}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </Field>
+            </div>
+          </div>
+
+          <DashboardToolGrid
+            pageParam={page}
+            useQueryResults={useQueryResults}
+            handlePageChange={handlePageChange}
+            handleClearFilters={handleClearFilters}
+          />
         </div>
-
-        {isLoading ? (
-          <div className="grid gap-4 md:grid-cols-2">
-            {[1, 2, 3, 4].map((item) => (
-              <Skeleton key={item} className="h-40 w-full" />
-            ))}
-          </div>
-        ) : tools.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-14">
-            <h4>No tools yet</h4>
-            <p className="text-muted-foreground">
-              Submit your first tool to get started.
-            </p>
-            <SubmitToolButton className="mt-4" />
-          </div>
-        ) : (
-          <div className="grid gap-4 md:grid-cols-2">
-            {tools.map((tool) => (
-              <Link
-                key={tool.id}
-                href={`/tools/${tool.slug}`}
-                className="rounded-lg border border-border bg-secondary p-4 shadow-md"
-              >
-                <div className="flex items-start gap-3">
-                  <Image
-                    src={tool.logo}
-                    alt={`${tool.name}'s Logo`}
-                    width={48}
-                    height={48}
-                    className="rounded-sm aspect-square object-cover"
-                  />
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-base font-semibold">{tool.name}</h3>
-                      <Badge variant="secondary">{categoryLabels[tool.category]}</Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground line-clamp-1">
-                      {tool.tagline}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-4 flex flex-wrap gap-2 text-xs text-muted-foreground">
-                  <Badge variant="outline">{pricingLabels[tool.pricing]}</Badge>
-                  <Badge variant="outline">{statusLabels[tool.status]}</Badge>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
       </PageContent>
     </>
   );

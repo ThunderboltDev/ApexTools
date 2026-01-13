@@ -24,6 +24,9 @@ export async function generateMetadata({
         description: tool.tagline,
         images: [tool.logo],
       },
+      alternates: {
+        canonical: `/tool/${slug}`,
+      },
     };
   } catch {
     return {

@@ -16,7 +16,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { ToolAnalytics } from "@/components/tool/analytics";
+import { ToolAnalytics } from "@/components/dashboard/analytics";
 import {
   AlertDialog,
   AlertDialogAction,

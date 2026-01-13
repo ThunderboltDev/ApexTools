@@ -1,6 +1,4 @@
-import { Suspense } from "react";
-import { DirectoryClient } from "@/components/tool/directory-client";
-import { LoadingScreen } from "@/components/ui/loading-screen";
+import { DirectoryClient } from "@/components/directory-client";
 import type { Category } from "@/lib/types";
 import { HydrateClient, trpc } from "@/trpc/server";
 
@@ -12,14 +10,12 @@ export async function ToolDirectory({ category }: ToolDirectoryProps) {
   void trpc.browse.getAll.prefetch({
     category,
     limit: 24,
-    sort: "latest",
+    sort: "hot",
   });
 
   return (
     <HydrateClient>
-      <Suspense fallback={<LoadingScreen />}>
-        <DirectoryClient category={category} />
-      </Suspense>
+      <DirectoryClient category={category} />
     </HydrateClient>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { getVisitorId } from "@/lib/visitor";
+import { getVisitorId } from "@/lib/store/visitor-store";
 import { trpc } from "@/trpc/provider";
 
 export function ImpressionTracker({ toolId }: { toolId: string }) {

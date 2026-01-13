@@ -5,7 +5,7 @@ import { type PropsWithChildren, useEffect } from "react";
 import { Navbar } from "@/components/app/navbar";
 import { LoadingScreen } from "@/components/ui/loading-screen";
 
-import { useAuth } from "@/lib/auth-context";
+import { useAuth } from "@/lib/auth/context";
 
 export default function DashboardLayout({
   children,
