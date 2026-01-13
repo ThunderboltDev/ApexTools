@@ -1,6 +1,8 @@
+import { Suspense } from "react";
 import { Footer } from "@/components/app/footer";
 import { Navbar } from "@/components/app/navbar";
 import { ToolDirectory } from "@/components/directory";
+import { LoadingScreen } from "@/components/ui/loading-screen";
 
 export default async function Home() {
   return (
@@ -14,7 +16,9 @@ export default async function Home() {
           the future, updated in real-time.
         </p>
       </div>
-      <ToolDirectory />
+      <Suspense fallback={<LoadingScreen />}>
+        <ToolDirectory />
+      </Suspense>
       <Footer />
     </Navbar>
   );

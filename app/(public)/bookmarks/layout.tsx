@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import type { PropsWithChildren } from "react";
+import { type PropsWithChildren, Suspense } from "react";
 import { Footer } from "@/components/app/footer";
+import { LoadingScreen } from "@/components/ui/loading-screen";
 import {
   PageContent,
   PageDescription,
@@ -29,7 +30,9 @@ export default function BookmarksLayout({ children }: PropsWithChildren) {
           Tools you&apos;ve saved for later. Stored locally in your browser.
         </PageDescription>
       </PageHeader>
-      <PageContent>{children}</PageContent>
+      <Suspense fallback={<LoadingScreen />}>
+        <PageContent>{children}</PageContent>
+      </Suspense>
       <Footer />
     </>
   );
