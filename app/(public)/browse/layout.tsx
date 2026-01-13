@@ -4,6 +4,8 @@ import { Footer } from "@/components/app/footer";
 import { LoadingScreen } from "@/components/ui/loading-screen";
 import { HydrateClient, trpc } from "@/trpc/server";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Browse AI Tools",
   description:

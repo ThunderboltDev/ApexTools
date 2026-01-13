@@ -4,6 +4,8 @@ import { Navbar } from "@/components/app/navbar";
 import { ToolDirectory } from "@/components/directory";
 import { LoadingScreen } from "@/components/ui/loading-screen";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   return (
     <Navbar>
