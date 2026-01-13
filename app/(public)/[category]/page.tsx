@@ -10,6 +10,8 @@ import { categoryContent } from "@/lib/category-data";
 import { categories } from "@/lib/constants";
 import type { Category } from "@/lib/types";
 
+export const dynamic = "force-dynamic";
+
 interface PageProps {
   params: Promise<{ category: string }>;
 }
