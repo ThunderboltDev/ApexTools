@@ -42,7 +42,7 @@ import type {
 } from "@/lib/types";
 import { trpc } from "@/trpc/provider";
 
-export function BrowsePage() {
+export default function BrowsePage() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [params, setParams] = useQueryStates({
