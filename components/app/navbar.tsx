@@ -14,7 +14,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { type PropsWithChildren, useEffect, useState } from "react";
 import { SubmitToolButton } from "@/components/tool/submit";
-import { Button } from "@/components/ui/button";
+import { LinkButton } from "@/components/ui/link-button";
 import { PageWrapper } from "@/components/ui/page";
 import {
   Sidebar,
@@ -33,6 +33,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { useAuth } from "@/lib/auth/context";
+import { normalizeCallbackUrl } from "@/lib/url";
 
 const publicItems = [
   {
@@ -71,7 +72,9 @@ interface NavbarProps extends Readonly<PropsWithChildren> {
 
 export function Navbar({ children }: NavbarProps) {
   const pathname = usePathname();
+
   const { user, isLoading } = useAuth();
+
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -187,10 +190,13 @@ export function Navbar({ children }: NavbarProps) {
           {mounted && !isLoading && user ? (
             <SubmitToolButton />
           ) : (
-            <Button theme="accent">
+            <LinkButton
+              theme="accent"
+              href={`/auth/callbackUrl=${normalizeCallbackUrl(pathname)}`}
+            >
               <HugeiconsIcon icon={UserIcon} />
               Sign In
-            </Button>
+            </LinkButton>
           )}
         </header>
         <main>
