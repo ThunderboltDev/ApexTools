@@ -20,12 +20,17 @@ export const categoryContent: Record<Category, CategoryData> = {
       {
         question: "What are AI productivity tools?",
         answer:
-          "AI productivity tools use artificial intelligence to help you work faster and smarter. They can automate repetitive tasks, summarize documents, schedule meetings, and more.",
+          "AI productivity tools are apps that use artificial intelligence to help you do your work faster, smarter, or with less effort.",
       },
       {
-        question: "How can AI help with time management?",
+        question: "How is AI used in productivity?",
         answer:
-          "AI tools can analyze your schedule, prioritize tasks, and even block out focus time automatically, helping you make the most of your day.",
+          "AI improves productivity by automating repetitive work, analyzing data, generating content, and assisting with decision-making in real time.",
+      },
+      {
+        question: "Is ChatGPT a productivity tool?",
+        answer:
+          "Yes, ChatGPT is a productivity tool that helps with writing, coding, research, brainstorming, and task automation.",
       },
     ],
   },
@@ -38,14 +43,19 @@ export const categoryContent: Record<Category, CategoryData> = {
       "Transform your marketing strategy with AI-powered content creation, analytics, and automation.",
     faqs: [
       {
-        question: "Can AI replace human marketers?",
+        question: "Is ChatGPT good at marketing?",
         answer:
-          "AI is a powerful assistant that can handle data analysis and content generation, but human creativity and strategy are still essential for successful marketing.",
+          "Yes, ChatGPT is effective for marketing tasks like content creation, ad copywriting, SEO ideas, and campaign planning.",
       },
       {
-        question: "What is the best AI for copywriting?",
+        question: "How can AI be used for marketing?",
         answer:
-          "Tools like Jasper and Copy.ai are popular for generating marketing copy, while ChatGPT and Claude are excellent for brainstorming and drafting.",
+          "AI is used in marketing for content generation, audience targeting, prediction, data analysis, personalization, analytics, chatbots, and ad optimization.",
+      },
+      {
+        question: "Which AI tool is best for sales?",
+        answer:
+          "Popular AI sales tools include HubSpot AI, Salesforce Einstein, Apollo AI, and Gong for lead generation and deal insights.",
       },
     ],
   },
@@ -78,7 +88,7 @@ export const categoryContent: Record<Category, CategoryData> = {
       "Turn text into beautiful images and art with these leading AI generation tools.",
     faqs: [
       {
-        question: "How do AI image generators work?",
+        question: "Which is the best AI image generator?",
         answer:
           "They use diffusion models to interpret text prompts and gradually denoise random static into a coherent image matching your description.",
       },
@@ -98,14 +108,19 @@ export const categoryContent: Record<Category, CategoryData> = {
       "Accelerate your development workflow with intelligent code completion and debugging tools.",
     faqs: [
       {
-        question: "Is AI code secure?",
+        question: "Which is the best AI agent for coding?",
         answer:
-          "AI coding assistants are generally safe, but you should review generated code for security vulnerabilities and avoid pasting sensitive keys or secrets into them.",
+          "No single AI is best at all coding tasks, but ChatGPT, Claude, and Copilot excel at code generation, debugging, and refactoring.",
       },
       {
-        question: "What is the best AI for Python?",
+        question: "Which AI does coding best?",
         answer:
           "GitHub Copilot and Cursor are highly rated for Python development, offering context-aware suggestions and refactoring capabilities.",
+      },
+      {
+        question: "Which is the most powerful AI agent?",
+        answer:
+          "The most powerful AI agents combine reasoning, tools, and automation, such as ChatGPT, Claude, Gemini, and Auto-GPT.",
       },
     ],
   },
@@ -118,14 +133,24 @@ export const categoryContent: Record<Category, CategoryData> = {
       "Create engaging videos from text or images in minutes with these powerful AI video tools.",
     faqs: [
       {
-        question: "Can AI generate realistic videos?",
+        question: "Who is the best AI video generator?",
         answer:
-          "Yes, tools like Sora, Runway, and Pika are rapidly advancing and can generate increasingly realistic video clips from text prompts.",
+          "Top AI video generators include Runway, Pika, Synthesia, and OpenAI Sora, each suited for different video styles and use cases.",
       },
       {
-        question: "How long does it take to generate an AI video?",
+        question: "Which AI is better for video?",
         answer:
-          "Generation time varies by tool and complexity, but most short clips can be generated in a few minutes.",
+          "The best AI for video depends on the task, with Runway and Pika for creative videos and Synthesia for professional explainer content.",
+      },
+      {
+        question: "Which AI is free to generate video?",
+        answer:
+          "Some AI video tools like Pika, Runway, and CapCut offer free plans with limited features or watermarks.",
+      },
+      {
+        question: "How can I AI a video?",
+        answer:
+          "You can AI-generate a video by entering a text prompt, uploading media, and letting an AI video tool create or enhance the video.",
       },
     ],
   },
@@ -138,9 +163,24 @@ export const categoryContent: Record<Category, CategoryData> = {
       "Generate realistic voiceovers, clean up recordings, and transcribe audio with ease.",
     faqs: [
       {
-        question: "What is AI voice cloning?",
+        question: "What are the best AI audio generators?",
         answer:
-          "AI voice cloning analyzes a sample of a person's voice to create a synthetic version that can speak any text in that person's tone.",
+          "Popular AI audio generators include ElevenLabs, PlayHT, Murf AI, and Adobe Enhance for voice and audio creation.",
+      },
+      {
+        question: "Is there an AI that can create audio?",
+        answer:
+          "Yes, AI tools can generate audio such as voiceovers, music, and sound effects from text or prompts.",
+      },
+      {
+        question: "Can ChatGPT do voice AI?",
+        answer:
+          "ChatGPT supports voice-based interactions and can work with AI voice models for speech generation and conversations.",
+      },
+      {
+        question: "Which AI voice is most realistic?",
+        answer:
+          "ElevenLabs is widely considered one of the most realistic AI voice generators available today.",
       },
     ],
   },
@@ -153,9 +193,19 @@ export const categoryContent: Record<Category, CategoryData> = {
       "Create royalty-free music and soundscapes for your projects using artificial intelligence.",
     faqs: [
       {
-        question: "Is AI music copyright free?",
+        question: "What is the best AI music generator?",
         answer:
-          "It depends on the platform. Many AI music generators offer royalty-free licenses for generated tracks, but always verify the terms.",
+          "Top AI music generators include Suno, Udio, AIVA, and Soundraw, known for high-quality AI-generated music.",
+      },
+      {
+        question: "Can AI generate music for a song?",
+        answer:
+          "Yes, AI can generate original music for songs, including melodies, instrumentals, and full tracks.",
+      },
+      {
+        question: "Which AI music app is free?",
+        answer:
+          "AI music apps like Suno, Udio, and BandLab offer free plans with limited features.",
       },
     ],
   },
@@ -168,9 +218,19 @@ export const categoryContent: Record<Category, CategoryData> = {
       "Overcome writer's block and craft compelling content with these advanced AI writing tools.",
     faqs: [
       {
-        question: "Can AI write a whole book?",
+        question: "Which AI content generator is best?",
         answer:
-          "AI can assist significantly with plotting, character development, and drafting chapters, but writing a cohesive book usually requires human guidance and editing.",
+          "Top AI content generators include ChatGPT, Jasper, Copy.ai, and Writesonic for blogs, ads, and marketing content.",
+      },
+      {
+        question: "Can I use AI for content writing?",
+        answer:
+          "Yes, AI can be used for content writing such as blogs, social posts, product descriptions, and emails.",
+      },
+      {
+        question: "What is the most advanced AI for writing content?",
+        answer:
+          "ChatGPT and Claude are considered among the most advanced AI tools for high-quality content writing.",
       },
     ],
   },
@@ -183,9 +243,19 @@ export const categoryContent: Record<Category, CategoryData> = {
       "Analyze documents, find sources, and synthesize information faster than ever before.",
     faqs: [
       {
-        question: "Can AI summarize research papers?",
+        question: "Which is the best research AI?",
         answer:
-          "Yes, tools like Consensus and Elicit are designed specifically to find and summarize academic papers and answer research questions.",
+          "Leading research AI tools include Perplexity, ChatGPT, Elicit, and Semantic Scholar for finding and summarizing information.",
+      },
+      {
+        question: "Who is the most famous AI researcher?",
+        answer:
+          "Some of the most famous AI researchers include Geoffrey Hinton, Yann LeCun, Yoshua Bengio, and Andrew Ng.",
+      },
+      {
+        question: "Is there an AI that does research?",
+        answer:
+          "Yes, research AI tools can search papers, analyze data, and summarize findings to support academic and professional research.",
       },
     ],
   },
