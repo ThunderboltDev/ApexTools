@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/app/footer";
-import { Navbar } from "@/components/app/navbar";
 import { ToolDirectory } from "@/components/directory";
 import { FAQ } from "@/components/tool/faq";
 import { categoryContent } from "@/lib/category-data";
@@ -53,7 +52,7 @@ export default async function CategoryPage({ params }: PageProps) {
   const content = categoryContent[category as Category];
 
   return (
-    <Navbar>
+    <>
       <div className="mt-4 mb-8 space-y-3">
         <h1 className="md:text-5xl text-center text-balance">
           {content.headline}
@@ -65,6 +64,6 @@ export default async function CategoryPage({ params }: PageProps) {
       <ToolDirectory category={category as Category} />
       {content.faqs.length > 0 && <FAQ items={content.faqs} />}
       <Footer />
-    </Navbar>
+    </>
   );
 }

@@ -115,8 +115,8 @@ export default function BrowsePage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col gap-4 max-w-xl mx-auto">
-        <div className="relative flex-1">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
+        <div className="relative grow">
           <HugeiconsIcon
             icon={SearchIcon}
             className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground"
@@ -129,8 +129,8 @@ export default function BrowsePage() {
             className="pl-9"
           />
         </div>
-        <div className="flex flex-row flex-wrap gap-4">
-          <Field className="max-w-[160]">
+        <div className="flex flex-row flex-wrap lg:flex-nowrap gap-4">
+          <Field className="min-w-[160] max-w-0">
             <FieldLabel htmlFor="pricing-filter">Pricing:</FieldLabel>
             <Select
               value={pricing ?? "all"}
@@ -154,7 +154,7 @@ export default function BrowsePage() {
               </SelectContent>
             </Select>
           </Field>
-          <Field className="max-w-[220px]">
+          <Field className="min-w-[220px] max-w-0">
             <FieldLabel htmlFor="category-filter">Category:</FieldLabel>
             <Select value={category} onValueChange={handleCategoryChange}>
               <SelectTrigger id="category-filter">
@@ -175,7 +175,7 @@ export default function BrowsePage() {
               </SelectContent>
             </Select>
           </Field>
-          <Field className="max-w-[160]">
+          <Field className="min-w-[160px] max-w-0">
             <FieldLabel htmlFor="sort-filter">Sort:</FieldLabel>
             <Select value={sort} onValueChange={handleSortChange}>
               <SelectTrigger id="sort-filter">
@@ -194,7 +194,6 @@ export default function BrowsePage() {
           </Field>
         </div>
       </div>
-
       <ToolGrid
         pageParam={page}
         useQueryResults={useQueryResults}

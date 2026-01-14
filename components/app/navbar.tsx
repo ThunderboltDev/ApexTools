@@ -12,7 +12,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import type { PropsWithChildren } from "react";
+import { type PropsWithChildren, useEffect, useState } from "react";
 import { SubmitToolButton } from "@/components/tool/submit";
 import { Button } from "@/components/ui/button";
 import { PageWrapper } from "@/components/ui/page";
@@ -72,6 +72,11 @@ interface NavbarProps extends Readonly<PropsWithChildren> {
 export function Navbar({ children }: NavbarProps) {
   const pathname = usePathname();
   const { user, isLoading } = useAuth();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <SidebarProvider>
@@ -136,7 +141,7 @@ export function Navbar({ children }: NavbarProps) {
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-        {!isLoading && user && (
+        {mounted && !isLoading && user && (
           <SidebarFooter>
             <SidebarMenu>
               <SidebarMenuItem>
@@ -179,7 +184,7 @@ export function Navbar({ children }: NavbarProps) {
       <SidebarInset>
         <header className="flex sticky z-25 top-0 h-14 shrink-0 items-center justify-between gap-2 bg-background/50 backdrop-blur-md border-b px-3">
           <SidebarTrigger />
-          {!isLoading && user ? (
+          {mounted && !isLoading && user ? (
             <SubmitToolButton />
           ) : (
             <Button theme="accent">Sign In</Button>

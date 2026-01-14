@@ -32,10 +32,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { usePreferences } from "@/lib/store/preferences";
 import { cn } from "@/lib/utils";
 
-const SIDEBAR_COOKIE_NAME = "sidebar_state";
-const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 const SIDEBAR_WIDTH = "15rem";
 const SIDEBAR_WIDTH_ICON = "3rem";
 const SIDEBAR_KEYBOARD_SHORTCUT = "b";
@@ -76,24 +75,28 @@ function SidebarProvider({
 }) {
   const isMobile = useIsMobile();
   const [openMobile, setOpenMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  const { sidebarOpen, setSidebarOpen } = usePreferences();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // This is the internal state of the sidebar.
   // We use openProp and setOpenProp for control from outside the component.
-  const [_open, _setOpen] = useState(defaultOpen);
-  const open = openProp ?? _open;
+  const open = openProp ?? (mounted ? sidebarOpen : defaultOpen);
+
   const setOpen = useCallback(
     (value: boolean | ((value: boolean) => boolean)) => {
       const openState = typeof value === "function" ? value(open) : value;
       if (setOpenProp) {
         setOpenProp(openState);
       } else {
-        _setOpen(openState);
+        setSidebarOpen(openState);
       }
-
-      // biome-ignore lint/suspicious/noDocumentCookie: safe manual cookie set
-      document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
     },
-    [setOpenProp, open]
+    [setOpenProp, open, setSidebarOpen]
   );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: sidebar
