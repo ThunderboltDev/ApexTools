@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { LoadingScreen } from "@/components/ui/loading-screen";
-import { AuthForm } from "./auth-form";
+import { auth } from "@/lib/auth";
+import { normalizeCallbackUrl } from "@/lib/url";
+import { AuthForm } from "./client";
 
 export const metadata: Metadata = {
   title: "Sign In",
@@ -9,7 +13,21 @@ export const metadata: Metadata = {
     "Sign in to your account on ApexTools using Google, GitHub or Email.",
 };
 
-export default function AuthPage() {
+interface AuthPageProps {
+  searchParams: { callbackUrl?: string };
+}
+
+export default async function AuthPage({ searchParams }: AuthPageProps) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (session) {
+    redirect(
+      `/auth?callbackUrl=${normalizeCallbackUrl(searchParams.callbackUrl)}`
+    );
+  }
+
   return (
     <Suspense fallback={<LoadingScreen />}>
       <AuthForm />

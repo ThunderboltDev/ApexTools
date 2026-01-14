@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import { LoadingScreen } from "@/components/ui/loading-screen";
-import { LogoutForm } from "./logout";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
+import { normalizeCallbackUrl } from "@/lib/url";
 
 export const metadata: Metadata = {
   title: "Sign Out",
@@ -9,12 +10,15 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function LogoutPage() {
-  return (
-    <Suspense fallback={<LoadingScreen />}>
-      <main>
-        <LogoutForm />
-      </main>
-    </Suspense>
+interface LogoutPageProps {
+  searchParams: { callbackUrl?: string };
+}
+export default async function LogoutPage({ searchParams }: LogoutPageProps) {
+  await auth.api.signOut({
+    headers: await headers(),
+  });
+
+  redirect(
+    `/auth?callbackUrl=${normalizeCallbackUrl(searchParams.callbackUrl)}`
   );
 }

@@ -83,6 +83,8 @@ export function DirectoryClient({ category }: DirectoryClientProps) {
     }
   );
 
+  useEffect(() => console.log(useQueryResults), [useQueryResults]);
+
   const handleSort = (sort: SortOption) => {
     setParams({ sort, page: 1 });
     trackFilterApplied("sort", sort);

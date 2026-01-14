@@ -1,28 +1,23 @@
-"use client";
-
-import { usePathname, useRouter } from "next/navigation";
-import { type PropsWithChildren, useEffect } from "react";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import type { PropsWithChildren } from "react";
 import { Navbar } from "@/components/app/navbar";
-import { LoadingScreen } from "@/components/ui/loading-screen";
+import { auth } from "@/lib/auth";
+import { normalizeCallbackUrl } from "@/lib/url";
 
-import { useAuth } from "@/lib/auth/context";
-
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: Readonly<PropsWithChildren>) {
-  const { user, isLoading } = useAuth();
+  const headersList = await headers();
 
-  const router = useRouter();
-  const pathname = usePathname();
+  const session = await auth.api.getSession({
+    headers: headersList,
+  });
 
-  useEffect(() => {
-    if (!isLoading && !user) {
-      router.push(`/auth?callbackUrl=${encodeURIComponent(pathname)}`);
-    }
-  }, [user, isLoading, router, pathname]);
-
-  if (isLoading || !user) {
-    return <LoadingScreen />;
+  if (!session) {
+    redirect(
+      `/auth?callbackUrl=${normalizeCallbackUrl(headersList.get("x-pathname"))}`
+    );
   }
 
   return <Navbar>{children}</Navbar>;

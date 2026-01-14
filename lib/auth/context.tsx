@@ -18,6 +18,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
   const { data, isLoading } = trpc.user.getSession.useQuery(undefined, {
     staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    retry: false,
   });
 
   const refetch = async () => {
