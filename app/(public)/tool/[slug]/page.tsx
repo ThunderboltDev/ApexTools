@@ -1,6 +1,10 @@
 "use client";
 
-import { LinkSquare02Icon, Tag01Icon } from "@hugeicons/core-free-icons";
+import {
+  ArrowRight02Icon,
+  LinkSquare02Icon,
+  Tag01Icon,
+} from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
 import { BookmarkButton } from "@/components/tool/bookmark";
@@ -50,7 +54,7 @@ export default function ToolPage() {
 
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <UpvoteButton tool={tool} />
+          <UpvoteButton className="hover:bg-secondary" tool={tool} />
           <BookmarkButton slug={tool.slug} />
         </div>
         <LinkButton
@@ -107,10 +111,14 @@ export default function ToolPage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 bg-muted/30 rounded-2xl border border-dashed">
+          <div className="text-center py-12 space-y-4">
             <p className="text-muted-foreground">
               No similar tools found in this category yet.
             </p>
+            <LinkButton href="/submit" theme="accent">
+              Be the first to add one
+              <HugeiconsIcon icon={ArrowRight02Icon} />
+            </LinkButton>
           </div>
         )}
       </div>

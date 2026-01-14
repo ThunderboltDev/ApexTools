@@ -10,6 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { BookmarkButton } from "@/components/tool/bookmark";
 import { CategoryBadge } from "@/components/tool/category";
+import { ImpressionTracker } from "@/components/tool/impression-tracker";
 import { UpvoteButton } from "@/components/tool/upvote";
 import {
   Card,
@@ -23,15 +24,25 @@ import { LinkButton } from "@/components/ui/link-button";
 import { trackOutboundClick, trackToolCardClick } from "@/lib/analytics";
 import { HOT_THRESHOLD } from "@/lib/constants";
 import { isNew } from "@/lib/date";
+import { getVisitorId } from "@/lib/store/visitor";
 import type { ToolWithUpvoteStatus } from "@/lib/types";
+import { trpc } from "@/trpc/provider";
 
 interface ToolCardProps {
   tool: ToolWithUpvoteStatus;
 }
 
 export function ToolCard({ tool }: ToolCardProps) {
+  const { mutate: incrementVisit } = trpc.browse.incrementVisit.useMutation();
+
+  const handleVisit = () => {
+    trackOutboundClick(tool.slug, tool.url);
+    incrementVisit({ toolId: tool.id, visitorId: getVisitorId() });
+  };
+
   return (
     <Card className="hover:-translate-y-1 transition-transform duration-200 ease-out relative gap-3 shadow-md hover:shadow-lg">
+      <ImpressionTracker toolId={tool.id} />
       {tool.score > HOT_THRESHOLD ? (
         <div className="absolute top-3 right-3 flex items-center gap-1.5 rounded-full bg-orange/20 px-2 py-0.5 text-xs font-medium text-orange-foreground border border-orange/30">
           <HugeiconsIcon icon={Fire03Icon} className="size-3" />
@@ -85,7 +96,7 @@ export function ToolCard({ tool }: ToolCardProps) {
           href={tool.url}
           rel="noopener noreferrer"
           target="_blank"
-          onClick={() => trackOutboundClick(tool.slug, tool.url)}
+          onClick={handleVisit}
         >
           Visit <HugeiconsIcon icon={LinkSquare02Icon} />
         </LinkButton>

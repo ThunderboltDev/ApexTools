@@ -1,4 +1,4 @@
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, gte } from "drizzle-orm";
 import { db } from "@/db";
 import { toolAnalyticsEventsTable } from "@/db/schema";
 import { getToday } from "@/lib/date";
@@ -35,7 +35,7 @@ export async function insertEvent({
         eq(toolAnalyticsEventsTable.toolId, toolId),
         eq(toolAnalyticsEventsTable.visitorId, visitorId),
         eq(toolAnalyticsEventsTable.type, type),
-        sql`${toolAnalyticsEventsTable.createdAt} >= ${today}`
+        gte(toolAnalyticsEventsTable.createdAt, today)
       )
     )
     .limit(1);
