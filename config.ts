@@ -1,5 +1,7 @@
 export const isDev = process.env.NODE_ENV === "development";
-export const url = isDev ? "http://localhost:3000" : "https://apextools.site";
+export const url = isDev
+  ? "http://localhost:3000"
+  : "https://www.apextools.site";
 
 export const config = {
   name: "ApexTools",
