@@ -192,7 +192,7 @@ export function Navbar({ children }: NavbarProps) {
           ) : (
             <LinkButton
               theme="accent"
-              href={`/auth/callbackUrl=${normalizeCallbackUrl(pathname)}`}
+              href={`/auth?callbackUrl=${normalizeCallbackUrl(pathname)}`}
             >
               <HugeiconsIcon icon={UserIcon} />
               Sign In
