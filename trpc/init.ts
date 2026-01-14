@@ -2,7 +2,6 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { headers } from "next/headers";
-import { cache } from "react";
 import superjson from "superjson";
 import { auth } from "@/lib/auth";
 import type { Session, User } from "@/lib/types";
@@ -14,8 +13,9 @@ interface Context {
   user: User | null;
 }
 
-export const createTRPCContext = cache(async () => {
+export async function createTRPCContext() {
   const headersList = await headers();
+
   try {
     const res = await auth.api.getSession({
       headers: headersList,
@@ -43,7 +43,7 @@ export const createTRPCContext = cache(async () => {
     session: null,
     user: null,
   };
-});
+}
 
 export function createRateLimit(
   max: number,
