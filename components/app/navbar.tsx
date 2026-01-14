@@ -187,7 +187,10 @@ export function Navbar({ children }: NavbarProps) {
           {mounted && !isLoading && user ? (
             <SubmitToolButton />
           ) : (
-            <Button theme="accent">Sign In</Button>
+            <Button theme="accent">
+              <HugeiconsIcon icon={UserIcon} />
+              Sign In
+            </Button>
           )}
         </header>
         <main>
