@@ -51,6 +51,7 @@
     "react-dropzone": "^14.3.8",
     "react-hook-form": "^7.69.0",
     "react-hotkeys-hook": "^5.2.1",
+    "react-use": "^17.6.0",
     "recharts": "2.15.4",
     "resend": "^6.6.0",
     "server-only": "^0.0.1",

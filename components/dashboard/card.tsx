@@ -47,8 +47,8 @@ export function DashboardToolCard({ tool }: DashboardToolCardProps) {
         </div>
       </div>
       <div className="mt-4 flex flex-wrap gap-2 text-xs text-muted-foreground">
-        <Badge variant="outline">{categoryLabels[tool.category]}</Badge>
-        <Badge variant="outline">{pricingLabels[tool.pricing]}</Badge>
+        <Badge variant="secondary">{categoryLabels[tool.category]}</Badge>
+        <Badge variant="secondary">{pricingLabels[tool.pricing]}</Badge>
         {/* <Badge variant="outline">{statusLabels[tool.status]}</Badge> */}
       </div>
     </Link>

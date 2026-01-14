@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 
 interface BookmarkState {
   slugs: Set<string>;
+  hasHydrated: boolean;
   isBookmarked: (slug: string) => boolean;
   toggle: (slug: string) => void;
   add: (slug: string) => void;
@@ -14,6 +15,7 @@ export const useBookmarkStore = create<BookmarkState>()(
   persist(
     (set, get) => ({
       slugs: new Set(),
+      hasHydrated: false,
 
       isBookmarked: (slug) => get().slugs.has(slug),
 
@@ -40,24 +42,32 @@ export const useBookmarkStore = create<BookmarkState>()(
     }),
     {
       name: "tool-bookmarks",
+
+      onRehydrateStorage: () => (state) => {
+        if (state) state.hasHydrated = true;
+      },
+
       storage: {
         getItem: (key) => {
           const value = localStorage.getItem(key);
           if (!value) return null;
+
           const parsed = JSON.parse(value);
           parsed.state.slugs = new Set(parsed.state.slugs);
           return parsed;
         },
 
         setItem: (key, value) => {
-          const serialized = {
-            ...value,
-            state: {
-              ...value.state,
-              slugs: Array.from(value.state.slugs),
-            },
-          };
-          localStorage.setItem(key, JSON.stringify(serialized));
+          localStorage.setItem(
+            key,
+            JSON.stringify({
+              ...value,
+              state: {
+                ...value.state,
+                slugs: Array.from(value.state.slugs),
+              },
+            })
+          );
         },
 
         removeItem: (key) => localStorage.removeItem(key),

@@ -9,6 +9,7 @@ import { useAuth } from "@/lib/auth/context";
 import type { ToolWithUpvoteStatus } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/provider";
+import { normalizeCallbackUrl } from "@/lib/url";
 
 interface UpvoteButtonProps {
   tool: ToolWithUpvoteStatus;
@@ -33,7 +34,7 @@ export function UpvoteButton({ tool, className }: UpvoteButtonProps) {
 
   const handleUpvote = useCallback(() => {
     if (!user) {
-      router.push(`/auth?callbackUrl=${encodeURIComponent(pathname)}`);
+      router.push(`/auth?callbackUrl=${normalizeCallbackUrl(pathname)}`);
     } else {
       setUpvotes((count) => count + (isUpvoted ? -1 : 1));
       setIsUpvoted((v) => !v);
@@ -41,14 +42,16 @@ export function UpvoteButton({ tool, className }: UpvoteButtonProps) {
     }
   }, [tool.id, isUpvoted, upvoteTool, user, pathname, router]);
 
+  if (isLoading) return null;
+
   return (
     <Button
       theme="default"
       variant="ghost"
       onClick={handleUpvote}
-      disabled={isLoading}
+      disabled={!user}
       className={cn(
-        "text-secondary-foreground [&>svg]:!size-5.5 !pl-2.5 !pr-3 !gap-1",
+        "text-secondary-foreground hover:bg-secondary [&>svg]:!size-5.5 !pl-2.5 !pr-3 !gap-1",
         {
           "[&>svg]:fill-accent text-accent hover:text-accent": isUpvoted,
         },

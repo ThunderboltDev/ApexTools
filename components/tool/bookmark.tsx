@@ -11,8 +11,11 @@ interface BookmarkButtonProps {
 }
 
 export function BookmarkButton({ slug }: BookmarkButtonProps) {
+  const hasHydrated = useBookmarkStore((s) => s.hasHydrated);
   const isBookmarked = useBookmarkStore((state) => state.isBookmarked(slug));
   const toggle = useBookmarkStore((state) => state.toggle);
+
+  if (!hasHydrated) return null;
 
   return (
     <Button

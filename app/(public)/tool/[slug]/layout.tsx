@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { PropsWithChildren } from "react";
-import { ToolProvider } from "@/app/(public)/tool/[slug]/tool-context";
+import { ToolProvider } from "@/components/tool/tool-context";
 import { trpc } from "@/trpc/server";
 
 interface ToolLayoutProps {

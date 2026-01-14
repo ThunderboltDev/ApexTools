@@ -194,7 +194,7 @@ export function Navbar({ children }: NavbarProps) {
           )}
         </header>
         <main>
-          <PageWrapper>{children}</PageWrapper>
+          <PageWrapper className="relative">{children}</PageWrapper>
         </main>
       </SidebarInset>
     </SidebarProvider>
