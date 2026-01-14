@@ -57,4 +57,9 @@ export const auth = betterAuth({
   onAPIError: {
     errorURL: "/auth",
   },
+  trustedOrigins: [
+    "http://localhost:3000",
+    "https://apextools.site",
+    "https://www.apextools.site",
+  ],
 });
