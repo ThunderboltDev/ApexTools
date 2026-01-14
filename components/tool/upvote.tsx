@@ -7,9 +7,9 @@ import { useCallback, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth/context";
 import type { ToolWithUpvoteStatus } from "@/lib/types";
+import { normalizeCallbackUrl } from "@/lib/url";
 import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/provider";
-import { normalizeCallbackUrl } from "@/lib/url";
 
 interface UpvoteButtonProps {
   tool: ToolWithUpvoteStatus;
