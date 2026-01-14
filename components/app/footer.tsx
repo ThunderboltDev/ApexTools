@@ -7,9 +7,9 @@ import { categories, categoryLabels } from "@/lib/constants";
 export function Footer() {
   return (
     <footer className="border-t mt-12 pt-12 md:pt-16 px-4 md:px-8">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-        <div className="col-span-2 md:col-span-1">
-          <Link href="/" className="text-xl font-bold">
+      <div className="grid grid-cols-2 gap-8 mb-12">
+        <div className="col-span-2">
+          <Link href="/" className="text-2xl font-bold">
             ApexTools
           </Link>
           <p className="mt-4 text-sm text-muted-foreground">
@@ -21,7 +21,7 @@ export function Footer() {
         <div>
           <h3 className="font-semibold mb-4">Categories</h3>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            {categories.slice(0, 5).map((category) => (
+            {categories.map((category) => (
               <li key={category}>
                 <Link
                   href={`/${category}`}
@@ -33,23 +33,6 @@ export function Footer() {
             ))}
           </ul>
         </div>
-
-        <div>
-          <h3 className="font-semibold mb-4">More Categories</h3>
-          <ul className="space-y-2 text-sm text-muted-foreground">
-            {categories.slice(5).map((category) => (
-              <li key={category}>
-                <Link
-                  href={`/${category}`}
-                  className="hover:text-foreground transition-colors"
-                >
-                  {categoryLabels[category]}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
         <div>
           <h3 className="font-semibold mb-4">Legal</h3>
           <ul className="space-y-2 text-sm text-muted-foreground">
