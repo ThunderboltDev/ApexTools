@@ -47,7 +47,10 @@ export function AuthForm() {
   const router = useRouter();
   const params = useSearchParams();
 
-  const callbackUrl = normalizeCallbackUrl(params.get("callbackUrl"));
+  const callbackUrl = decodeURIComponent(
+    normalizeCallbackUrl(params.get("callbackUrl"))
+  );
+
   const email = params.get("email") ?? "";
   const errorCode = params.get("error");
 
