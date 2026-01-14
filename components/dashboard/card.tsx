@@ -3,12 +3,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import {
-  categoryLabels,
-  HOT_THRESHOLD,
-  pricingLabels,
-  statusLabels,
-} from "@/lib/constants";
+import { categoryLabels, HOT_THRESHOLD, pricingLabels } from "@/lib/constants";
 import { isNew } from "@/lib/date";
 import type { Tool } from "@/lib/types";
 
@@ -54,7 +49,7 @@ export function DashboardToolCard({ tool }: DashboardToolCardProps) {
       <div className="mt-4 flex flex-wrap gap-2 text-xs text-muted-foreground">
         <Badge variant="outline">{categoryLabels[tool.category]}</Badge>
         <Badge variant="outline">{pricingLabels[tool.pricing]}</Badge>
-        <Badge variant="outline">{statusLabels[tool.status]}</Badge>
+        {/* <Badge variant="outline">{statusLabels[tool.status]}</Badge> */}
       </div>
     </Link>
   );
