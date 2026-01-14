@@ -9,6 +9,8 @@ import {
   PageTitle,
 } from "@/components/ui/page";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Bookmarks",
   description: "View and manage your bookmarked AI tools.",
@@ -30,9 +32,9 @@ export default function BookmarksLayout({ children }: PropsWithChildren) {
           Tools you&apos;ve saved for later. Stored locally in your browser.
         </PageDescription>
       </PageHeader>
-      <Suspense fallback={<LoadingScreen />}>
-        <PageContent>{children}</PageContent>
-      </Suspense>
+      <PageContent>
+        <Suspense fallback={<LoadingScreen />}>{children}</Suspense>
+      </PageContent>
       <Footer />
     </>
   );

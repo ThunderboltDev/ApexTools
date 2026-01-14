@@ -2,8 +2,9 @@ import type { Metadata, Viewport } from "next";
 import { Figtree } from "next/font/google";
 import Script from "next/script";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-import type { PropsWithChildren } from "react";
+import { type PropsWithChildren, Suspense } from "react";
 import { Providers } from "@/components/app/providers";
+import { LoadingScreen } from "@/components/ui/loading-screen";
 import { config, url } from "@/config";
 import "./globals.css";
 
@@ -73,7 +74,9 @@ export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
     <html lang="en" className={figtree.variable} suppressHydrationWarning>
       <body>
         <NuqsAdapter>
-          <Providers>{children}</Providers>
+          <Providers>
+            <Suspense fallback={<LoadingScreen />}>{children}</Suspense>
+          </Providers>
         </NuqsAdapter>
       </body>
       <Script

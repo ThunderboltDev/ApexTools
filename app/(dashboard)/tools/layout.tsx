@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
-import type { PropsWithChildren } from "react";
+import { type PropsWithChildren, Suspense } from "react";
+import { LoadingScreen } from "@/components/ui/loading-screen";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "My Tools",
@@ -8,5 +11,5 @@ export const metadata: Metadata = {
 };
 
 export default function ToolsLayout({ children }: PropsWithChildren) {
-  return children;
+  return <Suspense fallback={<LoadingScreen />}>{children}</Suspense>;
 }

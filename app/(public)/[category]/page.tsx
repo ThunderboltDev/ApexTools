@@ -1,16 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
 import { Footer } from "@/components/app/footer";
 import { Navbar } from "@/components/app/navbar";
 import { ToolDirectory } from "@/components/directory";
 import { FAQ } from "@/components/tool/faq";
-import { LoadingScreen } from "@/components/ui/loading-screen";
 import { categoryContent } from "@/lib/category-data";
 import { categories } from "@/lib/constants";
 import type { Category } from "@/lib/types";
-
-export const dynamic = "force-dynamic";
 
 interface PageProps {
   params: Promise<{ category: string }>;
@@ -66,9 +62,7 @@ export default async function CategoryPage({ params }: PageProps) {
           {content.subheadline}
         </p>
       </div>
-      <Suspense fallback={<LoadingScreen />}>
-        <ToolDirectory category={category as Category} />
-      </Suspense>
+      <ToolDirectory category={category as Category} />
       {content.faqs.length > 0 && <FAQ items={content.faqs} />}
       <Footer />
     </Navbar>

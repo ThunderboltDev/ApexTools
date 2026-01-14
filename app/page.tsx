@@ -1,8 +1,6 @@
-import { Suspense } from "react";
 import { Footer } from "@/components/app/footer";
 import { Navbar } from "@/components/app/navbar";
 import { ToolDirectory } from "@/components/directory";
-import { LoadingScreen } from "@/components/ui/loading-screen";
 
 export const dynamic = "force-dynamic";
 
@@ -18,9 +16,7 @@ export default async function Home() {
           the future, updated in real-time.
         </p>
       </div>
-      <Suspense fallback={<LoadingScreen />}>
-        <ToolDirectory />
-      </Suspense>
+      <ToolDirectory />
       <Footer />
     </Navbar>
   );
