@@ -19,6 +19,11 @@ export const userRouter = createTRPCRouter({
   getSession: publicProcedure
     .use(createRateLimit(100, 60, "user.getSession"))
     .query(async ({ ctx }) => {
+      console.log("getSession called", {
+        hasUser: !!ctx.user,
+        hasSession: !!ctx.session,
+      });
+
       return {
         user: ctx.user,
         session: ctx.session,
