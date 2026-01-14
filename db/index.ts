@@ -2,8 +2,6 @@ import { config } from "dotenv";
 
 const env = (process.env.NODE_ENV ?? "development").trim();
 
-console.log("Running Drizzle in environment:", env);
-
 config({
   path: env === "development" ? ".env.local" : ".env",
   override: true,

@@ -6,8 +6,9 @@ import { httpBatchLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
 import { type PropsWithChildren, useState } from "react";
 import superjson from "superjson";
-import { makeQueryClient } from "./query-client";
-import type { AppRouter } from "./routers/_app";
+import { url } from "@/config";
+import { makeQueryClient } from "@/trpc/query-client";
+import type { AppRouter } from "@/trpc/routers/_app";
 
 export const trpc = createTRPCReact<AppRouter>();
 
@@ -24,7 +25,7 @@ function getQueryClient() {
 }
 
 function getUrl() {
-  return "http://localhost:3000/api/trpc";
+  return `${url}/api/trpc`;
 }
 
 export function TRPCProvider(props: PropsWithChildren) {
