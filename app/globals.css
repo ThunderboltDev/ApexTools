@@ -207,23 +207,23 @@
   }
 
   .section h1 {
-    @apply mt-12;
+    @apply mt-7;
   }
 
   .section h2 {
-    @apply mt-8;
+    @apply mt-5;
   }
 
   .section h3 {
-    @apply mt-6;
-  }
-
-  .section h4 {
     @apply mt-4;
   }
 
+  .section h4 {
+    @apply mt-2;
+  }
+
   .section p {
-    @apply mt-3;
+    @apply mt-3 !text-muted-foreground;
   }
 
   .section + section {
@@ -231,7 +231,7 @@
   }
 
   .section ul {
-    @apply list-disc ml-6 pt-1 pb-3;
+    @apply list-disc ml-6 pt-1 pb-3 text-muted-foreground;
   }
 
   a {

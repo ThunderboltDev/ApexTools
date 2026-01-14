@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Footer } from "@/components/app/footer";
 import { Navbar } from "@/components/app/navbar";
 
@@ -14,9 +15,9 @@ export const metadata: Metadata = {
 export default function PrivacyPolicy() {
   return (
     <Navbar>
-      <article className="prose prose-invert mx-auto max-w-3xl py-12 px-4">
+      <article className="section">
         <h1>Privacy Policy</h1>
-        <p className="text-muted-foreground">Last updated: January 2026</p>
+        <p>Last updated: January 2026</p>
 
         <h2>Information We Collect</h2>
         <p>
@@ -78,9 +79,9 @@ export default function PrivacyPolicy() {
         <h2>Contact Us</h2>
         <p>
           If you have questions about this Privacy Policy, please contact us at{" "}
-          <a href="mailto:support@thunderboltdev.site">
+          <Link href="mailto:support@thunderboltdev.site" className="link">
             support@thunderboltdev.site
-          </a>
+          </Link>
           .
         </p>
       </article>
