@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 interface AuthPageProps {
-  searchParams: { callbackUrl?: string };
+  searchParams: Promise<{ callbackUrl?: string }>;
 }
 
 export default async function AuthPage({ searchParams }: AuthPageProps) {
@@ -23,9 +23,8 @@ export default async function AuthPage({ searchParams }: AuthPageProps) {
   });
 
   if (session) {
-    redirect(
-      `/auth?callbackUrl=${normalizeCallbackUrl(searchParams.callbackUrl)}`
-    );
+    const { callbackUrl } = await searchParams;
+    redirect(`/auth?callbackUrl=${normalizeCallbackUrl(callbackUrl)}`);
   }
 
   return (

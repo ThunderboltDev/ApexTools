@@ -19,13 +19,14 @@ export const metadata: Metadata = {
 };
 
 interface VerifyEmailPageProps {
-  searchParams: { email?: string };
+  searchParams: Promise<{ email?: string }>;
 }
 
 export default async function VerifyEmailPage({
   searchParams,
 }: VerifyEmailPageProps) {
-  const email = searchParams.email ?? "your email";
+  const email = (await searchParams).email ?? "your email";
+
   return (
     <Suspense fallback={<LoadingScreen />}>
       <main className="flex h-screen items-center justify-center p-4">

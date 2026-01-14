@@ -11,14 +11,13 @@ export const metadata: Metadata = {
 };
 
 interface LogoutPageProps {
-  searchParams: { callbackUrl?: string };
+  searchParams: Promise<{ callbackUrl?: string }>;
 }
 export default async function LogoutPage({ searchParams }: LogoutPageProps) {
   await auth.api.signOut({
     headers: await headers(),
   });
 
-  redirect(
-    `/auth?callbackUrl=${normalizeCallbackUrl(searchParams.callbackUrl)}`
-  );
+  const { callbackUrl } = await searchParams;
+  redirect(`/auth?callbackUrl=${normalizeCallbackUrl(callbackUrl)}`);
 }
