@@ -33,7 +33,7 @@ export const auth = betterAuth({
 
         await resend.emails.send({
           from: `"${brand.name}" <${
-            process.env.RESEND_FROM_EMAIL || "noreply@apextools.com"
+            process.env.RESEND_FROM_EMAIL || "noreply@apextools.site"
           }>`,
           to: email,
           subject: `Sign in to ${brand.name}`,
