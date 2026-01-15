@@ -1,36 +1,17 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+[ApexTools](https://www.apextools.site) is a curated directory of the best AI tools across productivity, marketing, development, writing, research, and more. It helps professionals and power users quickly discover reliable, up-to-date AI tools without the noise.
 
-## Getting Started
+**Key Features:**
+- Curated directory of top AI tools for various categories
+- Real-time updates to ensure access to latest Ai innovations
+- User-friendly interface with bookmarks, dashboards, and personalized tool management
+- Advanced search options for finding AI tools for your use case
+- Free tool submissions with a **dofollow backlink** for listed tools
 
-First, run the development server:
+**Target Audience:**
+- Power users and professionals in productivity, marketing, coding, and creative fields
+- Individuals and teams looking to discover and integrate AI tools into their workflows
+- Users seeking alternatives to popular AI models and tools with detailed insights
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Benefits / Value Proposition:**
+- Saves time by aggregating and curating the best AI tools in one place
+- Facilitates discovery of AI tools tailored to specific professional needs and interests
