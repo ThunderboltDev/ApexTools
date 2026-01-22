@@ -5,6 +5,7 @@ const env = (process.env.NODE_ENV ?? "development").trim();
 config({
   path: env === "development" ? ".env.local" : ".env",
   override: true,
+  quiet: true,
 });
 
 import { drizzle } from "drizzle-orm/postgres-js";
