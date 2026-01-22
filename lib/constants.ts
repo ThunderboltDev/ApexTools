@@ -8,7 +8,7 @@ import type {
   TimePeriod,
 } from "@/lib/types";
 
-export const HOT_THRESHOLD = 80;
+export const HOT_THRESHOLD = 0.75;
 
 export const categories = [
   "productivity",
@@ -107,7 +107,7 @@ export const slugSchema = z
   .max(100, "Slug is too long")
   .refine(
     (val) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(val),
-    "Slug must be lowercase, URL-safe, and use hyphens only"
+    "Slug must be lowercase, URL-safe, and use hyphens only",
   );
 
 export const toolSchema = z.object({
@@ -147,7 +147,7 @@ export const logoSchema = z
     {
       message: "Logo is required",
       path: ["logo"],
-    }
+    },
   );
 
 export const toolSubmitSchema = toolSchema.omit({ logo: true }).extend({
