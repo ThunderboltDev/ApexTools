@@ -15,8 +15,7 @@
     "db:studio": "drizzle-kit studio",
     "script": "pnpm tsx -r tsconfig-paths/register db/scripts/seed.ts",
     "seed:prod": "cross-env NODE_ENV=production pnpm script",
-    "seed:dev": "cross-env NODE_ENV=development pnpm script",
-    "cron:tool-scores": "tsx src/scripts/updateToolScore.ts"
+    "seed:dev": "cross-env NODE_ENV=development pnpm script"
   },
   "dependencies": {
     "@base-ui/react": "^1.0.0",
