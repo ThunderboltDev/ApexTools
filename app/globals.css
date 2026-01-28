@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -79,26 +80,26 @@
 
   --color-success-foreground: color-mix(
     in oklch,
-    var(--color-success) 80%,
-    var(--color-foreground)
+    var(--success) 85%,
+    var(--color-foreground) 15%
   );
 
   --color-warning-foreground: color-mix(
     in oklch,
-    var(--color-warning) 80%,
-    var(--color-foreground)
+    var(--warning) 85%,
+    var(--color-foreground) 15%
   );
 
   --color-danger-foreground: color-mix(
     in oklch,
-    var(--color-danger) 80%,
-    var(--color-foreground)
+    var(--danger) 85%,
+    var(--color-foreground) 15%
   );
 
   --color-info-foreground: color-mix(
     in oklch,
-    var(--color-info) 80%,
-    var(--color-foreground)
+    var(--info) 85%,
+    var(--color-foreground) 15%
   );
 
   --color-ring: var(--ring);
@@ -176,7 +177,7 @@
   }
 
   h2 {
-    @apply leading-[1.25] text-3xl tracking-tight;
+    @apply leading-tight text-3xl tracking-tight;
   }
 
   h3 {
@@ -223,7 +224,7 @@
   }
 
   .section p {
-    @apply mt-3 !text-muted-foreground;
+    @apply mt-3 text-muted-foreground!;
   }
 
   .section + section {
@@ -239,12 +240,10 @@
     @apply transition-colors duration-200 ease-out;
     @apply rounded-[1px];
   }
+}
 
-  .link {
-    @apply text-muted-foreground hover:text-accent;
-    @apply underline-offset-3 underline;
-    @apply decoration-current decoration-1;
-  }
+@utility text-responsive {
+  @apply text-base md:text-sm;
 }
 
 @utility h-view {
@@ -254,6 +253,12 @@
 
 @utility all-unset {
   all: unset;
+}
+
+@utility link {
+  @apply text-muted-foreground hover:text-accent;
+  @apply underline-offset-3 underline;
+  @apply decoration-current decoration-1;
 }
 
 @utility shine {
@@ -275,7 +280,7 @@
 
 @utility wrapper-* {
   @apply mx-auto w-[calc(100%-1.8rem)] xs:w-[calc(100%-4rem)] md:w-[calc(100%-6rem)] lg:w-[calc(100%-8rem)];
-  max-width: --value(--wrapper- *, integer);
+  max-width: --value(--wrapper-*, integer);
 }
 
 @utility scrollbar-* {

@@ -76,7 +76,7 @@ export function SelectTrigger({
           variant="outline"
           theme="default"
           className={cn(
-            "text-secondary-foreground inline-flex gap-2 justify-between items-center px-6",
+            "text-secondary-foreground text-responsive! inline-flex gap-2 justify-between items-center px-6 w-full min-w-0 whitespace-normal",
             className
           )}
         />

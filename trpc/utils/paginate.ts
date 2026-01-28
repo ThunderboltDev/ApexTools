@@ -36,15 +36,11 @@ export async function paginateTools(input: PaginationInput): Promise<{
   }
 
   if (input.category) {
-    conditions.push(eq(toolsTable.category, input.category));
+    conditions.push(sql`${input.category} = ANY(${toolsTable.category})`);
   }
 
   if (input.pricing) {
     conditions.push(eq(toolsTable.pricing, input.pricing));
-  }
-
-  if (input.status) {
-    conditions.push(eq(toolsTable.status, input.status));
   }
 
   if (input.slugs?.length) {

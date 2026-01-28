@@ -51,7 +51,7 @@ export function UpvoteButton({ tool, className }: UpvoteButtonProps) {
       onClick={handleUpvote}
       disabled={!user}
       className={cn(
-        "text-secondary-foreground [&>svg]:!size-5.5 !pl-2.5 !pr-3 !gap-1",
+        "text-secondary-foreground [&>svg]:size-5.5! pl-2.5! pr-3! gap-1!",
         {
           "[&>svg]:fill-accent text-accent hover:text-accent": isUpvoted,
         },

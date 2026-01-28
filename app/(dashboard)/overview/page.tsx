@@ -1,16 +1,19 @@
 "use client";
 
-import { EyeIcon, ThumbsUpIcon, UserIcon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { useState } from "react";
 import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+  ArrowUpBigIcon,
+  CrownIcon,
+  EyeIcon,
+  LinkSquare02Icon,
+  Radar01Icon,
+  TrendingUp,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { StatCard } from "@/components/dashboard/stat-card";
 import {
   Card,
   CardContent,
@@ -18,7 +21,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ChartContainer } from "@/components/ui/chart";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 import { PageDescription, PageHeader, PageTitle } from "@/components/ui/page";
 import {
   Select,
@@ -29,159 +36,98 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { timePeriodLabels, timePeriods } from "@/lib/constants";
 import type { TimePeriod } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/provider";
 
 export default function OverviewPage() {
-  const [period, setPeriod] = useState<TimePeriod>("7d");
+  const [period, setPeriod] = useState<TimePeriod>("30d");
 
-  const { data: stats, isLoading: isLoadingStats } =
-    trpc.analytics.getStats.useQuery();
-
-  const { data: aggregateStats, isLoading: isLoadingAggregate } =
-    trpc.analytics.getAggregateStats.useQuery();
-
-  const { data: chartData, isLoading: isLoadingChart } =
-    trpc.analytics.getAggregateStatsOverTime.useQuery({
-      type: "view",
-      period,
-    });
+  const { data: overview, isLoading } = trpc.dashboard.getOverview.useQuery({
+    period,
+  });
 
   return (
-    <>
-      <PageHeader>
-        <PageTitle>Overview</PageTitle>
-        <PageDescription>Welcome to your ApexTools dashboard</PageDescription>
+    <div className="space-y-6">
+      <PageHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="space-y-1">
+          <PageTitle>Overview</PageTitle>
+          <PageDescription>
+            Monitor your tools' performance and engagement.
+          </PageDescription>
+        </div>
+        <div>
+          <Select
+            value={period}
+            onValueChange={(value) => setPeriod(value as TimePeriod)}
+          >
+            <SelectTrigger className="w-[160px]">
+              {timePeriodLabels[period]}
+            </SelectTrigger>
+            <SelectContent>
+              {timePeriods.map((p) => (
+                <SelectItem key={p} value={p}>
+                  {timePeriodLabels[p]}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </PageHeader>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">My Tools</CardTitle>
-            <HugeiconsIcon
-              icon={UserIcon}
-              className="size-4 text-muted-foreground"
-            />
-          </CardHeader>
-          <CardContent>
-            {isLoadingStats ? (
-              <Skeleton className="h-8 w-16" />
-            ) : (
-              <div className="text-2xl font-bold">{stats?.count ?? 0}</div>
-            )}
-            <p className="text-xs text-muted-foreground mt-1">Tools you own</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Views</CardTitle>
-            <HugeiconsIcon
-              icon={EyeIcon}
-              className="size-4 text-muted-foreground"
-            />
-          </CardHeader>
-          <CardContent>
-            {isLoadingAggregate ? (
-              <Skeleton className="h-8 w-16" />
-            ) : (
-              <div className="text-2xl font-bold">
-                {aggregateStats?.views.toLocaleString() ?? 0}
-              </div>
-            )}
-            <p className="text-xs text-muted-foreground mt-1">
-              Across all your tools
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Upvotes</CardTitle>
-            <HugeiconsIcon
-              icon={ThumbsUpIcon}
-              className="size-4 text-muted-foreground"
-            />
-          </CardHeader>
-          <CardContent>
-            {isLoadingAggregate ? (
-              <Skeleton className="h-8 w-16" />
-            ) : (
-              <div className="text-2xl font-bold">
-                {aggregateStats?.upvotes.toLocaleString() ?? 0}
-              </div>
-            )}
-            <p className="text-xs text-muted-foreground mt-1">
-              Community engagement
-            </p>
-          </CardContent>
-        </Card>
+      <div className="grid gap-4 md:grid-cols-3">
+        <StatCard
+          title="Impressions"
+          value={overview?.impressions}
+          icon={Radar01Icon}
+        />
+        <StatCard title="Views" value={overview?.views} icon={EyeIcon} />
+        <StatCard
+          title="Upvotes"
+          value={overview?.upvotes}
+          icon={ArrowUpBigIcon}
+        />
+        <StatCard
+          title="Visits"
+          value={overview?.visits}
+          icon={LinkSquare02Icon}
+        />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-7 mt-4">
-        <Card className="col-span-4">
+      <div className="grid gap-6 lg:grid-cols-7">
+        <Card className="lg:col-span-4">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle>Overview</CardTitle>
+              <CardTitle>Performance Over Time</CardTitle>
               <CardDescription>
-                View traffic across all your tools
+                See metrics for the selected period.
               </CardDescription>
             </div>
-            <Select
-              value={period}
-              onValueChange={(value) =>
-                setPeriod(value as (typeof timePeriods)[number])
-              }
-            >
-              <SelectTrigger className="w-[150px]">
-                {timePeriodLabels[period]}
-              </SelectTrigger>
-              <SelectContent>
-                {timePeriods.map((timePeriod) => (
-                  <SelectItem key={timePeriod} value={timePeriod}>
-                    {timePeriodLabels[timePeriod]}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
           </CardHeader>
-          <CardContent className="mt-2">
-            {isLoadingChart ? (
-              <div className="flex h-[350px] items-center justify-center">
-                <Skeleton className="h-[350px] w-full" />
-              </div>
+          <CardContent>
+            {isLoading ? (
+              <Skeleton className="h-[350px] w-full" />
             ) : (
               <ChartContainer
                 config={{
-                  count: {
+                  view: {
                     label: "Views",
+                    color: "var(--info)",
+                  },
+                  impression: {
+                    label: "Impressions",
+                    color: "var(--color-orange)",
+                  },
+                  visit: {
+                    label: "Visits",
                     color: "var(--accent)",
                   },
                 }}
                 className="h-[350px] w-full"
               >
                 <AreaChart
-                  data={chartData}
-                  margin={{
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                  }}
+                  data={overview?.chartData}
+                  margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
                 >
-                  <defs>
-                    <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
-                      <stop
-                        offset="5%"
-                        stopColor="var(--accent)"
-                        stopOpacity={0.3}
-                      />
-                      <stop
-                        offset="95%"
-                        stopColor="var(--accent)"
-                        stopOpacity={0}
-                      />
-                    </linearGradient>
-                  </defs>
                   <CartesianGrid
                     strokeDasharray="3 3"
                     vertical={false}
@@ -191,7 +137,7 @@ export default function OverviewPage() {
                     dataKey="date"
                     tickLine={false}
                     axisLine={false}
-                    tickMargin={8}
+                    tickMargin={10}
                     tickFormatter={(value) => {
                       const date = new Date(value);
                       return date.toLocaleDateString("en-US", {
@@ -200,43 +146,50 @@ export default function OverviewPage() {
                       });
                     }}
                     fontSize={12}
-                    stroke="var(--muted-foreground)"
                   />
                   <YAxis
-                    width={24}
                     tickLine={false}
                     axisLine={false}
-                    tickMargin={8}
+                    tickMargin={10}
+                    width={40}
                     fontSize={12}
-                    stroke="var(--muted-foreground)"
+                    allowDecimals={false}
                   />
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (active && payload && payload.length) {
-                        return (
-                          <div className="rounded-lg border bg-background p-2 shadow-sm">
-                            <div className="grid grid-cols-2 gap-2">
-                              <div className="flex flex-col">
-                                <span className="text-[0.70rem] uppercase text-muted-foreground">
-                                  Views
-                                </span>
-                                <span className="font-bold text-muted-foreground">
-                                  {payload[0].value}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
+                  <ChartTooltip
+                    content={
+                      <ChartTooltipContent
+                        labelFormatter={(label) => {
+                          return new Date(label).toLocaleDateString("en-US", {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                          });
+                        }}
+                      />
+                    }
                   />
                   <Area
-                    type="monotone"
-                    dataKey="count"
+                    name="view"
+                    type="linear"
+                    dataKey="view"
+                    stroke="var(--info)"
+                    fill="transparent"
+                    strokeWidth={2}
+                  />
+                  <Area
+                    name="impression"
+                    type="linear"
+                    dataKey="impression"
+                    stroke="var(--color-orange)"
+                    fill="transparent"
+                    strokeWidth={2}
+                  />
+                  <Area
+                    name="visit"
+                    type="linear"
+                    dataKey="visit"
                     stroke="var(--accent)"
-                    fillOpacity={1}
-                    fill="url(#colorViews)"
+                    fill="transparent"
                     strokeWidth={2}
                   />
                 </AreaChart>
@@ -244,7 +197,144 @@ export default function OverviewPage() {
             )}
           </CardContent>
         </Card>
+
+        <Card className="lg:col-span-3">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Trending Tools</CardTitle>
+                <CardDescription>
+                  Top performing tools by engagement score.
+                </CardDescription>
+              </div>
+              <HugeiconsIcon
+                icon={TrendingUp}
+                className="size-6 text-muted-foreground"
+              />
+            </div>
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <div className="space-y-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="flex items-center gap-4 p-2">
+                    <Skeleton className="size-8 rounded-full" />
+                    <Skeleton className="size-10 rounded-lg" />
+                    <div className="space-y-2 flex-1">
+                      <Skeleton className="h-4 w-2/3" />
+                      <Skeleton className="h-3 w-1/3" />
+                    </div>
+                    <Skeleton className="h-8 w-16" />
+                  </div>
+                ))}
+              </div>
+            ) : overview?.trendingTools.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-[150px] text-muted-foreground space-y-3">
+                <div className="p-3 bg-muted rounded-full">
+                  <HugeiconsIcon icon={TrendingUp} className="size-6" />
+                </div>
+                <div className="text-center">
+                  <p className="font-medium">No trending data yet</p>
+                  <p className="text-sm mt-1">
+                    Share your tools to start seeing engagement.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {overview?.trendingTools.map((tool, index) => (
+                  <Link
+                    key={tool.id}
+                    href={`/tools/${tool.slug}`}
+                    className="group relative flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-muted/50 transition-all duration-250 ease-in overflow-hidden"
+                  >
+                    <div
+                      className="absolute top-0 right-0 h-full bg-linear-to-l from-accent/25 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-250 ease-in"
+                      style={{
+                        width: `${Math.max(10, Math.floor((tool.engagement / (overview?.trendingTools[0]?.engagement || 1)) * 35))}%`,
+                      }}
+                    />
+
+                    <div
+                      className={cn(
+                        "flex items-center justify-center size-7 rounded-full text-xs font-bold shrink-0",
+                        index === 0 && "bg-amber-500/10 text-amber-500",
+                        index === 1 && "bg-slate-600/10 text-slate-600",
+                        index === 2 && "bg-amber-700/10 text-amber-700",
+                        index > 2 && "bg-muted/50 text-muted-foreground"
+                      )}
+                    >
+                      {index + 1}
+                    </div>
+
+                    <div className="relative shrink-0">
+                      <Image
+                        src={tool.logo}
+                        alt={`${tool.name} Logo`}
+                        width={40}
+                        height={40}
+                        className="rounded-md"
+                        unoptimized
+                      />
+                      {index === 0 && (
+                        <div className="absolute -top-1 -right-1">
+                          <HugeiconsIcon
+                            icon={CrownIcon}
+                            className="size-4 text-amber-500 fill-amber-500 drop-shadow-xs drop-shadow-black/50"
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="font-semibold text-sm truncate">
+                          {tool.name}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground mt-0.5">
+                        <span className="flex items-center gap-1">
+                          <HugeiconsIcon
+                            icon={Radar01Icon}
+                            className="size-3"
+                          />
+                          {tool.impressions.toLocaleString()}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <HugeiconsIcon icon={EyeIcon} className="size-3" />
+                          {tool.views.toLocaleString()}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <HugeiconsIcon
+                            icon={ArrowUpBigIcon}
+                            className="size-3"
+                          />
+                          {tool.upvotes.toLocaleString()}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <HugeiconsIcon
+                            icon={LinkSquare02Icon}
+                            className="size-3"
+                          />
+                          {tool.visits.toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="text-right relative">
+                      <div className="text-base font-bold text-primary">
+                        {Math.round(tool.engagement ?? 0).toLocaleString()}
+                      </div>
+                      <div className="text-xs text-muted-foreground">score</div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
-    </>
+    </div>
   );
 }

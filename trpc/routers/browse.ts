@@ -1,9 +1,8 @@
-import { TRPCError } from "@trpc/server";
 import { and, eq, getTableColumns, ne, sql } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db/index";
 import { toolsTable, upvotesTable } from "@/db/schema";
-import { getToolsSchema, slugSchema } from "@/lib/constants";
+import { categories, getToolsSchema, slugSchema } from "@/lib/constants";
 import {
   createRateLimit,
   createTRPCRouter,
@@ -43,20 +42,8 @@ export const browseRouter = createTRPCRouter({
           isUpvoted: isUpvotedSelect,
         })
         .from(toolsTable)
-        .where(
-          and(
-            eq(toolsTable.slug, input.slug),
-            eq(toolsTable.status, "approved")
-          )
-        )
+        .where(and(eq(toolsTable.slug, input.slug)))
         .limit(1);
-
-      if (!tool) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Tool not found",
-        });
-      }
 
       return tool;
     }),
@@ -92,9 +79,9 @@ export const browseRouter = createTRPCRouter({
     .use(createRateLimit(30, 60, "browse.getSimilarTools"))
     .input(
       z.object({
-        category: z.string(),
+        categories: z.array(z.enum(categories)).min(1),
         excludeSlug: slugSchema,
-        limit: z.number().min(1).max(10).default(4),
+        limit: z.number().min(1).max(10).default(6),
       })
     )
     .query(async ({ input, ctx }) => {
@@ -115,13 +102,18 @@ export const browseRouter = createTRPCRouter({
         .from(toolsTable)
         .where(
           and(
-            eq(
-              toolsTable.category,
-              input.category as (typeof toolsTable.category.enumValues)[number]
-            ),
-            eq(toolsTable.status, "approved"),
+            sql`${toolsTable.category} && ${input.categories}`,
             ne(toolsTable.slug, input.excludeSlug)
           )
+        )
+        .orderBy(
+          sql`cardinality(
+            ARRAY(
+              SELECT UNNEST(${toolsTable.category})
+              INTERSECT
+              SELECT UNNEST(${input.categories})
+            )
+          ) DESC`
         )
         .limit(input.limit);
 
@@ -154,7 +146,6 @@ export const browseRouter = createTRPCRouter({
         .from(toolsTable)
         .where(
           and(
-            eq(toolsTable.status, "approved"),
             sql`
             ${toolsTable.name} ILIKE ${`%${input.query}%`}
             OR ${toolsTable.tagline} ILIKE ${`%${input.query}%`}
@@ -177,7 +168,6 @@ export const browseRouter = createTRPCRouter({
         toolId: input.toolId,
         visitorId: ctx.user?.id ?? input.visitorId,
         type: "impression",
-        dedupePerDay: true,
       });
     }),
 
@@ -194,7 +184,6 @@ export const browseRouter = createTRPCRouter({
         toolId: input.toolId,
         visitorId: ctx.user?.id ?? input.visitorId,
         type: "view",
-        dedupePerDay: true,
       });
     }),
 
@@ -211,7 +200,6 @@ export const browseRouter = createTRPCRouter({
         toolId: input.toolId,
         visitorId: ctx.user?.id ?? input.visitorId,
         type: "visit",
-        dedupePerDay: false,
       });
     }),
 });

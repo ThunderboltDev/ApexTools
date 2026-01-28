@@ -2,6 +2,7 @@
 
 import {
   AllBookmarkIcon,
+  FilterResetIcon,
   Globe02Icon,
   GridViewIcon,
   SearchIcon,
@@ -18,6 +19,7 @@ import { useEffect, useRef } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useDebounce } from "use-debounce";
 import { ToolGrid } from "@/components/tool/grid";
+import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { LinkButton } from "@/components/ui/link-button";
@@ -94,6 +96,7 @@ export default function Bookmarks() {
       placeholderData: keepPreviousData,
     }
   );
+
   const handleSortChange = (sort: string) => {
     setParams({ sort: sort as SortOption, page: 1 });
     trackFilterApplied("sort", sort);
@@ -223,10 +226,17 @@ export default function Bookmarks() {
             Save tools you want to revisit later by clicking the bookmark icon
             on any tool card.
           </p>
-          <LinkButton href="/browse" theme="accent" className="mt-6 gap-2">
-            <HugeiconsIcon icon={Globe02Icon} />
-            Browse Tools
-          </LinkButton>
+
+          <div className="flex flex-row justify-center items-center gap-2 mt-4">
+            <Button onClick={handleClearFilters}>
+              <HugeiconsIcon icon={FilterResetIcon} />
+              Clear all filters
+            </Button>
+            <LinkButton href="/browse" theme="accent">
+              <HugeiconsIcon icon={Globe02Icon} />
+              Browse Tools
+            </LinkButton>
+          </div>
         </div>
       </ToolGrid>
     </div>

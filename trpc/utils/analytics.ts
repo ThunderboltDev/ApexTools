@@ -8,14 +8,12 @@ export async function insertEvent({
   toolId,
   visitorId,
   type,
-  dedupePerDay,
 }: {
   toolId: string;
   visitorId: string;
   type: AnalyticsEvent;
-  dedupePerDay?: boolean;
 }) {
-  if (!dedupePerDay) {
+  if (type !== "view") {
     await db.insert(toolAnalyticsEventsTable).values({
       toolId,
       visitorId,

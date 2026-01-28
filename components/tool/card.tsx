@@ -9,9 +9,9 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
 import Link from "next/link";
 import { BookmarkButton } from "@/components/tool/bookmark";
-import { CategoryBadge } from "@/components/tool/category";
 import { ImpressionTracker } from "@/components/tool/impression-tracker";
 import { UpvoteButton } from "@/components/tool/upvote";
+import { VerifiedBadge } from "@/components/tool/verified-badge";
 import {
   Card,
   CardContent,
@@ -41,7 +41,7 @@ export function ToolCard({ tool }: ToolCardProps) {
   };
 
   return (
-    <Card className="hover:-translate-y-1 transition-transform duration-200 ease-out relative gap-3 shadow-md hover:shadow-lg">
+    <Card className="hover:-translate-y-1 transition-transform duration-200 ease-out relative gap-3 shadow-md hover:shadow-lg pt-4">
       <ImpressionTracker toolId={tool.id} />
       {tool.score > HOT_THRESHOLD ? (
         <div className="absolute top-3 right-3 flex items-center gap-1.5 rounded-full bg-orange/20 px-2 py-0.5 text-xs font-medium text-orange-foreground border border-orange/30">
@@ -65,22 +65,23 @@ export function ToolCard({ tool }: ToolCardProps) {
           height={48}
           loading="lazy"
           className="object-cover rounded-md"
+          unoptimized
         />
         <div className="flex-1">
           <Link
             href={`/tool/${tool.slug}`}
             onClick={() => trackToolCardClick(tool.slug, tool.name)}
           >
-            <CardTitle className="text-lg font-bold text-foreground transition-colors">
+            <CardTitle className="text-lg font-bold text-foreground transition-colors flex items-center gap-1.5">
               {tool.name}
+              <VerifiedBadge tool={tool} className="size-5" />
             </CardTitle>
           </Link>
-          <CategoryBadge category={tool.category} />
         </div>
       </CardHeader>
 
       <CardContent>
-        <CardDescription className="line-clamp-2 text-base md:text-sm text-muted-foreground">
+        <CardDescription className="line-clamp-2 text-responsive text-muted-foreground">
           {tool.tagline}
         </CardDescription>
       </CardContent>

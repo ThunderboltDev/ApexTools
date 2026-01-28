@@ -14,6 +14,7 @@ import {
 import {
   analyticsEvents,
   categories,
+  platforms,
   pricingModels,
   status,
 } from "@/lib/constants";
@@ -47,7 +48,7 @@ export const sessionsTable = pgTable(
       .notNull()
       .references(() => usersTable.id, { onDelete: "cascade" }),
   },
-  (table) => [index("session_userId_idx").on(table.userId)],
+  (table) => [index("session_userId_idx").on(table.userId)]
 );
 
 export const accountsTable = pgTable(
@@ -71,7 +72,7 @@ export const accountsTable = pgTable(
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
   },
-  (table) => [index("account_userId_idx").on(table.userId)],
+  (table) => [index("account_userId_idx").on(table.userId)]
 );
 
 export const verificationsTable = pgTable(
@@ -87,7 +88,7 @@ export const verificationsTable = pgTable(
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
   },
-  (table) => [index("verification_identifier_idx").on(table.identifier)],
+  (table) => [index("verification_identifier_idx").on(table.identifier)]
 );
 
 export const userRelations = relations(usersTable, ({ many }) => ({
@@ -111,33 +112,49 @@ export const accountRelations = relations(accountsTable, ({ one }) => ({
 }));
 
 export const toolCategoryEnum = pgEnum("tool_category", categories);
+export const toolPlatformEnum = pgEnum("tool_platform", platforms);
+
 export const toolPricingEnum = pgEnum("tool_pricing", pricingModels);
 export const statusEnum = pgEnum("tool_status", status);
 
 export const toolAnalyticsEventTypeEnum = pgEnum(
   "tool_analytics_event_type",
-  analyticsEvents,
+  analyticsEvents
 );
 
 export const toolsTable = pgTable(
   "tool",
   {
     id: text("id").primaryKey(),
-    slug: text("slug").unique().notNull(),
+
     name: text("name").notNull(),
+    slug: text("slug").unique().notNull(),
+
     tagline: text("tagline").notNull(),
-    category: toolCategoryEnum("category").notNull(),
-    pricing: toolPricingEnum("pricing").notNull(),
     description: text("description").notNull(),
-    logo: text("logo").notNull(),
+
+    pricing: toolPricingEnum("pricing").notNull(),
+    category: toolCategoryEnum("category").array().default([]).notNull(),
+    platform: toolPlatformEnum("platform").array().default([]).notNull(),
+
     url: text("url").notNull(),
-    tags: text("tags").array(),
+    logo: text("logo").notNull(),
+    banner: text("banner").notNull(),
+
+    tags: text("tags").array().default([]).notNull(),
+
     score: real("score").default(0).notNull(),
     upvotes: integer("upvotes").default(0).notNull(),
-    status: statusEnum("status").default("approved").notNull(),
+
+    featuredUntil: timestamp("featured_until").defaultNow().notNull(),
+
+    verifiedAt: timestamp("verified_at"),
+    verificationCode: text("verification_code").unique().notNull(),
+
     userId: text("user_id")
       .notNull()
       .references(() => usersTable.id, { onDelete: "cascade" }),
+
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at")
       .defaultNow()
@@ -147,7 +164,9 @@ export const toolsTable = pgTable(
   (table) => [
     index("tool_userId_idx").on(table.userId),
     index("tool_category_idx").on(table.category),
-  ],
+    index("tool_featured_idx").on(table.featuredUntil),
+    index("tool_verified_idx").on(table.verifiedAt),
+  ]
 );
 
 export const toolAnalyticsEventsTable = pgTable(
@@ -169,7 +188,7 @@ export const toolAnalyticsEventsTable = pgTable(
     index("tool_events_visitor_idx").on(table.visitorId),
     index("tool_events_type_idx").on(table.type),
     index("tool_events_created_idx").on(table.createdAt),
-  ],
+  ]
 );
 
 export const upvotesTable = pgTable(
@@ -183,7 +202,7 @@ export const upvotesTable = pgTable(
       .references(() => toolsTable.id, { onDelete: "cascade" }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  (table) => [primaryKey({ columns: [table.userId, table.toolId] })],
+  (table) => [primaryKey({ columns: [table.userId, table.toolId] })]
 );
 
 export const toolRelations = relations(toolsTable, ({ one }) => ({
@@ -192,6 +211,36 @@ export const toolRelations = relations(toolsTable, ({ one }) => ({
     references: [usersTable.id],
   }),
 }));
+
+export const featuredPurchasesTable = pgTable(
+  "featured_purchase",
+  {
+    id: text("id").primaryKey(),
+    toolId: text("tool_id")
+      .notNull()
+      .references(() => toolsTable.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => usersTable.id, { onDelete: "cascade" }),
+
+    dodoPurchaseId: text("dodo_purchase_id").unique().notNull(),
+    amount: integer("amount").notNull(),
+    currency: text("currency").default("usd").notNull(),
+    status: text("status").notNull(),
+
+    duration: integer("duration").notNull(),
+    startDate: timestamp("start_date").notNull(),
+    endDate: timestamp("end_date").notNull(),
+
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("featured_purchase_tool_idx").on(table.toolId),
+    index("featured_purchase_user_idx").on(table.userId),
+    index("featured_purchase_dodo_idx").on(table.dodoPurchaseId),
+    index("featured_purchase_status_idx").on(table.status),
+  ]
+);
 
 export const schema = {
   user: usersTable,

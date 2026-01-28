@@ -43,7 +43,7 @@ export default async function ToolLayout({
 
   const tool = await trpc.browse.getBySlug({ slug });
 
-  if (!tool || tool.status !== "approved") notFound();
+  if (!tool) notFound();
 
   return <ToolProvider tool={tool}>{children}</ToolProvider>;
 }

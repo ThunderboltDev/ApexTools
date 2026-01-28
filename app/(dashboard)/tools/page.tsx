@@ -206,7 +206,6 @@ export default function ToolsPage() {
               </Field>
             </div>
           </div>
-
           <DashboardToolGrid
             pageParam={page}
             useQueryResults={useQueryResults}

@@ -259,4 +259,191 @@ export const categoryContent: Record<Category, CategoryData> = {
       },
     ],
   },
+  design: {
+    title: "Best AI Design Tools",
+    description:
+      "Create stunning designs faster with AI-powered design tools for UI, branding, graphics, and visuals.",
+    headline: "Top AI Design Tools for Creators",
+    subheadline:
+      "Design better logos, UI, and visuals in minutes using intelligent AI design software.",
+    faqs: [
+      {
+        question: "What are AI design tools?",
+        answer:
+          "AI design tools help automate and enhance graphic design, UI/UX, branding, and visual creation using machine learning.",
+      },
+      {
+        question: "Can AI replace designers?",
+        answer:
+          "AI assists designers by speeding up workflows, but human creativity and judgment are still essential for high-quality design.",
+      },
+    ],
+  },
+
+  data: {
+    title: "Best AI Data Analysis Tools",
+    description:
+      "Analyze, visualize, and interpret data using AI-powered data analysis and business intelligence tools.",
+    headline: "Top AI Tools for Data Analysis",
+    subheadline:
+      "Turn raw data into insights with AI-driven analytics, dashboards, and predictions.",
+    faqs: [
+      {
+        question: "What are AI data tools used for?",
+        answer:
+          "AI data tools are used for data analysis, forecasting, visualization, anomaly detection, and decision support.",
+      },
+      {
+        question: "Can AI analyze data automatically?",
+        answer:
+          "Yes, AI can automatically clean, analyze, and summarize large datasets with minimal human input.",
+      },
+    ],
+  },
+
+  seo: {
+    title: "Best AI SEO Tools",
+    description:
+      "Improve rankings and organic traffic with AI-powered SEO tools for keywords, content, and optimization.",
+    headline: "Top AI SEO Tools",
+    subheadline:
+      "Optimize content, keywords, and technical SEO faster using artificial intelligence.",
+    faqs: [
+      {
+        question: "How is AI used in SEO?",
+        answer:
+          "AI is used in SEO for keyword research, content optimization, SERP analysis, internal linking, and ranking predictions.",
+      },
+      {
+        question: "Are AI SEO tools safe to use?",
+        answer:
+          "Yes, when used correctly, AI SEO tools help improve quality and efficiency without violating search engine guidelines.",
+      },
+    ],
+  },
+
+  education: {
+    title: "Best AI Education Tools",
+    description:
+      "Learn faster with AI-powered education tools for tutoring, studying, and personalized learning.",
+    headline: "Top AI Tools for Learning & Education",
+    subheadline:
+      "Personalize learning, explain complex topics, and study smarter with AI.",
+    faqs: [
+      {
+        question: "How is AI used in education?",
+        answer:
+          "AI is used for personalized tutoring, adaptive learning, grading assistance, and educational content generation.",
+      },
+      {
+        question: "Can AI replace teachers?",
+        answer:
+          "AI supports teachers by automating tasks and enhancing learning, but it cannot replace human educators.",
+      },
+    ],
+  },
+
+  copywriting: {
+    title: "Best AI Copywriting Tools",
+    description:
+      "Write high-converting copy with AI tools for ads, landing pages, emails, and sales pages.",
+    headline: "Top AI Copywriting Tools",
+    subheadline:
+      "Create persuasive, conversion-focused copy using advanced AI writing models.",
+    faqs: [
+      {
+        question: "What are AI copywriting tools?",
+        answer:
+          "AI copywriting tools generate marketing and sales copy using language models trained on high-performing content.",
+      },
+      {
+        question: "Can AI write sales copy?",
+        answer:
+          "Yes, AI can generate ad copy, headlines, CTAs, and landing page text optimized for conversions.",
+      },
+    ],
+  },
+
+  translation: {
+    title: "Best AI Translation Tools",
+    description:
+      "Translate text, audio, and documents instantly with accurate AI-powered translation tools.",
+    headline: "Top AI Translation Tools",
+    subheadline: "Break language barriers with fast, accurate AI translations.",
+    faqs: [
+      {
+        question: "How accurate are AI translators?",
+        answer:
+          "Modern AI translation tools are highly accurate for most languages, especially for common and professional use cases.",
+      },
+      {
+        question: "Can AI translate in real time?",
+        answer:
+          "Yes, many AI translation tools support real-time text, voice, and conversation translation.",
+      },
+    ],
+  },
+
+  gaming: {
+    title: "Best AI Gaming Tools",
+    description:
+      "Enhance gameplay and development with AI tools for game design, NPCs, and content generation.",
+    headline: "Top AI Tools for Gaming",
+    subheadline:
+      "Build smarter games and better experiences with AI-powered gaming tools.",
+    faqs: [
+      {
+        question: "How is AI used in gaming?",
+        answer:
+          "AI is used in gaming for NPC behavior, procedural content generation, testing, and player analytics.",
+      },
+      {
+        question: "Can AI create games?",
+        answer:
+          "AI can assist in game creation by generating assets, code, dialogue, and level designs.",
+      },
+    ],
+  },
+
+  legal: {
+    title: "Best AI Legal Tools",
+    description:
+      "Automate legal research, contract review, and compliance with AI-powered legal tools.",
+    headline: "Top AI Legal Tools",
+    subheadline:
+      "Save time on legal work with AI-driven document analysis and research.",
+    faqs: [
+      {
+        question: "What are AI legal tools?",
+        answer:
+          "AI legal tools help with contract analysis, legal research, document drafting, and compliance checks.",
+      },
+      {
+        question: "Is AI legal advice reliable?",
+        answer:
+          "AI can assist with legal research and drafting, but it should not replace licensed legal professionals.",
+      },
+    ],
+  },
+
+  finance: {
+    title: "Best AI Finance Tools",
+    description:
+      "Manage money smarter with AI tools for investing, accounting, budgeting, and forecasting.",
+    headline: "Top AI Tools for Finance",
+    subheadline:
+      "Automate financial analysis, forecasting, and decision-making with AI.",
+    faqs: [
+      {
+        question: "How is AI used in finance?",
+        answer:
+          "AI is used in finance for fraud detection, investment analysis, forecasting, accounting, and risk management.",
+      },
+      {
+        question: "Can AI help with investing?",
+        answer:
+          "Yes, AI tools analyze market data and trends to support investment decisions, but they do not guarantee profits.",
+      },
+    ],
+  },
 };

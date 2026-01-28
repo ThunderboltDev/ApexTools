@@ -41,7 +41,7 @@ export function ToolAnalytics({ toolId, className }: ToolAnalyticsProps) {
   const [period, setPeriod] = useState<TimePeriod>("30d");
   const [eventType, setEventType] = useState<AnalyticsEvent>("view");
 
-  const { data, isLoading } = trpc.analytics.getStatsOverTime.useQuery({
+  const { data, isLoading } = trpc.dashboard.getToolAnalytics.useQuery({
     toolId,
     period,
     eventType,
@@ -119,14 +119,24 @@ export function ToolAnalytics({ toolId, className }: ToolAnalyticsProps) {
                 }
               />
               <YAxis
-                width={24}
+                width={40}
                 tickMargin={10}
                 tickLine={false}
                 axisLine={false}
+                allowDecimals={false}
               />
               <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent hideLabel />}
+                content={
+                  <ChartTooltipContent
+                    labelFormatter={(label) => {
+                      return new Date(label).toLocaleDateString("en-US", {
+                        month: "long",
+                        day: "numeric",
+                        year: "numeric",
+                      });
+                    }}
+                  />
+                }
               />
               <Bar
                 dataKey="count"

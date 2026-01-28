@@ -2,8 +2,8 @@ import { Fire03Icon, SparklesIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { categoryLabels, HOT_THRESHOLD, pricingLabels } from "@/lib/constants";
+import { VerifiedBadge } from "@/components/tool/verified-badge";
+import { HOT_THRESHOLD } from "@/lib/constants";
 import { isNew } from "@/lib/date";
 import type { Tool } from "@/lib/types";
 
@@ -38,18 +38,22 @@ export function DashboardToolCard({ tool }: DashboardToolCardProps) {
           width={48}
           height={48}
           className="rounded-sm aspect-square object-cover"
+          loading="lazy"
+          unoptimized
         />
         <div className="space-y-1">
-          <h3 className="text-base font-semibold">{tool.name}</h3>
+          <h3 className="text-base font-semibold flex items-center gap-1.5">
+            {tool.name}
+            <VerifiedBadge
+              tool={tool}
+              className="size-4"
+              tooltip="Verified Tool"
+            />
+          </h3>
           <p className="text-sm text-muted-foreground line-clamp-1">
             {tool.tagline}
           </p>
         </div>
-      </div>
-      <div className="mt-4 flex flex-wrap gap-2 text-xs text-muted-foreground">
-        <Badge variant="secondary">{categoryLabels[tool.category]}</Badge>
-        <Badge variant="secondary">{pricingLabels[tool.pricing]}</Badge>
-        {/* <Badge variant="outline">{statusLabels[tool.status]}</Badge> */}
       </div>
     </Link>
   );

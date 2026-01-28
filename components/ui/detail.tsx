@@ -7,7 +7,7 @@ export function DetailGrid({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       className={cn(
-        "grid grid-cols-1 gap-4 text-base md:text-sm xs:grid-cols-2",
+        "grid grid-cols-1 gap-4 text-responsive xs:grid-cols-2",
         className
       )}
       {...props}

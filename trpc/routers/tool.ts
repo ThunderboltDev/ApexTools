@@ -4,6 +4,7 @@ import { z } from "zod";
 import { db } from "@/db/index";
 import { toolsTable, upvotesTable } from "@/db/schema";
 import { getToolsSchema, slugSchema, toolSchema } from "@/lib/constants";
+import { generateVerificationCode, getDomain } from "@/lib/domain-verification";
 import {
   createRateLimit,
   createTRPCRouter,
@@ -18,7 +19,7 @@ export const toolRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       return db.transaction(async (tx) => {
         const existing = await tx
-          .select({ userId: upvotesTable.userId })
+          .select()
           .from(upvotesTable)
           .where(
             and(
@@ -28,7 +29,9 @@ export const toolRouter = createTRPCRouter({
           )
           .limit(1);
 
-        if (existing.length > 0) {
+        const isRemoving = existing.length > 0;
+
+        if (isRemoving) {
           await tx
             .delete(upvotesTable)
             .where(
@@ -40,27 +43,21 @@ export const toolRouter = createTRPCRouter({
 
           await tx
             .update(toolsTable)
-            .set({
-              upvotes: sql`GREATEST(${toolsTable.upvotes} - 1, 0)`,
-            })
+            .set({ upvotes: sql`GREATEST(${toolsTable.upvotes} - 1, 0)` })
             .where(eq(toolsTable.id, input.toolId));
+        } else {
+          await tx.insert(upvotesTable).values({
+            userId: ctx.user.id,
+            toolId: input.toolId,
+          });
 
-          return { upvoted: false };
+          await tx
+            .update(toolsTable)
+            .set({ upvotes: sql`${toolsTable.upvotes} + 1` })
+            .where(eq(toolsTable.id, input.toolId));
         }
 
-        await tx.insert(upvotesTable).values({
-          userId: ctx.user.id,
-          toolId: input.toolId,
-        });
-
-        await tx
-          .update(toolsTable)
-          .set({
-            upvotes: sql`${toolsTable.upvotes} + 1`,
-          })
-          .where(eq(toolsTable.id, input.toolId));
-
-        return { upvoted: true };
+        return { upvoted: !isRemoving };
       });
     }),
 
@@ -149,9 +146,13 @@ export const toolRouter = createTRPCRouter({
           tagline: input.tagline,
           pricing: input.pricing,
           category: input.category,
+          platform: input.platform,
+          tags: input.tags,
+          banner: input.banner ?? "",
           description: input.description,
           url: input.url,
           userId: ctx.user.id,
+          verificationCode: `apex-verify=${crypto.randomUUID()}`,
         })
         .returning();
 
@@ -187,17 +188,29 @@ export const toolRouter = createTRPCRouter({
         });
       }
 
+      const isDomainChanged =
+        getDomain(input.url) !== getDomain(existingTool.url);
+
+      console.log({ isDomainChanged });
+
       const [updateTool] = await db
         .update(toolsTable)
         .set({
           name: input.name,
           category: input.category,
+          platform: input.platform,
+          tags: input.tags,
+          banner: input.banner ?? existingTool.banner,
           tagline: input.tagline,
           pricing: input.pricing,
           logo: input.logo,
           description: input.description,
           url: input.url,
           updatedAt: new Date(),
+          verifiedAt: isDomainChanged ? null : existingTool.verifiedAt,
+          verificationCode: isDomainChanged
+            ? generateVerificationCode()
+            : existingTool.verificationCode,
         })
         .where(eq(toolsTable.slug, input.slug))
         .returning();
@@ -237,5 +250,72 @@ export const toolRouter = createTRPCRouter({
       await db.delete(toolsTable).where(eq(toolsTable.slug, input.slug));
 
       return { success: true };
+    }),
+
+  verify: privateProcedure
+    .use(createRateLimit(5, 60, "tool.verify"))
+    .input(z.object({ toolId: z.string().min(1) }))
+    .mutation(async ({ ctx, input }) => {
+      const tool = await db.query.tool.findFirst({
+        where: and(
+          eq(toolsTable.id, input.toolId),
+          eq(toolsTable.userId, ctx.user.id)
+        ),
+        columns: {
+          id: true,
+          url: true,
+          verificationCode: true,
+          verifiedAt: true,
+        },
+      });
+
+      if (!tool) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Tool not found or you don't have access",
+        });
+      }
+
+      if (tool.verifiedAt) {
+        return { success: true, message: "Domain already verified" };
+      }
+
+      const expectedCode = tool.verificationCode;
+      const txtRecordHost = `_apex-verify.${new URL(tool.url).hostname}`;
+
+      try {
+        const { Resolver } = await import("node:dns").then((m) => m.promises);
+        const resolver = new Resolver();
+
+        resolver.setServers(["8.8.8.8", "1.1.1.1"]);
+
+        const txtRecords = await resolver.resolveTxt(txtRecordHost);
+        const flatRecords = txtRecords.flat();
+
+        const found = flatRecords.some((txt) => txt === expectedCode);
+
+        if (!found) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `DNS TXT record not found. Add "${expectedCode}" to ${txtRecordHost}`,
+          });
+        }
+
+        await db
+          .update(toolsTable)
+          .set({
+            verifiedAt: new Date(),
+          })
+          .where(eq(toolsTable.id, input.toolId));
+
+        return { success: true, message: "Domain verified successfully!" };
+      } catch (error) {
+        if (error instanceof TRPCError) throw error;
+
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `Could not find DNS TXT record. Please ensure the record is set correctly.`,
+        });
+      }
     }),
 });

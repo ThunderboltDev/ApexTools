@@ -5,7 +5,6 @@ import {
   ArrowRightDoubleIcon,
   FilterResetIcon,
   SearchIcon,
-  TrendingUp,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { UseQueryResult } from "@tanstack/react-query";
@@ -106,10 +105,6 @@ export function DashboardToolGrid({
             <Button onClick={handleClearFilters}>
               <HugeiconsIcon icon={FilterResetIcon} />
               Clear all filters
-            </Button>
-            <Button theme="accent">
-              <HugeiconsIcon icon={TrendingUp} />
-              View Trending
             </Button>
           </div>
         </div>

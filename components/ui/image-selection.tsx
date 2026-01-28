@@ -12,6 +12,15 @@ import { UploadDropzone } from "@/components/ui/upload-dropzone";
 
 type ImageSelectionTab = "upload" | "url";
 
+function isValidHttpUrl(value: string) {
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 export type ImageSelectionValue =
   | {
       type: "file";
@@ -29,6 +38,7 @@ interface ImageSelectionProps {
   className?: string;
   onChange?: (value: ImageSelectionValue) => void;
   invalid?: boolean;
+  mode?: "logo" | "banner";
 }
 
 export function ImageSelection({
@@ -38,6 +48,7 @@ export function ImageSelection({
   className,
   onChange,
   invalid = false,
+  mode = "logo",
 }: ImageSelectionProps) {
   const [activeTab, setActiveTab] = useState<ImageSelectionTab>("upload");
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -45,7 +56,11 @@ export function ImageSelection({
 
   const filePreview = useMemo(() => {
     if (!imageFile) return null;
-    return URL.createObjectURL(imageFile);
+    try {
+      return URL.createObjectURL(imageFile);
+    } catch {
+      return null;
+    }
   }, [imageFile]);
 
   const currentPreview = useMemo(() => {
@@ -53,7 +68,7 @@ export function ImageSelection({
       return filePreview;
     }
 
-    return imageUrl || null;
+    return isValidHttpUrl(imageUrl) ? imageUrl : null;
   }, [activeTab, filePreview, imageUrl]);
 
   const handleTabChange = useCallback((value: null | ImageSelectionTab) => {
@@ -92,7 +107,9 @@ export function ImageSelection({
   useEffect(() => {
     return () => {
       if (filePreview) {
-        URL.revokeObjectURL(filePreview);
+        try {
+          URL.revokeObjectURL(filePreview);
+        } catch {}
       }
     };
   }, [filePreview]);
@@ -133,46 +150,80 @@ export function ImageSelection({
             disabled={disabled}
             onChange={handleUrlChange}
           />
+          {!currentPreview && (
+            <div>
+              <p className="mt-4 text-sm text-center text-muted-foreground">
+                Enter a valid image URL
+              </p>
+            </div>
+          )}
         </TabsContent>
       </Tabs>
 
-      {currentPreview && (
-        <div className="mt-4 flex items-center gap-3">
-          <div className="relative size-16 shrink-0 overflow-hidden rounded-md border border-border bg-background">
-            <Image
-              src={currentPreview}
-              alt="Image Preview"
-              className="size-full aspect-square object-cover"
-              width={64}
-              height={64}
-              unoptimized
-            />
+      {currentPreview &&
+        (mode === "logo" ? (
+          <div className="mt-4 flex items-center gap-3">
+            <div className="relative size-16 shrink-0 overflow-hidden rounded-md border border-border bg-background">
+              <Image
+                src={currentPreview}
+                alt="Image Preview"
+                className="size-full aspect-square object-cover"
+                width={64}
+                height={64}
+                unoptimized
+              />
+            </div>
+            <div className="flex min-w-0 flex-1 flex-col gap-1">
+              <p className="truncate text-sm font-medium text-foreground">
+                {activeTab === "upload" && imageFile
+                  ? imageFile.name
+                  : "External Image"}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {activeTab === "upload" && imageFile
+                  ? `${(imageFile.size / 1024).toFixed(1)} KB`
+                  : "URL Source"}
+              </p>
+            </div>
+            <Button
+              size="icon"
+              theme="danger"
+              variant="transparent"
+              disabled={disabled}
+              onClick={handleRemove}
+              aria-label="Remove selected image"
+            >
+              <HugeiconsIcon icon={Cancel01Icon} />
+              <span className="sr-only">Remove selected image</span>
+            </Button>
           </div>
-          <div className="flex min-w-0 flex-1 flex-col gap-1">
-            <p className="truncate text-sm font-medium text-foreground">
-              {activeTab === "upload" && imageFile
-                ? imageFile.name
-                : "External Image"}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              {activeTab === "upload" && imageFile
-                ? `${(imageFile.size / 1024).toFixed(1)} KB`
-                : "URL Source"}
-            </p>
+        ) : (
+          <div className="relative mt-4 w-full overflow-hidden rounded-lg border border-border bg-background">
+            <div className="relative aspect-video w-full">
+              <Image
+                src={currentPreview}
+                alt="Banner Preview"
+                className="size-full object-cover"
+                fill
+                unoptimized
+              />
+            </div>
+            <div>
+              <Button
+                size="icon"
+                theme="danger"
+                variant="transparent"
+                className="size-6 absolute top-2 right-2 bg-danger/25 rounded-full"
+                disabled={disabled}
+                onClick={handleRemove}
+                aria-label="Remove selected image"
+              >
+                <HugeiconsIcon icon={Cancel01Icon} className="size-4" />
+                <span className="sr-only">Remove selected image</span>
+              </Button>
+            </div>
           </div>
-          <Button
-            size="icon"
-            theme="danger"
-            variant="transparent"
-            disabled={disabled}
-            onClick={handleRemove}
-            aria-label="Remove selected image"
-          >
-            <HugeiconsIcon icon={Cancel01Icon} />
-            <span className="sr-only">Remove selected image</span>
-          </Button>
-        </div>
-      )}
+        ))}
     </div>
   );
 }

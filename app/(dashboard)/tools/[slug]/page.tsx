@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Activity03Icon,
   Calendar04Icon,
   CalendarSetting01Icon,
   ChevronLeft,
@@ -42,7 +41,7 @@ import { LinkButton } from "@/components/ui/link-button";
 import { LoadingScreen } from "@/components/ui/loading-screen";
 import { PageContent, PageHeader, PageTitle } from "@/components/ui/page";
 import { Spinner } from "@/components/ui/spinner";
-import { categoryLabels, pricingLabels, statusLabels } from "@/lib/constants";
+import { categoryLabels, pricingLabels } from "@/lib/constants";
 import { trpc } from "@/trpc/provider";
 
 export default function ToolOverviewPage() {
@@ -138,19 +137,16 @@ export default function ToolOverviewPage() {
                 value={tool.updatedAt}
               />
               <DetailRow
-                icon={GridViewIcon}
-                label="Category"
-                value={categoryLabels[tool.category]}
-              />
-              <DetailRow
                 icon={Tag01Icon}
                 label="Pricing Model"
                 value={pricingLabels[tool.pricing]}
               />
               <DetailRow
-                icon={Activity03Icon}
-                label="Status"
-                value={statusLabels[tool.status]}
+                icon={GridViewIcon}
+                label="Category"
+                value={tool.category
+                  .map((category) => categoryLabels[category])
+                  .join(", ")}
               />
             </DetailGrid>
           </CardContent>

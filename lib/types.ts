@@ -9,6 +9,7 @@ import type {
 import type {
   analyticsEvents,
   categories,
+  platforms,
   pricingModels,
   sortOptions,
   status,
@@ -34,6 +35,9 @@ export type PricingModelFilter = PricingModel | "all";
 
 export type Status = (typeof status)[number];
 export type StatusFilter = Status | "all";
+
+export type Platform = (typeof platforms)[number];
+export type PlatformFilter = Platform | "all";
 
 export type AnalyticsEvent = (typeof analyticsEvents)[number];
 export type AnalyticsEventFilter = AnalyticsEvent | "all";

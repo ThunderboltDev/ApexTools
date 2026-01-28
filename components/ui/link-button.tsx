@@ -8,12 +8,18 @@ type ButtonLinkProps = ComponentProps<typeof Link> &
     buttonClassName?: string;
   };
 
-function LinkButton({ buttonClassName, className, ...props }: ButtonLinkProps) {
+function LinkButton({
+  buttonClassName,
+  className,
+  onClick,
+  ...props
+}: ButtonLinkProps) {
   return (
     <Button
       nativeButton={false}
       className={buttonClassName}
       render={<Link className={cn("no-underline", className)} {...props} />}
+      onClick={onClick}
       {...props}
     />
   );

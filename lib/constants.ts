@@ -2,6 +2,7 @@ import z from "zod";
 import type {
   AnalyticsEventFilter,
   CategoryFilter,
+  Platform,
   PricingModelFilter,
   SortOptionFilter,
   StatusFilter,
@@ -21,18 +22,30 @@ export const categories = [
   "music",
   "writing",
   "research",
+  "design",
+  "data",
+  "seo",
+  "education",
+  "copywriting",
+  "translation",
+  "gaming",
+  "legal",
+  "finance",
+] as const;
+
+export const platforms = [
+  "web",
+  "android",
+  "ios",
+  "chrome_extension",
+  "api",
 ] as const;
 
 export const pricingModels = ["free", "freemium", "paid"] as const;
 
 export const status = ["pending", "approved", "rejected"] as const;
 
-export const analyticsEvents = [
-  "view",
-  "visit",
-  "upvote",
-  "impression",
-] as const;
+export const analyticsEvents = ["view", "visit", "impression"] as const;
 
 export const sortOptions = [
   "latest",
@@ -54,6 +67,15 @@ export const categoryLabels: Record<CategoryFilter, string> = {
   music: "Music",
   writing: "Writing",
   research: "Research",
+  design: "Design",
+  data: "Data",
+  seo: "SEO",
+  education: "Education",
+  copywriting: "Copywriting",
+  translation: "Translation",
+  gaming: "Gaming",
+  legal: "Legal",
+  finance: "Finance",
 } as const;
 
 export const pricingLabels: Record<PricingModelFilter, string> = {
@@ -70,11 +92,19 @@ export const statusLabels: Record<StatusFilter, string> = {
   rejected: "Rejected",
 } as const;
 
+export const platformLabels: Record<Platform | "all", string> = {
+  all: "All Platforms",
+  web: "Web",
+  android: "Android",
+  ios: "iOS",
+  chrome_extension: "Chrome Extension",
+  api: "API",
+} as const;
+
 export const analyticsEventLabels: Record<AnalyticsEventFilter, string> = {
   all: "All",
   view: "Views",
   visit: "Visits",
-  upvote: "Upvotes",
   impression: "Impressions",
 } as const;
 
@@ -107,7 +137,7 @@ export const slugSchema = z
   .max(100, "Slug is too long")
   .refine(
     (val) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(val),
-    "Slug must be lowercase, URL-safe, and use hyphens only",
+    "Slug must be lowercase, URL-safe, and use hyphens only"
   );
 
 export const toolSchema = z.object({
@@ -119,14 +149,21 @@ export const toolSchema = z.object({
   name: z
     .string("Name is required")
     .min(1, "Name is too short")
-    .max(200, "Name is too long"),
+    .max(50, "Name is too long"),
   pricing: z.enum(pricingModels, "Invalid pricing model"),
   logo: z.url(),
-  category: z.enum(categories, "Invalid category"),
+  category: z.array(z.enum(categories)).min(1, "Select at least one category"),
+  platform: z.array(z.enum(platforms)).min(1, "Select at least one platform"),
+  tags: z
+    .array(z.string())
+    .max(10, "Maximum 10 tags allowed")
+    .default([])
+    .nonoptional(),
+  banner: z.url().optional(),
   description: z
     .string("Description is required")
-    .min(1, "Description is too short")
-    .max(1000, "Description is too long"),
+    .min(250, "Description is too short")
+    .max(5000, "Description is too long"),
   url: z.url("Invalid URL"),
 });
 
@@ -147,12 +184,35 @@ export const logoSchema = z
     {
       message: "Logo is required",
       path: ["logo"],
-    },
+    }
   );
 
-export const toolSubmitSchema = toolSchema.omit({ logo: true }).extend({
-  logo: logoSchema,
-});
+export const bannerSchema = z
+  .discriminatedUnion("type", [
+    z.object({
+      type: z.literal("url"),
+      url: z.url("Invalid banner URL"),
+    }),
+    z.object({
+      type: z.literal("file"),
+      file: z.instanceof(File),
+    }),
+  ])
+  .refine(
+    (val) =>
+      (val.type === "url" && !!val.url) || (val.type === "file" && !!val.file),
+    {
+      message: "Banner is required",
+      path: ["banner"],
+    }
+  );
+
+export const toolSubmitSchema = toolSchema
+  .omit({ logo: true, banner: true })
+  .extend({
+    logo: logoSchema,
+    banner: bannerSchema,
+  });
 
 export const getToolsSchema = z.object({
   category: z.enum(categories).optional(),

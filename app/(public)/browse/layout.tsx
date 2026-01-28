@@ -30,7 +30,7 @@ export default function BrowseLayout({ children }: PropsWithChildren) {
   return (
     <>
       <div className="mt-4 mb-8 space-y-3">
-        <h1 className="md:text-6xl text-balance text-center bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/80">
+        <h1 className="md:text-6xl text-balance text-center bg-clip-text text-transparent bg-linear-to-b from-foreground to-foreground/80">
           Browse AI Tools
         </h1>
         <p className="text-center md:text-xl text-muted-foreground max-w-2xl mx-auto">
