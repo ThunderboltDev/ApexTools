@@ -165,7 +165,7 @@ export const toolSchema = z.object({
   description: z
     .string("Description is required")
     .min(100, "Description is too short")
-    .max(3000, "Description is too long"),
+    .max(2000, "Description is too long"),
   url: z.url("Invalid URL"),
 });
 
