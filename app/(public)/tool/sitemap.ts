@@ -1,12 +1,9 @@
-import { eq } from "drizzle-orm";
 import type { MetadataRoute } from "next";
 import { url } from "@/config";
 import { db } from "@/db/index";
-import { toolsTable } from "@/db/schema";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const tools = await db.query.tool.findMany({
-    where: eq(toolsTable.status, "approved"),
     columns: {
       slug: true,
       updatedAt: true,
@@ -16,7 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return tools.map((tool) => ({
     url: `${url}/tool/${tool.slug}`,
     lastModified: tool.updatedAt,
-    changeFrequency: "weekly",
+    changeFrequency: "monthly",
     priority: 0.8,
   }));
 }
