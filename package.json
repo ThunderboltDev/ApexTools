@@ -13,9 +13,9 @@
     "db:push:prod": "cross-env NODE_ENV=production pnpm db:push",
     "db:push": "drizzle-kit push --config=db/drizzle.config.ts --force",
     "db:studio": "drizzle-kit studio",
-    "script": "pnpm tsx -r tsconfig-paths/register db/scripts/delete-all-tools.ts",
-    "seed:prod": "cross-env NODE_ENV=production pnpm script",
-    "seed:dev": "cross-env NODE_ENV=development pnpm script"
+    "script": "pnpm tsx -r tsconfig-paths/register db/scripts/initial-seed.ts",
+    "script:prod": "cross-env NODE_ENV=production pnpm script",
+    "script:dev": "cross-env NODE_ENV=development pnpm script"
   },
   "dependencies": {
     "@base-ui/react": "^1.0.0",
