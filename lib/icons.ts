@@ -12,6 +12,7 @@ import {
   CheckListIcon,
   Clock02Icon,
   CodeSimpleIcon,
+  ComputerIcon,
   CreditCardIcon,
   Database01Icon,
   Edit02Icon,
@@ -73,6 +74,7 @@ export const categoryIcons: Record<CategoryFilter, IconSvgElement> = {
 export const platformIcons: Record<PlatformFilter, IconSvgElement> = {
   all: GridViewIcon,
   web: GlobeIcon,
+  desktop: ComputerIcon,
   android: AndroidIcon,
   ios: AppleIcon,
   chrome_extension: BrowserIcon,

@@ -35,6 +35,7 @@ export const categories = [
 
 export const platforms = [
   "web",
+  "desktop",
   "android",
   "ios",
   "chrome_extension",
@@ -94,6 +95,7 @@ export const statusLabels: Record<StatusFilter, string> = {
 
 export const platformLabels: Record<Platform | "all", string> = {
   all: "All Platforms",
+  desktop: "Desktop",
   web: "Web",
   android: "Android",
   ios: "iOS",
@@ -137,21 +139,22 @@ export const slugSchema = z
   .max(100, "Slug is too long")
   .refine(
     (val) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(val),
-    "Slug must be lowercase, URL-safe, and use hyphens only"
+    "Slug must be lowercase, URL-safe, and use hyphens only",
   );
 
 export const toolSchema = z.object({
   slug: slugSchema,
   tagline: z
     .string("Tagline is required")
-    .min(10, "Tagline is too short")
-    .max(100, "Tagline is too long"),
+    .min(20, "Tagline is too short")
+    .max(65, "Tagline is too long"),
   name: z
     .string("Name is required")
-    .min(1, "Name is too short")
-    .max(50, "Name is too long"),
+    .min(2, "Name is too short")
+    .max(30, "Name is too long"),
   pricing: z.enum(pricingModels, "Invalid pricing model"),
   logo: z.url(),
+  banner: z.url(),
   category: z.array(z.enum(categories)).min(1, "Select at least one category"),
   platform: z.array(z.enum(platforms)).min(1, "Select at least one platform"),
   tags: z
@@ -159,11 +162,10 @@ export const toolSchema = z.object({
     .max(10, "Maximum 10 tags allowed")
     .default([])
     .nonoptional(),
-  banner: z.url().optional(),
   description: z
     .string("Description is required")
-    .min(250, "Description is too short")
-    .max(5000, "Description is too long"),
+    .min(100, "Description is too short")
+    .max(3000, "Description is too long"),
   url: z.url("Invalid URL"),
 });
 
@@ -184,7 +186,7 @@ export const logoSchema = z
     {
       message: "Logo is required",
       path: ["logo"],
-    }
+    },
   );
 
 export const bannerSchema = z
@@ -204,7 +206,7 @@ export const bannerSchema = z
     {
       message: "Banner is required",
       path: ["banner"],
-    }
+    },
   );
 
 export const toolSubmitSchema = toolSchema
