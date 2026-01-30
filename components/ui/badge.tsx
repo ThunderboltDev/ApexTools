@@ -20,18 +20,20 @@ const badgeVariants = cva(
       },
       size: {
         default: "px-2 py-0.5 text-[13px] [&>svg]:size-3.5",
+        sm: "px-1.75 py-0.5 text-xs [&>svg]:size-3",
       },
     },
     defaultVariants: {
       variant: "accent",
       size: "default",
     },
-  }
+  },
 );
 
 function Badge({
   className,
   variant = "default",
+  size = "default",
   render,
   ...props
 }: useRender.ComponentProps<"span"> & VariantProps<typeof badgeVariants>) {
@@ -39,9 +41,9 @@ function Badge({
     defaultTagName: "span",
     props: mergeProps<"span">(
       {
-        className: cn(badgeVariants({ className, variant })),
+        className: cn(badgeVariants({ className, variant, size })),
       },
-      props
+      props,
     ),
     render,
     state: {
