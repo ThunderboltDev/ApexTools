@@ -6,7 +6,7 @@ export const brand = {
   name: config.name,
   color: config.themeColor,
   supportEmail: config.socials.email,
-  logoUrl: config.logo.url,
+  logoUrl: config.url + config.logo.url,
 };
 
 export const fonts = {
@@ -31,7 +31,9 @@ export const styles = {
   },
 
   logo: {
+    display: "block",
     borderRadius: "16px",
+    margin: "0 auto",
     marginBottom: "24px",
   },
 
@@ -56,8 +58,8 @@ export const styles = {
   button: {
     backgroundColor: brand.color,
     color: "#ffffff",
-    padding: "12px 36px",
-    borderRadius: "12px",
+    padding: "8px 24px",
+    borderRadius: "8px",
     fontSize: "16px",
     fontWeight: "600",
     textDecoration: "none",
