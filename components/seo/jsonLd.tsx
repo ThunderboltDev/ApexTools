@@ -169,7 +169,7 @@ function mapCategoryToSchemaOrg(category: string): string {
 }
 
 export function getToolJsonLd(tool: Tool): WithContext<SoftwareApplication> {
-  return {
+  const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
     "name": tool.name,
@@ -177,7 +177,7 @@ export function getToolJsonLd(tool: Tool): WithContext<SoftwareApplication> {
     "image": tool.logo,
     "applicationCategory": mapCategoryToSchemaOrg(tool.category[0]),
     "operatingSystem": tool.platform
-      .map((platform) => platform.charAt(0).toUpperCase() + platform.slice(1))
+      .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
       .join(", "),
     "url": `${url}/tool/${tool.slug}`,
     "author": {
@@ -189,30 +189,27 @@ export function getToolJsonLd(tool: Tool): WithContext<SoftwareApplication> {
     ...(tool.upvotes > 0 && {
       aggregateRating: {
         "@type": "AggregateRating",
-        "ratingValue": "5",
-        "ratingCount": String(tool.upvotes),
-        "bestRating": "5",
-        "worstRating": "1",
+        "ratingValue": 5,
+        "ratingCount": tool.upvotes,
+        "bestRating": 5,
+        "worstRating": 1,
       },
       interactionStatistic: {
         "@type": "InteractionCounter",
-        "interactionType": {
-          "@type": "LikeAction",
-        },
+        "interactionType": { "@type": "LikeAction" },
         "userInteractionCount": tool.upvotes,
       },
     }),
     ...(tool.verifiedAt && {
-      hasCredential: {
-        "@type": "EducationalOccupationalCredential",
-        "credentialCategory": "Verified Domain",
-        "recognizedBy": {
-          "@type": "Organization",
-          "name": "ApexTools",
-        },
+      publisher: {
+        "@type": "Organization",
+        "name": "ApexTools",
+        "description": "Verified Domain",
       },
     }),
-  };
+  } satisfies WithContext<SoftwareApplication>;
+
+  return jsonLd;
 }
 
 export function getFAQJsonLd(

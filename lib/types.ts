@@ -12,7 +12,6 @@ import type {
   platforms,
   pricingModels,
   sortOptions,
-  status,
   timePeriods,
 } from "@/lib/constants";
 
@@ -33,9 +32,6 @@ export type CategoryFilter = Category | "all";
 export type PricingModel = (typeof pricingModels)[number];
 export type PricingModelFilter = PricingModel | "all";
 
-export type Status = (typeof status)[number];
-export type StatusFilter = Status | "all";
-
 export type Platform = (typeof platforms)[number];
 export type PlatformFilter = Platform | "all";
 
@@ -53,7 +49,6 @@ export interface PaginationInput {
   sort?: SortOption;
   category?: Category;
   pricing?: PricingModel;
-  status?: Status;
   slugs?: string[];
   search?: string;
   ownerId?: string;

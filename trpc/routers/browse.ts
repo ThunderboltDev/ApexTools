@@ -27,7 +27,6 @@ export const browseRouter = createTRPCRouter({
       return paginateTools({
         ...input,
         viewerId: ctx.user?.id,
-        status: "approved",
       });
     }),
 
@@ -79,7 +78,6 @@ export const browseRouter = createTRPCRouter({
       return paginateTools({
         ...input,
         viewerId: ctx.user?.id,
-        status: "approved",
       });
     }),
 

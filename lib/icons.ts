@@ -8,7 +8,6 @@ import {
   BookOpen01Icon,
   BrainIcon,
   BrowserIcon,
-  Cancel01Icon,
   CheckListIcon,
   Clock02Icon,
   CodeSimpleIcon,
@@ -33,7 +32,6 @@ import {
   PenTool01Icon,
   Radar01Icon,
   Search02Icon,
-  Tick02Icon,
   Video01Icon,
   VolumeHighIcon,
   Wallet01Icon,
@@ -45,7 +43,6 @@ import type {
   PlatformFilter,
   PricingModelFilter,
   SortOptionFilter,
-  StatusFilter,
 } from "@/lib/types";
 
 export const categoryIcons: Record<CategoryFilter, IconSvgElement> = {
@@ -86,13 +83,6 @@ export const pricingModelIcons: Record<PricingModelFilter, IconSvgElement> = {
   free: GiftIcon,
   freemium: Layers01Icon,
   paid: CreditCardIcon,
-};
-
-export const statusIcons: Record<StatusFilter, IconSvgElement> = {
-  all: GridViewIcon,
-  pending: Clock02Icon,
-  approved: Tick02Icon,
-  rejected: Cancel01Icon,
 };
 
 export const analyticsEventIcons: Record<AnalyticsEventFilter, IconSvgElement> =

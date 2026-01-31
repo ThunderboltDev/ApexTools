@@ -5,7 +5,6 @@ import type {
   Platform,
   PricingModelFilter,
   SortOptionFilter,
-  StatusFilter,
   TimePeriod,
 } from "@/lib/types";
 
@@ -43,8 +42,6 @@ export const platforms = [
 ] as const;
 
 export const pricingModels = ["free", "freemium", "paid"] as const;
-
-export const status = ["pending", "approved", "rejected"] as const;
 
 export const analyticsEvents = ["view", "visit", "impression"] as const;
 
@@ -84,13 +81,6 @@ export const pricingLabels: Record<PricingModelFilter, string> = {
   free: "Free",
   freemium: "Freemium",
   paid: "Paid",
-} as const;
-
-export const statusLabels: Record<StatusFilter, string> = {
-  all: "All",
-  pending: "Pending",
-  approved: "Approved",
-  rejected: "Rejected",
 } as const;
 
 export const platformLabels: Record<Platform | "all", string> = {
@@ -139,7 +129,7 @@ export const slugSchema = z
   .max(100, "Slug is too long")
   .refine(
     (val) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(val),
-    "Slug must be lowercase, URL-safe, and use hyphens only"
+    "Slug must be lowercase, URL-safe, and use hyphens only",
   );
 
 export const toolSchema = z.object({
@@ -186,7 +176,7 @@ export const logoSchema = z
     {
       message: "Logo is required",
       path: ["logo"],
-    }
+    },
   );
 
 export const bannerSchema = z
@@ -206,7 +196,7 @@ export const bannerSchema = z
     {
       message: "Banner is required",
       path: ["banner"],
-    }
+    },
   );
 
 export const toolSubmitSchema = toolSchema
