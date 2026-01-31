@@ -1,12 +1,12 @@
-import { config } from "@/config";
+import { config, socials } from "@/config";
 
 export { url } from "@/config";
 
 export const brand = {
   name: config.name,
   color: config.themeColor,
-  supportEmail: config.socials.email,
-  logoUrl: config.url + config.logo.url,
+  supportEmail: socials.email,
+  logoUrl: `${config.url}/logo.webp`,
 };
 
 export const fonts = {

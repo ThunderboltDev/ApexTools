@@ -12,6 +12,7 @@ import {
 import { useEffect, useRef } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useDebounce } from "use-debounce";
+import { getSearchResultsJsonLd, JsonLd } from "@/components/seo/jsonLd";
 import { ToolGrid } from "@/components/tool/grid";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -62,7 +63,7 @@ export default function BrowsePage() {
     () => {
       inputRef.current?.focus();
     },
-    { preventDefault: true }
+    { preventDefault: true },
   );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: search
@@ -81,7 +82,7 @@ export default function BrowsePage() {
     },
     {
       placeholderData: keepPreviousData,
-    }
+    },
   );
 
   const handleSortChange = (sort: string) => {
@@ -115,6 +116,9 @@ export default function BrowsePage() {
 
   return (
     <div className="space-y-8">
+      {useQueryResults.data?.tools && (
+        <JsonLd data={getSearchResultsJsonLd(useQueryResults.data.tools)} />
+      )}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end">
         <div className="relative grow">
           <HugeiconsIcon

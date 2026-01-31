@@ -20,48 +20,44 @@ export const metadata: Metadata = {
     default: config.name,
   },
   description: config.description,
-  keywords: [...config.keywords],
   applicationName: config.name,
   creator: config.creator,
   category: "technology",
   icons: {
-    icon: config.logo.url,
-    apple: config.logo.url,
-    shortcut: config.logo.url,
+    icon:"/logo.webp",
+    apple:"/logo.webp",
+    shortcut:"/logo.webp",
   },
   openGraph: {
-    title: {
-      template: `%s | ${config.name}`,
-      default: config.name,
-    },
-    url,
     siteName: config.name,
-    description: config.description,
     locale: "en_US",
     type: "website",
     images: [
       {
-        url: config.preview.url,
-        width: config.preview.width,
-        height: config.preview.height,
+        url: "/preview.webp",
+        width: 1200,
+        height: 630,
         alt: `${config.name} Landing Page`,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: {
-      template: `%s | ${config.name}`,
-      default: config.name,
-    },
-    description: config.description,
     creator: "Thunderbolt",
-    images: [config.preview.url],
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  keywords:[
+    "ai tools",
+    "ai directory",
+    "best ai tools",
+    "ai tools directory",
+    "ai productivity tools",
+    "ai coding assistants",
+    "ai marketing tools",
+    "ai writing tools",
+    "ai image generators",
+    "ai video generators",
+    "chatgpt alternatives",
+    "llm comparison",]
 };
 
 export const viewport: Viewport = {

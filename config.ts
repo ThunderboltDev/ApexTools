@@ -1,8 +1,7 @@
 export const isDev = process.env.NODE_ENV === "development";
 
-export const url = isDev
-  ? "http://localhost:3000"
-  : "https://www.apextools.site";
+export const url =
+  isDev ? "http://localhost:3000" : "https://www.apextools.site";
 
 export const config = {
   name: "ApexTools",
@@ -11,51 +10,26 @@ export const config = {
   url,
   creator: "Thunderbolt",
   themeColor: "#63a402",
-  socials: {
-    github: "https://github.com/ThunderboltDev",
-    discord: "https://discord.com/users/855342398115414037",
-    twitter: "https://x.com/Thunderbolt3141",
-    email: "support@thunderboltdev.site",
-  },
-  favicon: "/favicon.ico",
-  logo: {
-    url: "/logo.webp",
-    size: 512,
-  },
-  preview: {
-    url: "/preview.webp",
-    width: 1200,
-    height: 600,
-  },
-  keywords: [
-    "ai tools",
-    "ai directory",
-    "best ai tools",
-    "ai tools directory",
-    "ai productivity tools",
-    "ai coding assistants",
-    "ai marketing tools",
-    "ai writing tools",
-    "ai image generators",
-    "ai video generators",
-    "chatgpt alternatives",
-    "llm comparison",
-  ],
 } as const;
 
 export const products = {
   "7": {
-    productId: isDev
-      ? "pdt_0NXOm96nQQIzkSQGqkAjN"
-      : "pdt_0NXOn5POXSbEY6Ttjiz9L",
+    productId:
+      isDev ? "pdt_0NXOm96nQQIzkSQGqkAjN" : "pdt_0NXOn5POXSbEY6Ttjiz9L",
     duration: 7,
     price: 79,
   },
   "28": {
-    productId: isDev
-      ? "pdt_0NXOmHhFE6VwOtn3LhDw4"
-      : "pdt_0NXOnFEuk7JAYcvygczLb",
+    productId:
+      isDev ? "pdt_0NXOmHhFE6VwOtn3LhDw4" : "pdt_0NXOnFEuk7JAYcvygczLb",
     duration: 28,
     price: 249,
   },
+} as const;
+
+export const socials = {
+  github: "https://github.com/ThunderboltDev",
+  discord: "https://discord.com/users/855342398115414037",
+  twitter: "https://x.com/Thunderbolt3141",
+  email: "support@thunderboltdev.site",
 } as const;

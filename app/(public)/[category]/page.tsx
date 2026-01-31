@@ -2,10 +2,16 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/app/footer";
 import { ToolDirectory } from "@/components/directory";
+import {
+  getFAQJsonLd,
+  getToolCollectionJsonLd,
+  JsonLd,
+} from "@/components/seo/jsonLd";
 import { FAQ } from "@/components/tool/faq";
 import { categoryContent } from "@/lib/category-data";
 import { categories } from "@/lib/constants";
 import type { Category } from "@/lib/types";
+import { trpc } from "@/trpc/server";
 
 interface PageProps {
   params: Promise<{ category: string }>;
@@ -20,18 +26,18 @@ export async function generateMetadata({
     return {};
   }
 
-  const content = categoryContent[category as Category];
+  const { title, headline, description } =
+    categoryContent[category as Category];
 
   return {
-    title: content.title,
-    description: content.description,
-    openGraph: {
-      title: content.title,
-      description: content.description,
-      type: "website",
-    },
+    title: title,
+    description: `${headline} | ${description}`,
     alternates: {
       canonical: `/${category}`,
+    },
+    openGraph: {
+      type: "website",
+      url: `/${category}`,
     },
   };
 }
@@ -51,8 +57,22 @@ export default async function CategoryPage({ params }: PageProps) {
 
   const content = categoryContent[category as Category];
 
+  const toolsData = await trpc.browse.getAll({
+    category: category as Category,
+    limit: 24,
+  });
+
   return (
     <>
+      <JsonLd
+        data={getToolCollectionJsonLd(
+          category,
+          toolsData.tools,
+          content.headline,
+          content.description,
+        )}
+      />
+      <JsonLd data={getFAQJsonLd(content.faqs)} />
       <div className="mt-4 mb-8 space-y-3">
         <h1 className="md:text-5xl text-center text-balance">
           {content.headline}
@@ -62,7 +82,7 @@ export default async function CategoryPage({ params }: PageProps) {
         </p>
       </div>
       <ToolDirectory category={category as Category} />
-      {content.faqs.length > 0 && <FAQ items={content.faqs} />}
+      <FAQ items={content.faqs} />
       <Footer />
     </>
   );

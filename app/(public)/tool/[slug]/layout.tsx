@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { PropsWithChildren } from "react";
+import {
+  getBreadcrumbJsonLd,
+  getToolJsonLd,
+  JsonLd,
+} from "@/components/seo/jsonLd";
 import { ToolProvider } from "@/components/tool/tool-context";
+import { url } from "@/config";
 import { trpc } from "@/trpc/server";
 
 interface ToolLayoutProps {
@@ -17,8 +23,8 @@ export async function generateMetadata({
     const tool = await trpc.browse.getBySlug({ slug });
 
     return {
-      title: `${tool.name} - ${tool.tagline}`,
-      description: tool.description,
+      title: `${tool.name}`,
+      description: tool.tagline,
       openGraph: {
         title: tool.name,
         description: tool.tagline,
@@ -45,5 +51,17 @@ export default async function ToolLayout({
 
   if (!tool) notFound();
 
-  return <ToolProvider tool={tool}>{children}</ToolProvider>;
+  const breadcrumbs = [
+    { name: "Home", item: url },
+    { name: "Tool", item: `${url}/tool` },
+    { name: tool.name, item: `${url}/tool/${tool.slug}` },
+  ];
+
+  return (
+    <ToolProvider tool={tool}>
+      <JsonLd data={getToolJsonLd(tool)} />
+      <JsonLd data={getBreadcrumbJsonLd(breadcrumbs)} />
+      {children}
+    </ToolProvider>
+  );
 }
