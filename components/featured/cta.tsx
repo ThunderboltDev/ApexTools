@@ -2,20 +2,27 @@ import { CrownIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { format } from "date-fns";
 import type { Tool } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import { FeaturedToolPurchaseDialog } from "./dialog";
 
 interface FeaturedToolCTAProps {
   tool: Tool;
+  className?: string;
 }
 
-export function FeaturedToolCTA({ tool }: FeaturedToolCTAProps) {
+export function FeaturedToolCTA({ tool, className }: FeaturedToolCTAProps) {
   const isFeatured =
     tool.featuredUntil && new Date(tool.featuredUntil) > new Date();
 
   return (
-    <div className="mt-6 p-4 rounded-lg border border-gold/30 bg-gold/5 shadow-sm shadow-gold/10">
+    <div
+      className={cn(
+        "mt-6 p-4 rounded-lg border border-gold/30 bg-gold/5 shadow-sm shadow-gold/10",
+        className,
+      )}
+    >
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        {isFeatured ? (
+        {isFeatured ?
           <>
             <div className="flex items-center gap-3">
               <HugeiconsIcon
@@ -38,8 +45,7 @@ export function FeaturedToolCTA({ tool }: FeaturedToolCTAProps) {
               currentFeaturedUntil={tool.featuredUntil}
             />
           </>
-        ) : (
-          <>
+        : <>
             <div>
               <p className="font-medium">Boost your tool's visibility</p>
               <p className="text-sm text-muted-foreground">
@@ -53,7 +59,7 @@ export function FeaturedToolCTA({ tool }: FeaturedToolCTAProps) {
               currentFeaturedUntil={tool.featuredUntil}
             />
           </>
-        )}
+        }
       </div>
     </div>
   );

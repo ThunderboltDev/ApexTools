@@ -16,6 +16,7 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { ToolAnalytics } from "@/components/dashboard/analytics";
+import { FeaturedToolCTA } from "@/components/featured/cta";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,7 +36,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
 import { DetailGrid, DetailRow } from "@/components/ui/detail";
 import { LinkButton } from "@/components/ui/link-button";
 import { LoadingScreen } from "@/components/ui/loading-screen";
@@ -52,7 +52,7 @@ export default function ToolOverviewPage() {
 
   const { data: tool, isLoading: isLoadingTool } = trpc.tool.getBySlug.useQuery(
     { slug },
-    { enabled: !!slug }
+    { enabled: !!slug },
   );
 
   const { mutate: deleteTool, isPending: isDeleting } =
@@ -63,7 +63,7 @@ export default function ToolOverviewPage() {
       },
       onError: (error) => {
         toast.error(
-          error instanceof Error ? error.message : "Failed to delete tool"
+          error instanceof Error ? error.message : "Failed to delete tool",
         );
       },
     });
@@ -117,6 +117,7 @@ export default function ToolOverviewPage() {
       </PageHeader>
 
       <PageContent className="grid gap-4 grid-cols-1 lg:grid-cols-3">
+        <FeaturedToolCTA className="lg:col-span-3" tool={tool} />
         <ToolAnalytics toolId={tool.id} className="lg:col-span-3" />
 
         <Card className="lg:col-span-2">
@@ -183,17 +184,16 @@ export default function ToolOverviewPage() {
                     disabled={isDeleting}
                     aria-busy={isDeleting}
                   >
-                    {isDeleting ? (
+                    {isDeleting ?
                       <>
                         <Spinner />
                         Deleting...
                       </>
-                    ) : (
-                      <>
+                    : <>
                         <HugeiconsIcon icon={Delete02Icon} />
                         Confirm Delete
                       </>
-                    )}
+                    }
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
