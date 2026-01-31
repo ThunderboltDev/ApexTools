@@ -13,6 +13,86 @@ import {
 import { paginateTools } from "@/trpc/utils/paginate";
 
 export const toolRouter = createTRPCRouter({
+  claim: privateProcedure
+    .use(createRateLimit(3, 60, "tool.claim"))
+    .input(z.object({ toolId: z.string().min(1) }))
+    .mutation(async ({ ctx, input }) => {
+      const tool = await db.query.tool.findFirst({
+        where: eq(toolsTable.id, input.toolId),
+        columns: {
+          id: true,
+          url: true,
+          userId: true,
+          verifiedAt: true,
+          verificationCode: true,
+        },
+      });
+
+      if (!tool) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Tool not found",
+        });
+      }
+
+      if (tool.userId === ctx.user.id) {
+        return { success: true, message: "You already own this tool" };
+      }
+
+      if (tool.verifiedAt) {
+        const domainAge = Date.now() - tool.verifiedAt.getTime();
+        const threeDays = 3 * 24 * 60 * 60 * 1000;
+
+        if (domainAge < threeDays) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message:
+              "Tool must be verified for at least 3 days before claiming",
+          });
+        }
+      }
+
+      const expectedCode = tool.verificationCode;
+      const txtRecordHost = `_apex-verify.${getDomain(tool.url)}`;
+
+      try {
+        const { Resolver } = await import("node:dns").then((m) => m.promises);
+        const resolver = new Resolver();
+
+        resolver.setServers(["8.8.8.8", "1.1.1.1"]);
+
+        const txtRecords = await resolver.resolveTxt(txtRecordHost);
+        const flatRecords = txtRecords.flat();
+
+        const found = flatRecords.some((txt) => txt === expectedCode);
+
+        if (!found) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `DNS TXT record not found. Add "${expectedCode}" to ${txtRecordHost}`,
+          });
+        }
+
+        await db
+          .update(toolsTable)
+          .set({
+            userId: ctx.user.id,
+            verifiedAt: new Date(),
+            verificationCode: generateVerificationCode(),
+          })
+          .where(eq(toolsTable.id, input.toolId))
+          .returning();
+
+        return { success: true, message: "Tool claimed successfully!" };
+      } catch (error) {
+        if (error instanceof TRPCError) throw error;
+
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `Could not find DNS TXT record. Please ensure the record is set correctly.`,
+        });
+      }
+    }),
   upvote: privateProcedure
     .use(createRateLimit(30, 60, "tool.upvote"))
     .input(z.object({ toolId: z.string().min(1) }))
@@ -24,8 +104,8 @@ export const toolRouter = createTRPCRouter({
           .where(
             and(
               eq(upvotesTable.userId, ctx.user.id),
-              eq(upvotesTable.toolId, input.toolId)
-            )
+              eq(upvotesTable.toolId, input.toolId),
+            ),
           )
           .limit(1);
 
@@ -37,8 +117,8 @@ export const toolRouter = createTRPCRouter({
             .where(
               and(
                 eq(upvotesTable.userId, ctx.user.id),
-                eq(upvotesTable.toolId, input.toolId)
-              )
+                eq(upvotesTable.toolId, input.toolId),
+              ),
             );
 
           await tx
@@ -71,8 +151,8 @@ export const toolRouter = createTRPCRouter({
         .where(
           and(
             eq(upvotesTable.userId, ctx.user.id),
-            eq(upvotesTable.toolId, input.toolId)
-          )
+            eq(upvotesTable.toolId, input.toolId),
+          ),
         )
         .limit(1);
 
@@ -97,7 +177,7 @@ export const toolRouter = createTRPCRouter({
       const tool = await db.query.tool.findFirst({
         where: and(
           eq(toolsTable.slug, input.slug),
-          eq(toolsTable.userId, ctx.user.id)
+          eq(toolsTable.userId, ctx.user.id),
         ),
       });
 
@@ -118,7 +198,7 @@ export const toolRouter = createTRPCRouter({
       const tool = await db.query.tool.findFirst({
         where: and(
           eq(toolsTable.id, input.id),
-          eq(toolsTable.userId, ctx.user.id)
+          eq(toolsTable.userId, ctx.user.id),
         ),
       });
 
@@ -137,7 +217,7 @@ export const toolRouter = createTRPCRouter({
     .input(
       z.object({
         slug: z.string().min(1),
-      })
+      }),
     )
     .query(async ({ input }) => {
       const slug = input.slug.toLowerCase().trim().replace(/\s+/g, "-");
@@ -229,9 +309,7 @@ export const toolRouter = createTRPCRouter({
           url: input.url,
           updatedAt: new Date(),
           verifiedAt: isDomainChanged ? null : existingTool.verifiedAt,
-          verificationCode: isDomainChanged
-            ? generateVerificationCode()
-            : existingTool.verificationCode,
+          verificationCode: generateVerificationCode(),
         })
         .where(eq(toolsTable.slug, input.slug))
         .returning();
@@ -274,13 +352,13 @@ export const toolRouter = createTRPCRouter({
     }),
 
   verify: privateProcedure
-    .use(createRateLimit(5, 60, "tool.verify"))
+    .use(createRateLimit(3, 60, "tool.verify"))
     .input(z.object({ toolId: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
       const tool = await db.query.tool.findFirst({
         where: and(
           eq(toolsTable.id, input.toolId),
-          eq(toolsTable.userId, ctx.user.id)
+          eq(toolsTable.userId, ctx.user.id),
         ),
         columns: {
           id: true,
@@ -302,7 +380,7 @@ export const toolRouter = createTRPCRouter({
       }
 
       const expectedCode = tool.verificationCode;
-      const txtRecordHost = `_apex-verify.${new URL(tool.url).hostname}`;
+      const txtRecordHost = `_apex-verify.${getDomain(tool.url)}`;
 
       try {
         const { Resolver } = await import("node:dns").then((m) => m.promises);
@@ -326,6 +404,7 @@ export const toolRouter = createTRPCRouter({
           .update(toolsTable)
           .set({
             verifiedAt: new Date(),
+            verificationCode: generateVerificationCode(),
           })
           .where(eq(toolsTable.id, input.toolId));
 

@@ -11,6 +11,7 @@ import { ToolBadge } from "@/components/tool/badge";
 import { BookmarkButton } from "@/components/tool/bookmark";
 import { ToolCard } from "@/components/tool/card";
 import { CategoryBadge } from "@/components/tool/category";
+import { ClaimTool } from "@/components/tool/claim";
 import { useTool } from "@/components/tool/tool-context";
 import { UpvoteButton } from "@/components/tool/upvote";
 import { VerifiedBadge } from "@/components/tool/verified-badge";
@@ -58,8 +59,8 @@ export default function ToolPage() {
       </div>
 
       <div className="relative sm:px-6 -mt-20 mb-8">
-        <div className="flex flex-col md:flex-row md:items-end gap-6">
-          <div className="relative rounded-md translate-x-4 drop-shadow-sm shrink-0 size-32 md:size-40 overflow-hidden">
+        <div className="flex flex-col md:flex-row gap-6">
+          <div className="relative rounded-md drop-shadow-sm shrink-0 size-32 md:size-40 overflow-hidden">
             <Image
               src={tool.logo}
               alt={`${tool.name} Logo`}
@@ -96,12 +97,15 @@ export default function ToolPage() {
               )}
             </div>
           </div>
+        </div>
 
-          <div className="flex flex-wrap items-center gap-3 pb-2">
-            <div className="flex items-center gap-2">
-              <UpvoteButton className="hover:bg-secondary" tool={tool} />
-              <BookmarkButton slug={tool.slug} />
-            </div>
+        <div className="flex flex-row justify-between gap-3 pb-2 mt-6">
+          <div className="flex items-center gap-2">
+            <UpvoteButton className="hover:bg-secondary" tool={tool} />
+            <BookmarkButton slug={tool.slug} />
+          </div>
+          <div className="flex items-center gap-2">
+            <ClaimTool tool={tool} />
             <LinkButton
               theme="accent"
               href={tool.url}
@@ -138,7 +142,7 @@ export default function ToolPage() {
                 "prose-pre:p-4 prose-pre:rounded-lg prose-pre:bg-muted prose-pre:overflow-x-auto prose-pre:my-6",
                 "prose-img:rounded-lg prose-img:border prose-img:my-6",
                 "prose-hr:my-8 prose-hr:border-muted",
-                "prose-a:text-primary prose-a:underline prose-a:underline-offset-4 hover:prose-a:text-primary/80"
+                "prose-a:text-primary prose-a:underline prose-a:underline-offset-4 hover:prose-a:text-primary/80",
               )}
             >
               <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
@@ -173,17 +177,16 @@ export default function ToolPage() {
 
         <div className="sticky top-24 py-6 space-y-4">
           <h3>Similar Tools</h3>
-          {similarTools && similarTools.length > 0 ? (
+          {similarTools && similarTools.length > 0 ?
             <div className="space-y-4">
               {similarTools.map((tool) => (
                 <ToolCard key={tool.id} tool={tool} />
               ))}
             </div>
-          ) : (
-            <p className="text-sm text-muted-foreground">
+          : <p className="text-sm text-muted-foreground">
               No similar tools found.
             </p>
-          )}
+          }
         </div>
       </div>
     </>
