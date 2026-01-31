@@ -35,8 +35,8 @@ export function DomainVerification({ tool }: { tool: Tool }) {
         title="Domain Verification"
         description="Verified domain builds more trust with visitors"
       >
-        <div className="flex items-center gap-3 py-2">
-          <div className="flex size-10 items-center justify-center rounded-full bg-success/10 text-success-foreground">
+        <div id="domain-verification" className="flex items-center gap-3 py-2">
+          <div className="flex size-10 items-center justify-center rounded-full bg-success/10 text-success">
             <HugeiconsIcon icon={ShieldKeyIcon} className="size-6" />
           </div>
 
@@ -74,16 +74,15 @@ export function DomainVerification({ tool }: { tool: Tool }) {
         disabled={isVerifying}
         className="flex ml-auto"
       >
-        {isVerifying ? (
+        {isVerifying ?
           <>
             <Spinner /> Verifying...
           </>
-        ) : (
-          <>
+        : <>
             <HugeiconsIcon icon={ShieldKeyIcon} />
             Verify Domain
           </>
-        )}
+        }
       </Button>
     </FormSection>
   );

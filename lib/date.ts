@@ -22,11 +22,6 @@ export function getDaysAgo(number: number) {
   return new Date(date.getTime() - getDaysInMs(number));
 }
 
-export function isNew(createdAt: Date) {
-  const today = Date.now();
-  return today - createdAt.getTime() < getDaysInMs(7);
-}
-
 export const dateExpression = sql<string>`
   to_char(${toolAnalyticsEventsTable.createdAt}, 'YYYY-MM-DD')
 `;

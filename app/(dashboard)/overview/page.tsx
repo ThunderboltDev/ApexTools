@@ -335,6 +335,35 @@ export default function OverviewPage() {
           </CardContent>
         </Card>
       </div>
+
+      <Card className="border-2 border-dashed border-amber-500/40 bg-linear-to-r from-amber-500/5 to-orange-500/5">
+        <CardContent className="flex flex-col md:flex-row items-center justify-between gap-4 py-6">
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-xl bg-amber-500/10">
+              <HugeiconsIcon
+                icon={CrownIcon}
+                className="size-6 text-amber-500"
+              />
+            </div>
+            <div className="space-y-1">
+              <h3 className="font-semibold">
+                Want more visibility for your tools?
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Featured tools appear first in all listings and get up to 10x
+                more views.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/tools"
+            className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 font-medium text-sm hover:bg-amber-500/20 transition-colors"
+          >
+            <HugeiconsIcon icon={CrownIcon} className="size-4" />
+            Feature Your Tool
+          </Link>
+        </CardContent>
+      </Card>
     </div>
   );
 }

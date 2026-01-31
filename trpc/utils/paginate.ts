@@ -117,6 +117,8 @@ export async function paginateTools(input: PaginationInput): Promise<{
     )`
     : sql<boolean>`FALSE`;
 
+  const isFeaturedExpr = sql<boolean>`(${toolsTable.featuredUntil} IS NOT NULL AND ${toolsTable.featuredUntil} > NOW())`;
+
   const tools = await db
     .select({
       ...getTableColumns(toolsTable),
@@ -124,7 +126,7 @@ export async function paginateTools(input: PaginationInput): Promise<{
     })
     .from(toolsTable)
     .where(where)
-    .orderBy(orderBy)
+    .orderBy(desc(isFeaturedExpr), orderBy)
     .limit(limit)
     .offset(offset);
 

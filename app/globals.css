@@ -20,18 +20,13 @@
 
   --accent: oklch(0.65 0.18 132);
 
+  --gold: oklch(0.67 0.175 80);
   --info: oklch(0.63 0.16 224);
   --danger: oklch(0.6 0.22 27);
   --warning: oklch(0.62 0.18 70);
   --success: oklch(0.63 0.16 152);
 
   --radius: 0.5rem;
-
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
 }
 
 .dark {
@@ -61,46 +56,11 @@
 
   --color-accent: var(--accent);
 
-  --color-success: color-mix(in oklch, var(--success) 85%, var(--color-black));
-  --color-warning: color-mix(in oklch, var(--warning) 85%, var(--color-black));
-  --color-danger: color-mix(in oklch, var(--danger) 85%, var(--color-black));
-  --color-info: color-mix(in oklch, var(--info) 85%, var(--color-black));
-
-  --color-orange: color-mix(
-    in oklch,
-    var(--color-orange-500) 85%,
-    var(--color-black)
-  );
-
-  --color-orange-foreground: color-mix(
-    in oklch,
-    var(--color-orange) 85%,
-    var(--color-foreground)
-  );
-
-  --color-success-foreground: color-mix(
-    in oklch,
-    var(--success) 85%,
-    var(--color-foreground) 15%
-  );
-
-  --color-warning-foreground: color-mix(
-    in oklch,
-    var(--warning) 85%,
-    var(--color-foreground) 15%
-  );
-
-  --color-danger-foreground: color-mix(
-    in oklch,
-    var(--danger) 85%,
-    var(--color-foreground) 15%
-  );
-
-  --color-info-foreground: color-mix(
-    in oklch,
-    var(--info) 85%,
-    var(--color-foreground) 15%
-  );
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+  --color-gold: var(--gold);
 
   --color-ring: var(--ring);
   --color-input: var(--input);

@@ -3,8 +3,7 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { headers } from "next/headers";
 import superjson from "superjson";
-import { auth } from "@/lib/auth";
-import type { Session, User } from "@/lib/types";
+import { auth, type Session, type User } from "@/lib/auth";
 
 const redis = Redis.fromEnv();
 
@@ -49,7 +48,7 @@ export function createRateLimit(
   max: number,
   durationSeconds: number,
   routeName?: string,
-  message?: string
+  message?: string,
 ) {
   const limiter = new Ratelimit({
     redis,

@@ -1,6 +1,8 @@
 import { createTRPCRouter } from "@/trpc/init";
+import { billingRouter } from "@/trpc/routers/billing";
 import { browseRouter } from "@/trpc/routers/browse";
 import { dashboardRouter } from "@/trpc/routers/dashboard";
+import { featuredRouter } from "@/trpc/routers/featured";
 import { toolRouter } from "@/trpc/routers/tool";
 import { userRouter } from "@/trpc/routers/user";
 
@@ -9,6 +11,8 @@ export const appRouter = createTRPCRouter({
   tool: toolRouter,
   browse: browseRouter,
   dashboard: dashboardRouter,
+  featured: featuredRouter,
+  billing: billingRouter,
 });
 
 export type AppRouter = typeof appRouter;

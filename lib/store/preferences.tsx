@@ -23,6 +23,6 @@ export const usePreferences = create<PreferencesState>()(
     }),
     {
       name: "preferences",
-    },
-  ),
+    }
+  )
 );

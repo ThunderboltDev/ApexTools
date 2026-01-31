@@ -25,11 +25,14 @@ export const usersTable = pgTable("user", {
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
   image: text("image"),
+
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
+
+  customerId: text("customer_id"),
 });
 
 export const sessionsTable = pgTable(
@@ -251,4 +254,5 @@ export const schema = {
   tool: toolsTable,
   upvote: upvotesTable,
   analyticsEvents: toolAnalyticsEventsTable,
+  featuredPurchase: featuredPurchasesTable,
 };

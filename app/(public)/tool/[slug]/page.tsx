@@ -6,6 +6,8 @@ import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
+import { FeaturedToolCTA } from "@/components/featured/cta";
+import { ToolBadge } from "@/components/tool/badge";
 import { BookmarkButton } from "@/components/tool/bookmark";
 import { ToolCard } from "@/components/tool/card";
 import { CategoryBadge } from "@/components/tool/category";
@@ -15,12 +17,15 @@ import { VerifiedBadge } from "@/components/tool/verified-badge";
 import { ViewTracker } from "@/components/tool/view-tracker";
 import { Badge } from "@/components/ui/badge";
 import { LinkButton } from "@/components/ui/link-button";
+import { useSession } from "@/lib/auth/client";
 import { getVisitorId } from "@/lib/store/visitor";
 import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/provider";
 
 export default function ToolPage() {
   const tool = useTool();
+
+  const { data: session, isPending } = useSession();
 
   const { data: similarTools } = trpc.browse.getSimilarTools.useQuery({
     categories: tool.category,
@@ -33,6 +38,8 @@ export default function ToolPage() {
   const handleVisit = () => {
     incrementVisit({ toolId: tool.id, visitorId: getVisitorId() });
   };
+
+  const isOwner = !isPending && session?.user?.id === tool.userId;
 
   return (
     <>
@@ -50,9 +57,9 @@ export default function ToolPage() {
         <div className="absolute inset-0 bg-linear-to-t from-background/80 to-transparent" />
       </div>
 
-      <div className="relative px-4 sm:px-6 -mt-20 mb-8">
+      <div className="relative sm:px-6 -mt-20 mb-8">
         <div className="flex flex-col md:flex-row md:items-end gap-6">
-          <div className="relative rounded-xl border-4 border-background bg-background shadow-sm shrink-0 size-32 md:size-40 overflow-hidden">
+          <div className="relative rounded-md translate-x-4 drop-shadow-sm shrink-0 size-32 md:size-40 overflow-hidden">
             <Image
               src={tool.logo}
               alt={`${tool.name} Logo`}
@@ -69,6 +76,7 @@ export default function ToolPage() {
                 {tool.name}
               </h1>
               <VerifiedBadge tool={tool} />
+              <ToolBadge tool={tool} size="md" />
             </div>
             <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
               {tool.tagline}
@@ -106,6 +114,8 @@ export default function ToolPage() {
             </LinkButton>
           </div>
         </div>
+
+        {isOwner && !isPending && <FeaturedToolCTA tool={tool} />}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mt-12">
@@ -161,24 +171,19 @@ export default function ToolPage() {
           )}
         </div>
 
-        <div className="space-y-8">
-          {/* Sidebar content can go here, e.g. similar tools, ad, etc. */}
-          <div className="sticky top-24 space-y-8">
-            <div className="rounded-xl border bg-card p-6 space-y-4">
-              <h3 className="font-semibold text-lg">Similar Tools</h3>
-              {similarTools && similarTools.length > 0 ? (
-                <div className="space-y-4">
-                  {similarTools.map((tool) => (
-                    <ToolCard key={tool.id} tool={tool} />
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">
-                  No similar tools found.
-                </p>
-              )}
+        <div className="sticky top-24 py-6 space-y-4">
+          <h3>Similar Tools</h3>
+          {similarTools && similarTools.length > 0 ? (
+            <div className="space-y-4">
+              {similarTools.map((tool) => (
+                <ToolCard key={tool.id} tool={tool} />
+              ))}
             </div>
-          </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              No similar tools found.
+            </p>
+          )}
         </div>
       </div>
     </>

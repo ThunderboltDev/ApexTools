@@ -19,22 +19,29 @@ export const auth = betterAuth({
     provider: "pg",
     schema,
   }),
+  user: {
+    additionalFields: {
+      customerId: {
+        type: "string",
+        nullable: true,
+        required: true,
+      },
+    },
+  },
   plugins: [
     magicLink({
       sendMagicLink: async ({ url: magicLinkUrl, email }) => {
         const emailHtml = await render(
-          MagicLinkEmail({ url: magicLinkUrl }) as ReactElement
+          MagicLinkEmail({ url: magicLinkUrl }) as ReactElement,
         );
 
         const emailText = await render(
           MagicLinkEmail({ url: magicLinkUrl }) as ReactElement,
-          { plainText: true }
+          { plainText: true },
         );
 
         await resend.emails.send({
-          from: `"${brand.name}" <${
-            process.env.RESEND_FROM_EMAIL || "noreply@apextools.site"
-          }>`,
+          from: `"${brand.name}" <${process.env.RESEND_FROM_EMAIL}>`,
           to: email,
           subject: `Sign in to ${brand.name}`,
           html: emailHtml,
@@ -63,3 +70,11 @@ export const auth = betterAuth({
     "https://www.apextools.site",
   ],
 });
+
+export type Auth = typeof auth;
+
+export type User = Auth["$Infer"]["Session"]["user"] & {
+  image: string | null;
+};
+
+export type Session = Auth["$Infer"]["Session"]["session"];

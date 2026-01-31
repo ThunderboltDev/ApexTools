@@ -111,6 +111,27 @@ export const toolRouter = createTRPCRouter({
       return tool;
     }),
 
+  getById: privateProcedure
+    .use(createRateLimit(100, 60, "tool.getById"))
+    .input(z.object({ id: z.string().min(1) }))
+    .query(async ({ ctx, input }) => {
+      const tool = await db.query.tool.findFirst({
+        where: and(
+          eq(toolsTable.id, input.id),
+          eq(toolsTable.userId, ctx.user.id)
+        ),
+      });
+
+      if (!tool) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Tool not found",
+        });
+      }
+
+      return tool;
+    }),
+
   validateSlug: privateProcedure
     .use(createRateLimit(30, 60, "tool.validateSlug"))
     .input(

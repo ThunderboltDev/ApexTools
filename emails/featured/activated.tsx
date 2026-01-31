@@ -61,8 +61,7 @@ export default function FeaturedActivatedEmail({
           }}
         >
           ✓ Appears first in all search results
-          <br />
-          ✓ Featured badge displayed on your listing
+          <br />✓ Featured badge displayed on your listing
           <br />✓ Up to 10x more visibility
         </Text>
       </Section>

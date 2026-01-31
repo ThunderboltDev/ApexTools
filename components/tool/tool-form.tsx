@@ -80,8 +80,8 @@ interface ToolFormBase {
   onSubmit: (
     values: Omit<FormValues, "logo" | "banner"> & {
       logo: string;
-      banner?: string;
-    }
+      banner: string;
+    },
   ) => Promise<void>;
 }
 
@@ -157,7 +157,7 @@ export function ToolForm({
     { slug: slugValue },
     {
       enabled: false,
-    }
+    },
   );
 
   useEffect(() => {
@@ -211,24 +211,24 @@ export function ToolForm({
         return;
       }
 
-      let logoUrl = "";
+      let logoUrl: string;
+
       if (values.logo.type === "url") {
         logoUrl = values.logo.url;
       } else {
         logoUrl = await uploadFile(values.logo.file, "tool-logos", "logos");
       }
 
-      let bannerUrl: string | undefined;
-      if (values.banner) {
-        if (values.banner.type === "url") {
-          bannerUrl = values.banner.url;
-        } else {
-          bannerUrl = await uploadFile(
-            values.banner.file,
-            "tool-banners",
-            "banners"
-          );
-        }
+      let bannerUrl: string;
+
+      if (values.banner.type === "url") {
+        bannerUrl = values.banner.url;
+      } else {
+        bannerUrl = await uploadFile(
+          values.banner.file,
+          "tool-banners",
+          "banners",
+        );
       }
 
       if (
@@ -294,14 +294,14 @@ export function ToolForm({
                         field.onChange(toSlug(e.target.value));
                       }}
                     />
-                    {mode === "create" ? (
+                    {mode === "create" ?
                       <div className="flex items-center gap-2 text-xs">
-                        {checkingSlug ? (
+                        {checkingSlug ?
                           <span className="text-warning flex items-center gap-1">
                             <Spinner className="size-4" /> Checking
                             availability...
                           </span>
-                        ) : !slugCheck ? (
+                        : !slugCheck ?
                           <span className="text-muted-foreground flex items-center gap-1">
                             <HugeiconsIcon
                               icon={InformationCircleIcon}
@@ -309,7 +309,7 @@ export function ToolForm({
                             />
                             Pick a slug
                           </span>
-                        ) : slugCheck?.available ? (
+                        : slugCheck?.available ?
                           <span className="text-success flex items-center gap-1">
                             <HugeiconsIcon
                               icon={Tick02Icon}
@@ -317,21 +317,19 @@ export function ToolForm({
                             />
                             Slug available: {siteUrl}/{slugValue}
                           </span>
-                        ) : (
-                          <span className="text-danger flex items-center gap-1">
+                        : <span className="text-danger flex items-center gap-1">
                             <HugeiconsIcon
                               icon={Cancel01Icon}
                               className="size-4"
                             />
                             Slug is taken!
                           </span>
-                        )}
+                        }
                       </div>
-                    ) : (
-                      <div className="text-xs text-muted-foreground">
+                    : <div className="text-xs text-muted-foreground">
                         Slug cannot be changed.
                       </div>
-                    )}
+                    }
                     <FormError />
                   </FormContent>
                 </FormItem>
@@ -416,9 +414,9 @@ export function ToolForm({
               <ImageSelection
                 invalid={!!form.formState.errors.logo}
                 defaultValue={
-                  defaultValues?.logo?.type === "url"
-                    ? defaultValues.logo.url
-                    : undefined
+                  defaultValues?.logo?.type === "url" ?
+                    defaultValues.logo.url
+                  : undefined
                 }
                 onChange={(value) =>
                   form.setValue("logo", value, { shouldDirty: true })
@@ -443,9 +441,9 @@ export function ToolForm({
                 maxSize={10 * 1024 * 1024}
                 invalid={!!form.formState.errors.banner}
                 defaultValue={
-                  defaultValues?.banner?.type === "url"
-                    ? defaultValues.banner.url
-                    : undefined
+                  defaultValues?.banner?.type === "url" ?
+                    defaultValues.banner.url
+                  : undefined
                 }
                 onChange={(value) =>
                   form.setValue("banner", value, { shouldDirty: true })
@@ -569,19 +567,18 @@ export function ToolForm({
           disabled={checkingSlug || form.formState.isSubmitting}
           aria-busy={form.formState.isSubmitting}
         >
-          {form.formState.isSubmitting ? (
+          {form.formState.isSubmitting ?
             <>
               <Spinner />
               {mode === "create" ? "Publishing..." : "Saving..."}
             </>
-          ) : (
-            <>
+          : <>
               <HugeiconsIcon
                 icon={mode === "create" ? SentIcon : FloppyDiskIcon}
               />
               {mode === "create" ? "Publish Tool" : "Save Changes"}
             </>
-          )}
+          }
         </Button>
       </form>
     </Form>

@@ -23,5 +23,5 @@ export function SubmitForm() {
     }
   };
 
-  return <ToolForm mode="create" onSubmit={handleSubmit} />;
+  return <ToolForm mode="create" onSubmit={handleSubmit} tool={undefined} />;
 }

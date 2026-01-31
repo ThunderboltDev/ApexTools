@@ -27,7 +27,7 @@ const badgeVariants = cva(
       variant: "accent",
       size: "default",
     },
-  },
+  }
 );
 
 function Badge({
@@ -43,7 +43,7 @@ function Badge({
       {
         className: cn(badgeVariants({ className, variant, size })),
       },
-      props,
+      props
     ),
     render,
     state: {

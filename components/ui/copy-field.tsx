@@ -44,10 +44,7 @@ export function CopyField({
         >
           <HugeiconsIcon
             icon={copyState.value ? Tick02Icon : Copy01Icon}
-            className={cn(
-              "size-4",
-              copyState.value ? "text-success-foreground" : ""
-            )}
+            className={cn("size-4", copyState.value ? "text-success" : "")}
           />
           <span className="sr-only">{copyState.value ? "Copied" : "Copy"}</span>
         </Button>

@@ -1,4 +1,12 @@
-import { and, eq, getTableColumns, ne, sql } from "drizzle-orm";
+import {
+  and,
+  arrayOverlaps,
+  desc,
+  eq,
+  getTableColumns,
+  ne,
+  sql,
+} from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/db/index";
 import { toolsTable, upvotesTable } from "@/db/schema";
@@ -102,18 +110,18 @@ export const browseRouter = createTRPCRouter({
         .from(toolsTable)
         .where(
           and(
-            sql`${toolsTable.category} && ${input.categories}`,
+            arrayOverlaps(toolsTable.category, input.categories),
             ne(toolsTable.slug, input.excludeSlug)
           )
         )
         .orderBy(
-          sql`cardinality(
-            ARRAY(
-              SELECT UNNEST(${toolsTable.category})
-              INTERSECT
-              SELECT UNNEST(${input.categories})
-            )
-          ) DESC`
+          desc(
+            sql`(
+              SELECT COUNT(*)::int 
+              FROM UNNEST(${toolsTable.category}) AS c(cat)
+              WHERE c.cat = ANY(${sql.param(input.categories)})
+            )`
+          )
         )
         .limit(input.limit);
 

@@ -147,7 +147,7 @@ export const toolSchema = z.object({
   tagline: z
     .string("Tagline is required")
     .min(20, "Tagline is too short")
-    .max(65, "Tagline is too long"),
+    .max(120, "Tagline is too long"),
   name: z
     .string("Name is required")
     .min(2, "Name is too short")
