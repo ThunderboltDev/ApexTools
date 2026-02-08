@@ -142,7 +142,7 @@ export default function ToolPage() {
                 "prose-pre:p-4 prose-pre:rounded-lg prose-pre:bg-muted prose-pre:overflow-x-auto prose-pre:my-6",
                 "prose-img:rounded-lg prose-img:border prose-img:my-6",
                 "prose-hr:my-8 prose-hr:border-muted",
-                "prose-a:text-primary prose-a:underline prose-a:underline-offset-4 hover:prose-a:text-primary/80",
+                "prose-a:text-primary prose-a:underline prose-a:underline-offset-4 hover:prose-a:text-primary/80"
               )}
             >
               <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
@@ -177,16 +177,17 @@ export default function ToolPage() {
 
         <div className="sticky top-24 py-6 space-y-4">
           <h3>Similar Tools</h3>
-          {similarTools && similarTools.length > 0 ?
+          {similarTools && similarTools.length > 0 ? (
             <div className="space-y-4">
               {similarTools.map((tool) => (
                 <ToolCard key={tool.id} tool={tool} />
               ))}
             </div>
-          : <p className="text-sm text-muted-foreground">
+          ) : (
+            <p className="text-sm text-muted-foreground">
               No similar tools found.
             </p>
-          }
+          )}
         </div>
       </div>
     </>

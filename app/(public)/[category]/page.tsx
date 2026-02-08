@@ -3,11 +3,13 @@ import { notFound } from "next/navigation";
 import { Footer } from "@/components/app/footer";
 import { ToolDirectory } from "@/components/directory";
 import {
+  getBreadcrumbJsonLd,
   getFAQJsonLd,
   getToolCollectionJsonLd,
   JsonLd,
 } from "@/components/seo/jsonLd";
 import { FAQ } from "@/components/tool/faq";
+import { url } from "@/config";
 import { categoryContent } from "@/lib/category-data";
 import { categories } from "@/lib/constants";
 import type { Category } from "@/lib/types";
@@ -62,6 +64,17 @@ export default async function CategoryPage({ params }: PageProps) {
     limit: 24,
   });
 
+  const breadcrumbs = [
+    {
+      name: "Home",
+      item: url,
+    },
+    {
+      name: content.headline,
+      item: `${url}/${category}`,
+    },
+  ];
+
   return (
     <>
       <JsonLd
@@ -69,10 +82,11 @@ export default async function CategoryPage({ params }: PageProps) {
           category,
           toolsData.tools,
           content.headline,
-          content.description,
+          content.description
         )}
       />
       <JsonLd data={getFAQJsonLd(content.faqs)} />
+      <JsonLd data={getBreadcrumbJsonLd(breadcrumbs)} />
       <div className="mt-4 mb-8 space-y-3">
         <h1 className="md:text-5xl text-center text-balance">
           {content.headline}

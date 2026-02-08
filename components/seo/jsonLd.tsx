@@ -13,7 +13,7 @@ import type {
   WithContext,
 } from "schema-dts";
 import { socials, url } from "@/config";
-import type { Tool } from "@/lib/types";
+import type { Category, Tool } from "@/lib/types";
 
 type JsonLdTypes =
   | Article
@@ -80,7 +80,7 @@ export function getToolCollectionJsonLd(
   category: string,
   tools: Tool[],
   headline: string,
-  description: string,
+  description: string
 ): WithContext<CollectionPage> {
   const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
 
@@ -120,7 +120,7 @@ export function getToolCollectionJsonLd(
 }
 
 export function getSearchResultsJsonLd(
-  tools: Tool[],
+  tools: Tool[]
 ): WithContext<SearchResultsPage> {
   return {
     "@context": "https://schema.org",
@@ -156,19 +156,36 @@ export function getSearchResultsJsonLd(
   };
 }
 
-function mapCategoryToSchemaOrg(category: string): string {
-  const mapping: Record<string, string> = {
-    "developer-tools": "DeveloperApplication",
-    "design": "DesignApplication",
-    "productivity": "BusinessApplication",
-    "communication": "CommunicationApplication",
-    "security": "SecurityApplication",
-  };
+const mapping: Record<Category, string> = {
+  llm: "AIApplication",
+  image: "MultimediaApplication",
+  code: "DeveloperApplication",
+  video: "MultimediaApplication",
+  audio: "MultimediaApplication",
+  music: "MultimediaApplication",
+  writing: "TextEditor",
+  research: "ReferenceApplication",
+  design: "DesignApplication",
+  data: "DataVisualizationApplication",
+  seo: "BusinessApplication",
+  education: "EducationApplication",
+  copywriting: "BusinessApplication",
+  translation: "ReferenceApplication",
+  gaming: "GameApplication",
+  legal: "BusinessApplication",
+  finance: "FinanceApplication",
+  productivity: "BusinessApplication",
+  marketing: "BusinessApplication",
+};
 
+function mapCategoryToSchemaOrg(category: Category): string {
   return mapping[category] || "SoftwareApplication";
 }
 
-export function getToolJsonLd(tool: Tool): WithContext<SoftwareApplication> {
+export function getToolJsonLd(
+  tool: Tool,
+  authorName: string = "Unknown Author"
+): WithContext<SoftwareApplication> {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -181,23 +198,24 @@ export function getToolJsonLd(tool: Tool): WithContext<SoftwareApplication> {
       .join(", "),
     "url": `${url}/tool/${tool.slug}`,
     "author": {
-      "@type": "Organization",
-      "name": "ApexTools",
+      "@type": "Person",
+      "name": authorName,
     },
     "datePublished": tool.createdAt.toISOString(),
     "dateModified": tool.updatedAt.toISOString(),
     ...(tool.upvotes > 0 && {
-      aggregateRating: {
-        "@type": "AggregateRating",
-        "ratingValue": 5,
-        "ratingCount": tool.upvotes,
-        "bestRating": 5,
-        "worstRating": 1,
-      },
       interactionStatistic: {
         "@type": "InteractionCounter",
         "interactionType": { "@type": "LikeAction" },
         "userInteractionCount": tool.upvotes,
+      },
+    }),
+    ...(tool.pricing && {
+      offers: {
+        "@type": "Offer",
+        "price": tool.pricing === "free" ? "0" : undefined,
+        "priceCurrency": "USD",
+        "description": tool.pricing,
       },
     }),
     ...(tool.verifiedAt && {
@@ -213,7 +231,7 @@ export function getToolJsonLd(tool: Tool): WithContext<SoftwareApplication> {
 }
 
 export function getFAQJsonLd(
-  faqs: Array<{ question: string; answer: string }>,
+  faqs: Array<{ question: string; answer: string }>
 ): WithContext<FAQPage> {
   return {
     "@context": "https://schema.org",
@@ -226,6 +244,24 @@ export function getFAQJsonLd(
         "text": faq.answer,
       },
     })),
+  };
+}
+
+export function getWebPageJsonLd(
+  name: string,
+  description: string,
+  path: string = ""
+): WithContext<WebPage> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": `${name} | ApexTools`,
+    "description": description,
+    "url": `${url}${path}`,
+    "publisher": {
+      "@type": "Organization",
+      "name": "ApexTools",
+    },
   };
 }
 
@@ -248,7 +284,7 @@ interface BreadcrumbItem {
 }
 
 export function getBreadcrumbJsonLd(
-  breadcrumbs: BreadcrumbItem[],
+  breadcrumbs: BreadcrumbItem[]
 ): WithContext<BreadcrumbList> {
   return {
     "@context": "https://schema.org",

@@ -16,6 +16,30 @@ const updateProfileSchema = z.object({
 });
 
 export const userRouter = createTRPCRouter({
+  getById: publicProcedure
+    .use(createRateLimit(50, 60, "user.getById"))
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ input }) => {
+      const user = await db
+        .select()
+        .from(usersTable)
+        .where(eq(usersTable.id, input.id))
+        .limit(1);
+
+      if (!user.length) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User not found",
+        });
+      }
+
+      return user[0] as User;
+    }),
+
   getSession: publicProcedure
     .use(createRateLimit(100, 60, "user.getSession"))
     .query(async ({ ctx }) => {

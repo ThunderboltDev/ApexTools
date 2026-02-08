@@ -51,6 +51,11 @@ export default async function ToolLayout({
 
   if (!tool) notFound();
 
+  void trpc.browse.getBySlug.prefetch({ slug });
+  void trpc.user.getById.prefetch({ id: tool.userId });
+
+  const user = await trpc.user.getById({ id: tool.userId });
+
   const breadcrumbs = [
     { name: "Home", item: url },
     { name: "Tool", item: `${url}/tool` },
@@ -59,7 +64,7 @@ export default async function ToolLayout({
 
   return (
     <ToolProvider tool={tool}>
-      <JsonLd data={getToolJsonLd(tool)} />
+      <JsonLd data={getToolJsonLd(tool, user.name)} />
       <JsonLd data={getBreadcrumbJsonLd(breadcrumbs)} />
       {children}
     </ToolProvider>

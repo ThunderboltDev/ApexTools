@@ -1,19 +1,33 @@
+import type { Metadata } from "next";
 import { Footer } from "@/components/app/footer";
 import { Navbar } from "@/components/app/navbar";
 import { ToolDirectory } from "@/components/directory";
 import {
+  getBreadcrumbJsonLd,
   getOrganizationJsonLd,
+  getPersonJsonLd,
   getWebSiteJsonLd,
   JsonLd,
 } from "@/components/seo/jsonLd";
+import { url } from "@/config";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+  },
+};
+
+const breadcrumbs = [{ name: "Home", item: url }];
 
 export default async function Home() {
   return (
     <Navbar>
+      <JsonLd data={getPersonJsonLd()} />
       <JsonLd data={getWebSiteJsonLd()} />
       <JsonLd data={getOrganizationJsonLd()} />
+      <JsonLd data={getBreadcrumbJsonLd(breadcrumbs)} />
       <div className="mt-4 mb-8 space-y-3">
         <h1 className="md:text-6xl text-balance text-center bg-clip-text text-transparent bg-linear-to-b from-foreground to-foreground/80">
           Discover the <span className="text-primary">Apex</span> of AI

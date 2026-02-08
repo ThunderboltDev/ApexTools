@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Footer } from "@/components/app/footer";
 import { Navbar } from "@/components/app/navbar";
+import { getBreadcrumbJsonLd, JsonLd } from "@/components/seo/jsonLd";
+import { url } from "@/config";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -12,9 +14,15 @@ export const metadata: Metadata = {
   },
 };
 
+const breadcrumbs = [
+  { name: "Home", item: url },
+  { name: "Privacy Policy", item: `${url}/privacy-policy` },
+];
+
 export default function PrivacyPolicy() {
   return (
     <Navbar>
+      <JsonLd data={getBreadcrumbJsonLd(breadcrumbs)} />
       <article className="section">
         <h1>Privacy Policy</h1>
         <p>Last updated: January 2026</p>

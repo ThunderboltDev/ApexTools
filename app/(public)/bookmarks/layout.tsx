@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { type PropsWithChildren, Suspense } from "react";
 import { Footer } from "@/components/app/footer";
+import { getWebPageJsonLd, JsonLd } from "@/components/seo/jsonLd";
 import { LoadingScreen } from "@/components/ui/loading-screen";
 import {
   PageContent,
@@ -26,6 +27,13 @@ export const metadata: Metadata = {
 export default function BookmarksLayout({ children }: PropsWithChildren) {
   return (
     <>
+      <JsonLd
+        data={getWebPageJsonLd(
+          "Bookmarks",
+          "View and manage your bookmarked AI tools.",
+          "/bookmarks"
+        )}
+      />
       <PageHeader>
         <PageTitle>Bookmarks</PageTitle>
         <PageDescription>
