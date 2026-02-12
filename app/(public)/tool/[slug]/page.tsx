@@ -12,6 +12,7 @@ import { BookmarkButton } from "@/components/tool/bookmark";
 import { ToolCard } from "@/components/tool/card";
 import { CategoryBadge } from "@/components/tool/category";
 import { ClaimTool } from "@/components/tool/claim";
+import { SkeletonToolCard } from "@/components/tool/skeleton";
 import { useTool } from "@/components/tool/tool-context";
 import { UpvoteButton } from "@/components/tool/upvote";
 import { VerifiedBadge } from "@/components/tool/verified-badge";
@@ -28,11 +29,12 @@ export default function ToolPage() {
 
   const { data: session, isPending } = useSession();
 
-  const { data: similarTools } = trpc.browse.getSimilarTools.useQuery({
-    categories: tool.category,
-    excludeSlug: tool.slug,
-    limit: 3,
-  });
+  const { data: similarTools, isLoading: isLoadingSimilar } =
+    trpc.browse.getSimilarTools.useQuery({
+      categories: tool.category,
+      excludeSlug: tool.slug,
+      limit: 6,
+    });
 
   const { mutate: incrementVisit } = trpc.browse.incrementVisit.useMutation();
 
@@ -46,7 +48,7 @@ export default function ToolPage() {
     <>
       <ViewTracker toolId={tool.id} />
 
-      <div className="relative w-full h-[200px] md:h-[300px] rounded-xl overflow-hidden mb-8 bg-muted">
+      <div className="relative w-full h-[200px] md:h-[300px] rounded-xl overflow-hidden mb-6 bg-muted">
         <Image
           src={tool.banner}
           alt={`${tool.name} Banner`}
@@ -55,12 +57,11 @@ export default function ToolPage() {
           priority
           unoptimized
         />
-        <div className="absolute inset-0 bg-linear-to-t from-background/80 to-transparent" />
       </div>
 
-      <div className="relative sm:px-6 -mt-20 mb-8">
-        <div className="flex flex-col md:flex-row gap-6">
-          <div className="relative rounded-md drop-shadow-sm shrink-0 size-32 md:size-40 overflow-hidden">
+      <div className="px-4 sm:px-6 mb-8">
+        <div className="flex flex-col md:flex-row gap-6 items-start">
+          <div className="relative rounded-xl overflow-hidden shrink-0 size-24 md:size-28 ring-4 ring-background shadow-lg">
             <Image
               src={tool.logo}
               alt={`${tool.name} Logo`}
@@ -71,19 +72,20 @@ export default function ToolPage() {
             />
           </div>
 
-          <div className="flex-1 space-y-2 pb-2">
-            <div className="flex items-center gap-3 flex-wrap">
-              <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
+          <div className="flex-1 min-w-0 space-y-3">
+            <div className="flex items-start gap-3 flex-wrap">
+              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
                 {tool.name}
               </h1>
               <VerifiedBadge tool={tool} />
               <ToolBadge tool={tool} size="md" />
             </div>
-            <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
+
+            <p className="text-base md:text-lg text-muted-foreground leading-relaxed max-w-2xl">
               {tool.tagline}
             </p>
 
-            <div className="flex items-center gap-2 overflow-auto scrollbar-2 pt-2">
+            <div className="flex items-center gap-2 flex-wrap">
               {tool.category.slice(0, 3).map((category) => (
                 <CategoryBadge key={category} category={category} />
               ))}
@@ -99,7 +101,7 @@ export default function ToolPage() {
           </div>
         </div>
 
-        <div className="flex flex-row justify-between gap-3 pb-2 mt-6">
+        <div className="flex flex-row justify-between gap-3 mt-6 pt-4 border-t">
           <div className="flex items-center gap-2">
             <UpvoteButton className="hover:bg-secondary" tool={tool} />
             <BookmarkButton slug={tool.slug} />
@@ -122,20 +124,20 @@ export default function ToolPage() {
         {isOwner && !isPending && <FeaturedToolCTA tool={tool} />}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mt-12">
-        <div className="lg:col-span-2 space-y-10">
+      <div className="px-4 sm:px-6 mt-8">
+        <div className="max-w-3xl">
           <section className="space-y-6">
-            <h2 className="text-2xl font-bold">About {tool.name}</h2>
+            <h2 className="text-xl font-semibold">About {tool.name}</h2>
             <div
               className={cn(
                 "prose prose-neutral dark:prose-invert max-w-none",
                 "prose-headings:font-bold prose-headings:tracking-tight",
-                "prose-h1:text-3xl prose-h1:font-extrabold prose-h1:lg:text-4xl prose-h1:mb-4 prose-h1:mt-8 prose-h1:first:mt-0",
-                "prose-h2:text-2xl prose-h2:font-semibold prose-h2:mt-8 prose-h2:mb-3",
-                "prose-h3:text-xl prose-h3:font-semibold prose-h3:mt-6 prose-h3:mb-2",
-                "prose-h4:text-lg prose-h4:font-semibold prose-h4:mt-6 prose-h4:mb-2",
+                "prose-h1:text-2xl prose-h1:font-bold prose-h1:mb-4 prose-h1:mt-8 prose-h1:first:mt-0",
+                "prose-h2:text-xl prose-h2:font-semibold prose-h2:mt-6 prose-h2:mb-3",
+                "prose-h3:text-lg prose-h3:font-semibold prose-h3:mt-4 prose-h3:mb-2",
+                "prose-h4:text-base prose-h4:font-semibold prose-h4:mt-4 prose-h4:mb-2",
                 "prose-p:leading-7 prose-p:text-muted-foreground prose-p:mb-4 last:prose-p:mb-0",
-                "prose-blockquote:border-l-2 prose-blockquote:border-primary prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-muted-foreground prose-blockquote:my-6",
+                "prose-blockquote:border-l-2 prose-blockquote:border-primary prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-muted-foreground prose-blockquote:my-4",
                 "prose-ul:my-4 prose-ul:ml-4 prose-ul:list-disc [&>li]:mt-1",
                 "prose-ol:my-4 prose-ol:ml-4 prose-ol:list-decimal [&>li]:mt-1",
                 "prose-code:relative prose-code:rounded prose-code:bg-secondary prose-code:px-[0.3rem] prose-code:py-[0.2rem] prose-code:font-mono prose-code:text-sm prose-code:font-semibold",
@@ -152,7 +154,7 @@ export default function ToolPage() {
           </section>
 
           {tool.tags && tool.tags.length > 0 && (
-            <section className="space-y-4 pt-8 border-t">
+            <section className="space-y-4 pt-8 mt-8 border-t">
               <h3 className="flex items-center gap-2 text-lg font-semibold">
                 <HugeiconsIcon
                   icon={Tag01Icon}
@@ -174,19 +176,30 @@ export default function ToolPage() {
             </section>
           )}
         </div>
+      </div>
 
-        <div className="sticky top-24 py-6 space-y-4">
-          <h3>Similar Tools</h3>
-          {similarTools && similarTools.length > 0 ? (
-            <div className="space-y-4">
-              {similarTools.map((tool) => (
-                <ToolCard key={tool.id} tool={tool} />
+      <div className="px-4 sm:px-6 mt-16 pt-8 border-t">
+        <div className="space-y-6">
+          <h3 className="text-xl font-semibold">Similar Tools</h3>
+
+          {isLoadingSimilar ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array.from({ length: 6 }).map(() => (
+                <SkeletonToolCard key={crypto.randomUUID()} />
+              ))}
+            </div>
+          ) : similarTools && similarTools.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {similarTools.map((similarTool) => (
+                <ToolCard key={similarTool.id} tool={similarTool} />
               ))}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">
-              No similar tools found.
-            </p>
+            <div className="text-center py-12 bg-muted/30 rounded-lg">
+              <p className="text-muted-foreground text-sm">
+                No similar tools found.
+              </p>
+            </div>
           )}
         </div>
       </div>
