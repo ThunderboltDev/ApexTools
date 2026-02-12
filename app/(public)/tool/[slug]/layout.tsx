@@ -23,12 +23,10 @@ export async function generateMetadata({
     const tool = await trpc.browse.getBySlug({ slug });
 
     return {
-      title: `${tool.name}`,
-      description: tool.tagline,
+      title: `${tool.name} | ${tool.tagline}`,
+      description: tool.description,
       openGraph: {
-        title: tool.name,
-        description: tool.tagline,
-        images: [tool.logo],
+        images: [tool.banner],
       },
       alternates: {
         canonical: `/tool/${slug}`,
@@ -37,6 +35,7 @@ export async function generateMetadata({
   } catch {
     return {
       title: "Tool Not Found",
+      description: "The tool you are looking for does not exist.",
     };
   }
 }
