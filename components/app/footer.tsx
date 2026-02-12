@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/performance/noImgElement: badges */
 "use client";
 
 import Link from "next/link";
@@ -81,61 +82,119 @@ export function Footer() {
           </ul>
         </div>
       </div>
-      <div className="flex flex-row items-center gap-4 py-6 border-t">
-        {/* <a href="https://fazier.com" target="_blank" rel="noopener">
+      <div className="flex flex-row flex-wrap items-center gap-4 py-6 border-t">
+        <a
+          href="https://www.proofstories.io/directory/products/apextools/"
+          target="_blank"
+          rel="noopener"
+        >
           <img
-            src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=light"
-            width="120"
+            src="https://www.proofstories.io/directory/badges/l/apextools.svg"
+            alt="ApexTools badge"
+            width="200"
+          />
+        </a>
+        <a
+          href="https://foundrlist.com/product/apextools"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            src="https://foundrlist.com/api/badge/apextools"
+            alt="Live on FoundrList"
+            width="140"
+          />
+        </a>
+        <a
+          href="https://fazier.com/launches/www.apextools.site"
+          target="_blank"
+          rel="noopener"
+        >
+          <img
+            src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=neutral"
+            width="140"
             alt="Fazier badge"
           />
-        </a> */}
+        </a>
         <a
           href="https://tinylaunchpad.com/projects/apextools"
           target="_blank"
           rel="noopener"
         >
-          {/** biome-ignore lint/performance/noImgElement: tinylaunchpad badge */}
           <img
             src="https://tinylaunchpad.com/images/badges/tinylaunchpad-badge-light.svg"
             alt="Featured on TinyLaunchpad"
-            width="150"
-            height="54"
+            width="200"
           />
         </a>
         <a href="https://tinylaunch.com" target="_blank" rel="noopener">
-          {/** biome-ignore lint/performance/noImgElement: tinylaunch badge */}
           <img
             src="https://tinylaunch.com/tinylaunch_badge_launching_soon.svg"
             alt="TinyLaunch Badge"
-            style={{
-              width: 140,
-              height: "auto",
-            }}
+            width="200"
+          />
+        </a>
+        <a
+          href="https://buildvoyage.com/products/apextools?ref=badge"
+          target="_blank"
+          rel="noopener"
+        >
+          <img
+            src="https://buildvoyage.com/images/featured_badge.png"
+            alt="Featured on BuildVoyage"
+            width="200"
+          />
+        </a>
+        <a
+          href="https://launchigniter.com/product/apextools?ref=badge-apextools"
+          target="_blank"
+          rel="noopener"
+        >
+          <img
+            src="https://launchigniter.com/api/badge/apextools?theme=neutral"
+            alt="Featured on LaunchIgniter"
+            width="200"
+            height="54"
           />
         </a>
         <a
           href="https://trylaunch.ai/launch/apextools"
           target="_blank"
           rel="noopener dofollow"
-          style={{
-            display: "inline-block",
-            padding: "8px 12px",
-            background: "#FFFFFF",
-            border: "1px solid #E5E5E5",
-            borderRadius: "8px",
-            textDecoration: "none",
-            transition: "all 0.2s",
-          }}
         >
-          {/** biome-ignore lint/performance/noImgElement: trylaunch badge */}
           <img
             src="https://trylaunch.ai/badges/badge-color.svg"
             alt="Launch"
-            style={{
-              display: "block",
-              height: "24px",
-              width: "auto",
-            }}
+            width="200"
+            height="54"
+          />
+        </a>
+        <a href="https://twelve.tools" target="_blank" rel="noopener">
+          <img
+            src="https://twelve.tools/badge0-light.svg"
+            alt="Featured on Twelve Tools"
+            width="200"
+            height="54"
+          />
+        </a>
+        <a href="https://wired.business" target="_blank" rel="noopener">
+          <img
+            src="https://wired.business/badge0-light.svg"
+            alt="Featured on Wired Business"
+            width="200"
+            height="54"
+          />
+        </a>
+        <a
+          href="https://frogdr.com/apextools.site?utm_source=apextools.site"
+          target="_blank"
+          rel="noopener"
+        >
+          <img
+            src="https://frogdr.com/apextools.site/badge-white.svg"
+            alt="Monitor your Domain Rating with FrogDR"
+            width="250"
+            height="54"
           />
         </a>
       </div>
