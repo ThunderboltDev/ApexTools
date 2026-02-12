@@ -32,12 +32,12 @@ export const auth = betterAuth({
     magicLink({
       sendMagicLink: async ({ url: magicLinkUrl, email }) => {
         const emailHtml = await render(
-          MagicLinkEmail({ url: magicLinkUrl }) as ReactElement,
+          MagicLinkEmail({ url: magicLinkUrl }) as ReactElement
         );
 
         const emailText = await render(
           MagicLinkEmail({ url: magicLinkUrl }) as ReactElement,
-          { plainText: true },
+          { plainText: true }
         );
 
         await resend.emails.send({

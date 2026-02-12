@@ -18,11 +18,11 @@ export function FeaturedToolCTA({ tool, className }: FeaturedToolCTAProps) {
     <div
       className={cn(
         "mt-6 p-4 rounded-lg border border-gold/30 bg-gold/5 shadow-sm shadow-gold/10",
-        className,
+        className
       )}
     >
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        {isFeatured ?
+        {isFeatured ? (
           <>
             <div className="flex items-center gap-3">
               <HugeiconsIcon
@@ -45,7 +45,8 @@ export function FeaturedToolCTA({ tool, className }: FeaturedToolCTAProps) {
               currentFeaturedUntil={tool.featuredUntil}
             />
           </>
-        : <>
+        ) : (
+          <>
             <div>
               <p className="font-medium">Boost your tool's visibility</p>
               <p className="text-sm text-muted-foreground">
@@ -59,7 +60,7 @@ export function FeaturedToolCTA({ tool, className }: FeaturedToolCTAProps) {
               currentFeaturedUntil={tool.featuredUntil}
             />
           </>
-        }
+        )}
       </div>
     </div>
   );

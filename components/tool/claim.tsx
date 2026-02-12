@@ -63,24 +63,25 @@ export function ClaimTool({ tool }: { tool: Tool }) {
             {!isAuthenticated ? "Sign in Required" : "Claim Tool"}
           </DialogTitle>
           <DialogDescription>
-            {!isAuthenticated ?
+            {!isAuthenticated ? (
               <>
                 ou need to be signed in to claim a tool. Create an account or
                 log in to an existing account.
               </>
-            : <>
+            ) : (
+              <>
                 Verify domain ownership of{" "}
                 <span className="text-secondary-foreground font-semibold">
                   {domain}
                 </span>{" "}
                 to claim this tool.
               </>
-            }
+            )}
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4">
-          {!isAuthenticated ?
+          {!isAuthenticated ? (
             <>
               <p className="text-sm text-muted-foreground">
                 Please sign in to your account to verify domain ownership and
@@ -91,7 +92,8 @@ export function ClaimTool({ tool }: { tool: Tool }) {
                 Sign In
               </LinkButton>
             </>
-          : <>
+          ) : (
+            <>
               <p className="text-sm text-muted-foreground">
                 Add a new TXT record at your DNS provider.
               </p>
@@ -109,18 +111,19 @@ export function ClaimTool({ tool }: { tool: Tool }) {
                 aria-disabled={isClaiming}
                 className="flex ml-auto"
               >
-                {isClaiming ?
+                {isClaiming ? (
                   <>
                     <Spinner /> Verifying...
                   </>
-                : <>
+                ) : (
+                  <>
                     <HugeiconsIcon icon={ShieldKeyIcon} />
                     Verify Domain
                   </>
-                }
+                )}
               </Button>
             </>
-          }
+          )}
         </div>
       </DialogContent>
     </Dialog>

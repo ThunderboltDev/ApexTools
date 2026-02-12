@@ -46,13 +46,13 @@ export function getPersonJsonLd(): WithContext<Person> {
   return {
     "@context": "https://schema.org",
     "@type": "Person",
-    "name": "Thunderbolt",
-    "url": url,
-    "image": `${url}/logo.webp`,
-    "jobTitle": "Web Developer",
-    "description":
+    name: "Thunderbolt",
+    url: url,
+    image: `${url}/logo.webp`,
+    jobTitle: "Web Developer",
+    description:
       "Self taught web developer building beautiful websites one line of code at a time.",
-    "sameAs": [socials.twitter, socials.discord, socials.github],
+    sameAs: [socials.twitter, socials.discord, socials.github],
   };
 }
 
@@ -60,18 +60,18 @@ export function getWebSiteJsonLd(): WithContext<WebSite> {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "⚡ Thunderbolt",
-    "url": url,
-    "description":
+    name: "⚡ Thunderbolt",
+    url: url,
+    description:
       "I am a self taught web developer building beautiful websites one line of code at a time.",
-    "publisher": {
+    publisher: {
       "@type": "Person",
-      "name": "Thunderbolt",
+      name: "Thunderbolt",
     },
-    "potentialAction": {
+    potentialAction: {
       "@type": "SearchAction",
-      "target": `${url}/browse?search={query}`,
-      "query": "query",
+      target: `${url}/browse?search={query}`,
+      query: "query",
     },
   };
 }
@@ -87,33 +87,33 @@ export function getToolCollectionJsonLd(
   return {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    "name": `${categoryName} | ApexTools`,
-    "description": `${headline} ${description}`,
-    "url": `${url}/${category}`,
-    "breadcrumb": {
+    name: `${categoryName} | ApexTools`,
+    description: `${headline} ${description}`,
+    url: `${url}/${category}`,
+    breadcrumb: {
       "@type": "BreadcrumbList",
-      "itemListElement": [
+      itemListElement: [
         {
           "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": url,
+          position: 1,
+          name: "Home",
+          item: url,
         },
         {
           "@type": "ListItem",
-          "position": 2,
-          "name": categoryName,
-          "item": `${url}/${category}`,
+          position: 2,
+          name: categoryName,
+          item: `${url}/${category}`,
         },
       ],
     },
-    "mainEntity": {
+    mainEntity: {
       "@type": "ItemList",
-      "itemListElement": tools.map((tool, index) => ({
+      itemListElement: tools.map((tool, index) => ({
         "@type": "ListItem",
-        "position": index + 1,
-        "url": `${url}/tool/${tool.slug}`,
-        "name": tool.name,
+        position: index + 1,
+        url: `${url}/tool/${tool.slug}`,
+        name: tool.name,
       })),
     },
   };
@@ -125,32 +125,32 @@ export function getSearchResultsJsonLd(
   return {
     "@context": "https://schema.org",
     "@type": "SearchResultsPage",
-    "name": "Search Results | ApexTools",
-    "url": `${url}/browse`,
-    "breadcrumb": {
+    name: "Search Results | ApexTools",
+    url: `${url}/browse`,
+    breadcrumb: {
       "@type": "BreadcrumbList",
-      "itemListElement": [
+      itemListElement: [
         {
           "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": url,
+          position: 1,
+          name: "Home",
+          item: url,
         },
         {
           "@type": "ListItem",
-          "position": 2,
-          "name": "Browse",
-          "item": `${url}/browse`,
+          position: 2,
+          name: "Browse",
+          item: `${url}/browse`,
         },
       ],
     },
-    "mainEntity": {
+    mainEntity: {
       "@type": "ItemList",
-      "itemListElement": tools.map((tool, index) => ({
+      itemListElement: tools.map((tool, index) => ({
         "@type": "ListItem",
-        "position": index + 1,
-        "url": `${url}/tool/${tool.slug}`,
-        "name": tool.name,
+        position: index + 1,
+        url: `${url}/tool/${tool.slug}`,
+        name: tool.name,
       })),
     },
   };
@@ -189,40 +189,40 @@ export function getToolJsonLd(
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": tool.name,
-    "description": tool.tagline,
-    "image": tool.logo,
-    "applicationCategory": mapCategoryToSchemaOrg(tool.category[0]),
-    "operatingSystem": tool.platform
+    name: tool.name,
+    description: tool.tagline,
+    image: tool.logo,
+    applicationCategory: mapCategoryToSchemaOrg(tool.category[0]),
+    operatingSystem: tool.platform
       .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
       .join(", "),
-    "url": `${url}/tool/${tool.slug}`,
-    "author": {
+    url: `${url}/tool/${tool.slug}`,
+    author: {
       "@type": "Person",
-      "name": authorName,
+      name: authorName,
     },
-    "datePublished": tool.createdAt.toISOString(),
-    "dateModified": tool.updatedAt.toISOString(),
+    datePublished: tool.createdAt.toISOString(),
+    dateModified: tool.updatedAt.toISOString(),
     ...(tool.upvotes > 0 && {
       interactionStatistic: {
         "@type": "InteractionCounter",
-        "interactionType": { "@type": "LikeAction" },
-        "userInteractionCount": tool.upvotes,
+        interactionType: { "@type": "LikeAction" },
+        userInteractionCount: tool.upvotes,
       },
     }),
     ...(tool.pricing && {
       offers: {
         "@type": "Offer",
-        "price": tool.pricing === "free" ? "0" : undefined,
-        "priceCurrency": "USD",
-        "description": tool.pricing,
+        price: tool.pricing === "free" ? "0" : undefined,
+        priceCurrency: "USD",
+        description: tool.pricing,
       },
     }),
     ...(tool.verifiedAt && {
       publisher: {
         "@type": "Organization",
-        "name": "ApexTools",
-        "description": "Verified Domain",
+        name: "ApexTools",
+        description: "Verified Domain",
       },
     }),
   } satisfies WithContext<SoftwareApplication>;
@@ -236,12 +236,12 @@ export function getFAQJsonLd(
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "mainEntity": faqs.map((faq) => ({
+    mainEntity: faqs.map((faq) => ({
       "@type": "Question",
-      "name": faq.question,
-      "acceptedAnswer": {
+      name: faq.question,
+      acceptedAnswer: {
         "@type": "Answer",
-        "text": faq.answer,
+        text: faq.answer,
       },
     })),
   };
@@ -255,12 +255,12 @@ export function getWebPageJsonLd(
   return {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": `${name} | ApexTools`,
-    "description": description,
-    "url": `${url}${path}`,
-    "publisher": {
+    name: `${name} | ApexTools`,
+    description: description,
+    url: `${url}${path}`,
+    publisher: {
       "@type": "Organization",
-      "name": "ApexTools",
+      name: "ApexTools",
     },
   };
 }
@@ -269,12 +269,12 @@ export function getOrganizationJsonLd(): WithContext<Organization> {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "ApexTools",
-    "url": url,
-    "logo": `${url}/logo.webp`,
-    "description":
+    name: "ApexTools",
+    url: url,
+    logo: `${url}/logo.webp`,
+    description:
       "The curated directory for power users. Find the tools that are shaping the future, updated in real-time.",
-    "sameAs": [socials.twitter, socials.discord, socials.github],
+    sameAs: [socials.twitter, socials.discord, socials.github],
   };
 }
 
@@ -289,11 +289,11 @@ export function getBreadcrumbJsonLd(
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
-    "itemListElement": breadcrumbs.map((crumb, index) => ({
+    itemListElement: breadcrumbs.map((crumb, index) => ({
       "@type": "ListItem",
-      "position": index + 1,
-      "name": crumb.name,
-      "item": crumb.item,
+      position: index + 1,
+      name: crumb.name,
+      item: crumb.item,
     })),
   };
 }

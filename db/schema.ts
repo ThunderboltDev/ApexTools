@@ -50,7 +50,7 @@ export const sessionsTable = pgTable(
       .notNull()
       .references(() => usersTable.id, { onDelete: "cascade" }),
   },
-  (table) => [index("session_userId_idx").on(table.userId)],
+  (table) => [index("session_userId_idx").on(table.userId)]
 );
 
 export const accountsTable = pgTable(
@@ -74,7 +74,7 @@ export const accountsTable = pgTable(
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
   },
-  (table) => [index("account_userId_idx").on(table.userId)],
+  (table) => [index("account_userId_idx").on(table.userId)]
 );
 
 export const verificationsTable = pgTable(
@@ -90,7 +90,7 @@ export const verificationsTable = pgTable(
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
   },
-  (table) => [index("verification_identifier_idx").on(table.identifier)],
+  (table) => [index("verification_identifier_idx").on(table.identifier)]
 );
 
 export const userRelations = relations(usersTable, ({ many }) => ({
@@ -120,7 +120,7 @@ export const toolPricingEnum = pgEnum("tool_pricing", pricingModels);
 
 export const toolAnalyticsEventTypeEnum = pgEnum(
   "tool_analytics_event_type",
-  analyticsEvents,
+  analyticsEvents
 );
 
 export const toolsTable = pgTable(
@@ -167,7 +167,7 @@ export const toolsTable = pgTable(
     index("tool_category_idx").on(table.category),
     index("tool_featured_idx").on(table.featuredUntil),
     index("tool_verified_idx").on(table.verifiedAt),
-  ],
+  ]
 );
 
 export const toolAnalyticsEventsTable = pgTable(
@@ -189,7 +189,7 @@ export const toolAnalyticsEventsTable = pgTable(
     index("tool_events_visitor_idx").on(table.visitorId),
     index("tool_events_type_idx").on(table.type),
     index("tool_events_created_idx").on(table.createdAt),
-  ],
+  ]
 );
 
 export const upvotesTable = pgTable(
@@ -203,7 +203,7 @@ export const upvotesTable = pgTable(
       .references(() => toolsTable.id, { onDelete: "cascade" }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  (table) => [primaryKey({ columns: [table.userId, table.toolId] })],
+  (table) => [primaryKey({ columns: [table.userId, table.toolId] })]
 );
 
 export const toolRelations = relations(toolsTable, ({ one }) => ({
@@ -240,7 +240,7 @@ export const featuredPurchasesTable = pgTable(
     index("featured_purchase_user_idx").on(table.userId),
     index("featured_purchase_dodo_idx").on(table.dodoPurchaseId),
     index("featured_purchase_status_idx").on(table.status),
-  ],
+  ]
 );
 
 export const schema = {

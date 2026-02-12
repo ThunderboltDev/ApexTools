@@ -74,15 +74,16 @@ export function DomainVerification({ tool }: { tool: Tool }) {
         disabled={isVerifying}
         className="flex ml-auto"
       >
-        {isVerifying ?
+        {isVerifying ? (
           <>
             <Spinner /> Verifying...
           </>
-        : <>
+        ) : (
+          <>
             <HugeiconsIcon icon={ShieldKeyIcon} />
             Verify Domain
           </>
-        }
+        )}
       </Button>
     </FormSection>
   );

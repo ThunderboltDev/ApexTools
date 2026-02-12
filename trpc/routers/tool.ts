@@ -104,8 +104,8 @@ export const toolRouter = createTRPCRouter({
           .where(
             and(
               eq(upvotesTable.userId, ctx.user.id),
-              eq(upvotesTable.toolId, input.toolId),
-            ),
+              eq(upvotesTable.toolId, input.toolId)
+            )
           )
           .limit(1);
 
@@ -117,8 +117,8 @@ export const toolRouter = createTRPCRouter({
             .where(
               and(
                 eq(upvotesTable.userId, ctx.user.id),
-                eq(upvotesTable.toolId, input.toolId),
-              ),
+                eq(upvotesTable.toolId, input.toolId)
+              )
             );
 
           await tx
@@ -151,8 +151,8 @@ export const toolRouter = createTRPCRouter({
         .where(
           and(
             eq(upvotesTable.userId, ctx.user.id),
-            eq(upvotesTable.toolId, input.toolId),
-          ),
+            eq(upvotesTable.toolId, input.toolId)
+          )
         )
         .limit(1);
 
@@ -177,7 +177,7 @@ export const toolRouter = createTRPCRouter({
       const tool = await db.query.tool.findFirst({
         where: and(
           eq(toolsTable.slug, input.slug),
-          eq(toolsTable.userId, ctx.user.id),
+          eq(toolsTable.userId, ctx.user.id)
         ),
       });
 
@@ -198,7 +198,7 @@ export const toolRouter = createTRPCRouter({
       const tool = await db.query.tool.findFirst({
         where: and(
           eq(toolsTable.id, input.id),
-          eq(toolsTable.userId, ctx.user.id),
+          eq(toolsTable.userId, ctx.user.id)
         ),
       });
 
@@ -217,7 +217,7 @@ export const toolRouter = createTRPCRouter({
     .input(
       z.object({
         slug: z.string().min(1),
-      }),
+      })
     )
     .query(async ({ input }) => {
       const slug = input.slug.toLowerCase().trim().replace(/\s+/g, "-");
@@ -358,7 +358,7 @@ export const toolRouter = createTRPCRouter({
       const tool = await db.query.tool.findFirst({
         where: and(
           eq(toolsTable.id, input.toolId),
-          eq(toolsTable.userId, ctx.user.id),
+          eq(toolsTable.userId, ctx.user.id)
         ),
         columns: {
           id: true,

@@ -28,7 +28,7 @@ const badgeVariants = cva(
       variant: "featured",
       size: "sm",
     },
-  },
+  }
 );
 
 const isFeatured = (featuredUntil: Date | null | undefined) => {

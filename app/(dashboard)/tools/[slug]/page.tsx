@@ -52,7 +52,7 @@ export default function ToolOverviewPage() {
 
   const { data: tool, isLoading: isLoadingTool } = trpc.tool.getBySlug.useQuery(
     { slug },
-    { enabled: !!slug },
+    { enabled: !!slug }
   );
 
   const { mutate: deleteTool, isPending: isDeleting } =
@@ -63,7 +63,7 @@ export default function ToolOverviewPage() {
       },
       onError: (error) => {
         toast.error(
-          error instanceof Error ? error.message : "Failed to delete tool",
+          error instanceof Error ? error.message : "Failed to delete tool"
         );
       },
     });
@@ -184,16 +184,17 @@ export default function ToolOverviewPage() {
                     disabled={isDeleting}
                     aria-busy={isDeleting}
                   >
-                    {isDeleting ?
+                    {isDeleting ? (
                       <>
                         <Spinner />
                         Deleting...
                       </>
-                    : <>
+                    ) : (
+                      <>
                         <HugeiconsIcon icon={Delete02Icon} />
                         Confirm Delete
                       </>
-                    }
+                    )}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>

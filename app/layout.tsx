@@ -24,9 +24,9 @@ export const metadata: Metadata = {
   creator: config.creator,
   category: "technology",
   icons: {
-    icon:"/logo.webp",
-    apple:"/logo.webp",
-    shortcut:"/logo.webp",
+    icon: "/logo.webp",
+    apple: "/logo.webp",
+    shortcut: "/logo.webp",
   },
   openGraph: {
     siteName: config.name,
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     creator: "Thunderbolt",
   },
-  keywords:[
+  keywords: [
     "ai tools",
     "ai directory",
     "best ai tools",
@@ -57,7 +57,8 @@ export const metadata: Metadata = {
     "ai image generators",
     "ai video generators",
     "chatgpt alternatives",
-    "llm comparison",]
+    "llm comparison",
+  ],
 };
 
 export const viewport: Viewport = {
