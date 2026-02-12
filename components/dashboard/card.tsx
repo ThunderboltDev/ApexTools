@@ -13,7 +13,7 @@ export function DashboardToolCard({ tool }: DashboardToolCardProps) {
     <Link
       key={tool.id}
       href={`/tools/${tool.slug}`}
-      className="rounded-lg border border-border bg-secondary p-4 shadow-md"
+      className="relative rounded-lg border border-border bg-secondary p-4 shadow-md"
     >
       <ToolBadge tool={tool} />
       <div className="flex items-start gap-3">
