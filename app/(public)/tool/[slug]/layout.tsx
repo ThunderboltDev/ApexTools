@@ -7,7 +7,7 @@ import {
   JsonLd,
 } from "@/components/seo/jsonLd";
 import { ToolProvider } from "@/components/tool/tool-context";
-import { url } from "@/config";
+import { config, url } from "@/config";
 import { trpc } from "@/trpc/server";
 
 interface ToolLayoutProps {
@@ -23,14 +23,26 @@ export async function generateMetadata({
     const tool = await trpc.browse.getBySlug({ slug });
 
     return {
-      title: `${tool.name} | ${tool.tagline}`,
-      description: tool.description,
-      openGraph: {
-        images: [tool.banner],
-      },
+      title: `${tool.name}`,
+      description: `${tool.tagline} Category: ${tool.category.slice(0, 3).join(", ")}`,
       alternates: {
         canonical: `/tool/${slug}`,
       },
+      openGraph: {
+        siteName: config.name,
+        locale: "en_US",
+        type: "website",
+        url: `/tool/${slug}`,
+        images: [
+          {
+            url: tool.banner,
+            width: 1200,
+            height: 630,
+            alt: tool.name,
+          },
+        ],
+      },
+      keywords: [tool.name, ...tool.category, ...tool.tags],
     };
   } catch {
     return {

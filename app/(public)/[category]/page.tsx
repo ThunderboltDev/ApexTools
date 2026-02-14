@@ -9,7 +9,7 @@ import {
   JsonLd,
 } from "@/components/seo/jsonLd";
 import { FAQ } from "@/components/tool/faq";
-import { url } from "@/config";
+import { config, url } from "@/config";
 import { categoryContent } from "@/lib/category-data";
 import { categories } from "@/lib/constants";
 import type { Category } from "@/lib/types";
@@ -38,8 +38,18 @@ export async function generateMetadata({
       canonical: `/${category}`,
     },
     openGraph: {
+      siteName: config.name,
+      locale: "en_US",
       type: "website",
       url: `/${category}`,
+      images: [
+        {
+          url: "/preview.webp",
+          width: 1200,
+          height: 630,
+          alt: `${config.name} Landing Page`,
+        },
+      ],
     },
   };
 }
@@ -82,7 +92,7 @@ export default async function CategoryPage({ params }: PageProps) {
           category,
           toolsData.tools,
           content.headline,
-          content.description
+          content.description,
         )}
       />
       <JsonLd data={getFAQJsonLd(content.faqs)} />

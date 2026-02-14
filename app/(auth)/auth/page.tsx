@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: "Sign In",
   description:
     "Sign in to your account on ApexTools using Google, GitHub or Email.",
+  robots: { index: false, follow: false },
 };
 
 interface AuthPageProps {

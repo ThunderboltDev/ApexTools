@@ -32,6 +32,7 @@ export const metadata: Metadata = {
     siteName: config.name,
     locale: "en_US",
     type: "website",
+    url: "/",
     images: [
       {
         url: "/preview.webp",
