@@ -1,7 +1,5 @@
 "use client";
 
-import { LinkSquare02Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
 import Link from "next/link";
 import { ToolBadge } from "@/components/tool/badge";
@@ -9,6 +7,7 @@ import { BookmarkButton } from "@/components/tool/bookmark";
 import { ImpressionTracker } from "@/components/tool/impression-tracker";
 import { UpvoteButton } from "@/components/tool/upvote";
 import { VerifiedBadge } from "@/components/tool/verified-badge";
+import { VisitButton } from "@/components/tool/visit-button";
 import {
   Card,
   CardContent,
@@ -17,24 +16,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { LinkButton } from "@/components/ui/link-button";
-import { trackOutboundClick, trackToolCardClick } from "@/lib/analytics";
-import { getVisitorId } from "@/lib/store/visitor";
+import { trackToolCardClick } from "@/lib/analytics";
 import type { ToolWithUpvoteStatus } from "@/lib/types";
-import { trpc } from "@/trpc/provider";
 
 interface ToolCardProps {
   tool: ToolWithUpvoteStatus;
 }
 
 export function ToolCard({ tool }: ToolCardProps) {
-  const { mutate: incrementVisit } = trpc.browse.incrementVisit.useMutation();
-
-  const handleVisit = () => {
-    trackOutboundClick(tool.slug, tool.url);
-    incrementVisit({ toolId: tool.id, visitorId: getVisitorId() });
-  };
-
   return (
     <Card className="hover:-translate-y-1 transition-transform duration-200 ease-out relative gap-3 shadow-md hover:shadow-lg pt-4">
       <ImpressionTracker toolId={tool.id} />
@@ -74,16 +63,7 @@ export function ToolCard({ tool }: ToolCardProps) {
           <UpvoteButton tool={tool} />
           <BookmarkButton slug={tool.slug} />
         </div>
-        <LinkButton
-          size="sm"
-          variant="outline"
-          href={tool.url}
-          rel="noopener noreferrer"
-          target="_blank"
-          onClick={handleVisit}
-        >
-          Visit <HugeiconsIcon icon={LinkSquare02Icon} />
-        </LinkButton>
+        <VisitButton tool={tool} />
       </CardFooter>
     </Card>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { LinkSquare02Icon, Tag01Icon } from "@hugeicons/core-free-icons";
+import { Tag01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
@@ -17,8 +17,8 @@ import { useTool } from "@/components/tool/tool-context";
 import { UpvoteButton } from "@/components/tool/upvote";
 import { VerifiedBadge } from "@/components/tool/verified-badge";
 import { ViewTracker } from "@/components/tool/view-tracker";
+import { VisitButton } from "@/components/tool/visit-button";
 import { Badge } from "@/components/ui/badge";
-import { LinkButton } from "@/components/ui/link-button";
 import { useSession } from "@/lib/auth/client";
 import { getVisitorId } from "@/lib/store/visitor";
 import { cn } from "@/lib/utils";
@@ -35,12 +35,6 @@ export default function ToolPage() {
       excludeSlug: tool.slug,
       limit: 6,
     });
-
-  const { mutate: incrementVisit } = trpc.browse.incrementVisit.useMutation();
-
-  const handleVisit = () => {
-    incrementVisit({ toolId: tool.id, visitorId: getVisitorId() });
-  };
 
   const isOwner = !isPending && session?.user?.id === tool.userId;
 
@@ -108,16 +102,7 @@ export default function ToolPage() {
           </div>
           <div className="flex items-center gap-2">
             <ClaimTool tool={tool} />
-            <LinkButton
-              theme="accent"
-              href={tool.url}
-              onClick={handleVisit}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <HugeiconsIcon icon={LinkSquare02Icon} />
-              Visit Website
-            </LinkButton>
+            <VisitButton tool={tool} />
           </div>
         </div>
 
