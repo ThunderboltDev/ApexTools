@@ -20,7 +20,6 @@ import { ViewTracker } from "@/components/tool/view-tracker";
 import { VisitButton } from "@/components/tool/visit-button";
 import { Badge } from "@/components/ui/badge";
 import { useSession } from "@/lib/auth/client";
-import { getVisitorId } from "@/lib/store/visitor";
 import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/provider";
 
