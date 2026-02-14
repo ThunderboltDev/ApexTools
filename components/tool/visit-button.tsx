@@ -27,7 +27,7 @@ export function VisitButton({ tool }: VisitButtonProps) {
       rel="noopener noreferrer"
     >
       <HugeiconsIcon icon={LinkSquare02Icon} />
-      Visit Website
+      Visit
     </LinkButton>
   );
 }
