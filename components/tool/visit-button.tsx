@@ -20,7 +20,7 @@ export function VisitButton({ tool }: VisitButtonProps) {
 
   return (
     <LinkButton
-      theme="accent"
+      variant="outline"
       href={`${tool.url}?ref=apextools`}
       onClick={handleVisit}
       target="_blank"
