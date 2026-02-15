@@ -93,7 +93,7 @@ export default async function CategoryPage({ params }: PageProps) {
           category,
           toolsData.tools,
           content.headline,
-          content.description,
+          content.description
         )}
       />
       <JsonLd data={getFAQJsonLd(content.faqs)} />

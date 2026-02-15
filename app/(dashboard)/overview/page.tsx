@@ -104,9 +104,10 @@ export default function OverviewPage() {
             </div>
           </CardHeader>
           <CardContent>
-            {isLoading ?
+            {isLoading ? (
               <Skeleton className="h-[350px] w-full" />
-            : <ChartContainer
+            ) : (
+              <ChartContainer
                 config={{
                   view: {
                     label: "Views",
@@ -193,7 +194,7 @@ export default function OverviewPage() {
                   />
                 </AreaChart>
               </ChartContainer>
-            }
+            )}
           </CardContent>
         </Card>
 
@@ -213,7 +214,7 @@ export default function OverviewPage() {
             </div>
           </CardHeader>
           <CardContent>
-            {isLoading ?
+            {isLoading ? (
               <div className="space-y-4">
                 {[1, 2, 3].map((i) => (
                   <div key={i} className="flex items-center gap-4 p-2">
@@ -227,7 +228,7 @@ export default function OverviewPage() {
                   </div>
                 ))}
               </div>
-            : overview?.trendingTools.length === 0 ?
+            ) : overview?.trendingTools.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-[150px] text-muted-foreground space-y-3">
                 <div className="p-3 bg-muted rounded-full">
                   <HugeiconsIcon icon={TrendingUp} className="size-6" />
@@ -239,7 +240,8 @@ export default function OverviewPage() {
                   </p>
                 </div>
               </div>
-            : <div className="space-y-2">
+            ) : (
+              <div className="space-y-2">
                 {overview?.trendingTools.map((tool, index) => (
                   <Link
                     key={tool.id}
@@ -259,7 +261,7 @@ export default function OverviewPage() {
                         index === 0 && "bg-amber-500/10 text-amber-500",
                         index === 1 && "bg-slate-600/10 text-slate-600",
                         index === 2 && "bg-amber-700/10 text-amber-700",
-                        index > 2 && "bg-muted/50 text-muted-foreground",
+                        index > 2 && "bg-muted/50 text-muted-foreground"
                       )}
                     >
                       {index + 1}
@@ -329,7 +331,7 @@ export default function OverviewPage() {
                   </Link>
                 ))}
               </div>
-            }
+            )}
           </CardContent>
         </Card>
       </div>
