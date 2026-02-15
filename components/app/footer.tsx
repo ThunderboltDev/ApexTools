@@ -5,11 +5,18 @@ import Link from "next/link";
 import { ThemeDropdown } from "@/components/app/theme-dropdown";
 import { categories, categoryLabels } from "@/lib/constants";
 
+const projects = [
+  {
+    name: "PDF Pal",
+    url: "https://pdfpal.thunderboltdev.site/?ref=apextools.site",
+  },
+];
+
 export function Footer() {
   return (
     <footer className="border-t mt-12 pt-12 md:pt-16 px-4 md:px-8">
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-12 gap-8 mb-12">
-        <div className="lg:col-span-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-x-4 gap-y-8 mb-12">
+        <div className="lg:col-span-2">
           <Link href="/" className="text-2xl font-bold">
             ApexTools
           </Link>
@@ -22,8 +29,8 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="lg:col-span-2">
-          <h3 className="font-semibold mb-4">Pages</h3>
+        <div>
+          <h4 className="font-semibold mb-4">Pages</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li>
               <Link
@@ -44,8 +51,8 @@ export function Footer() {
           </ul>
         </div>
 
-        <div className="lg:col-span-2">
-          <h3 className="font-semibold mb-4">Legal</h3>
+        <div>
+          <h4 className="font-semibold mb-4">Legal</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li>
               <Link
@@ -66,22 +73,41 @@ export function Footer() {
           </ul>
         </div>
 
-        <div className="md:col-span-3 lg:col-span-4">
-          <h3 className="font-semibold mb-4">Categories</h3>
-          <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-2 gap-2 text-sm text-muted-foreground">
-            {categories.map((category) => (
-              <li key={category}>
+        <div>
+          <h4 className="font-semibold mb-4">From the Creator</h4>
+          <ul className="space-y-2 text-sm text-muted-foreground">
+            {projects.map((project) => (
+              <li key={project.name}>
                 <Link
-                  href={`/${category}`}
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-foreground transition-colors"
                 >
-                  {categoryLabels[category]}
+                  {project.name}
                 </Link>
               </li>
             ))}
           </ul>
         </div>
       </div>
+
+      <div className="mb-12">
+        <h4 className="font-semibold mb-4">Categories</h4>
+        <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
+          {categories.map((category) => (
+            <li key={category}>
+              <Link
+                href={`/${category}`}
+                className="hover:text-foreground transition-colors"
+              >
+                {categoryLabels[category]}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+
       <div className="flex flex-row flex-wrap items-center justify-center gap-4 pt-8 border-t">
         <a
           href="https://www.proofstories.io/directory/products/apextools/"
@@ -179,7 +205,7 @@ export function Footer() {
         <a
           href="https://trylaunch.ai/launch/apextools"
           target="_blank"
-          rel="noopener dofollow"
+          rel="noopener"
         >
           <img
             src="https://trylaunch.ai/badges/badge-color.svg"
@@ -217,8 +243,18 @@ export function Footer() {
           />
         </a>
       </div>
-      <div className="pt-8 text-center text-sm text-muted-foreground">
-        © {new Date().getFullYear()} ApexTools. All rights reserved.
+
+      <div className="pt-8 text-center text-sm text-muted-foreground space-y-1">
+        <p>© {new Date().getFullYear()} ApexTools. All rights reserved.</p>
+        <p>
+          Created by{" "}
+          <Link
+            className="link"
+            href="https://www.thunderboltdev.site/?ref=apextools.site"
+          >
+            Thunderbolt
+          </Link>
+        </p>
       </div>
     </footer>
   );
