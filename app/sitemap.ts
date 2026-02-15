@@ -34,7 +34,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${url}/${category}`,
     lastModified: new Date(),
     changeFrequency: "weekly",
-    priority: 0.8,
+    priority: 0.9,
   }));
 
   return [...staticPages, ...categoryPages];

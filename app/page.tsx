@@ -14,7 +14,7 @@ import { url } from "@/config";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "AI Tools Directory — Discover the Best AI Tools for Any Task",
+  title: "Discover the Best AI Tools | AI Tools Directory | ApexTools",
   alternates: {
     canonical: "/",
   },

@@ -6,11 +6,12 @@ interface CategoryData {
   headline: string;
   subheadline: string;
   faqs: { question: string; answer: string }[];
+  keywords: string[];
 }
 
 export const categoryContent: Record<Category, CategoryData> = {
   productivity: {
-    title: "Best AI Productivity Tools for 2025 | Automate Your Workflow",
+    title: "Best AI Productivity Tools | Automate Your Workflow",
     description:
       "Discover the best AI productivity tools to automate tasks, manage projects, and reclaim hours in your day. Compare top-rated AI assistants for work and life.",
     headline: "Best AI Productivity Tools That Actually Save You Time",
@@ -53,9 +54,10 @@ export const categoryContent: Record<Category, CategoryData> = {
           "Start with your biggest time-waster—whether it's meetings, email, or task organization—then choose an AI tool specifically designed to solve that pain point.",
       },
     ],
+    keywords: [],
   },
   marketing: {
-    title: "Best AI Marketing Tools for 2025 | Scale Your Growth",
+    title: "Best AI Marketing Tools | Scale Your Growth",
     description:
       "Find the best AI marketing tools to generate high-converting copy, create visuals, analyze campaigns, and automate your entire marketing stack. Expert reviews and comparisons.",
     headline: "AI Marketing Tools That Turn Clicks Into Customers",
@@ -98,13 +100,13 @@ export const categoryContent: Record<Category, CategoryData> = {
           "Reputable AI marketing tools comply with GDPR and CCPA, using encrypted data processing and offering opt-out options for training data usage.",
       },
     ],
+    keywords: [],
   },
   llm: {
-    title:
-      "Best Large Language Models (LLMs) 2025 | Compare GPT-4, Claude & More",
+    title: "Best Large Language Models (LLMs) | Compare GPT-4, Claude & More",
     description:
       "Compare the most powerful Large Language Models side-by-side. See pricing, context windows, and real performance benchmarks for GPT-4, Claude 3, Gemini, and open-source alternatives.",
-    headline: "The Definitive Guide to Large Language Models in 2025",
+    headline: "The Definitive Guide to Large Language Models",
     subheadline:
       "Cut through the hype. We break down which LLM actually delivers for coding, reasoning, creativity, and long-context tasks.",
     faqs: [
@@ -144,6 +146,7 @@ export const categoryContent: Record<Category, CategoryData> = {
           "Yes, models like Llama 3 and Mistral can run locally with 16GB+ VRAM, though you'll sacrifice speed and capabilities compared to cloud APIs.",
       },
     ],
+    keywords: [],
   },
   image: {
     title: "Best AI Image Generators 2025 | Create Stunning Visuals",
@@ -189,6 +192,7 @@ export const categoryContent: Record<Category, CategoryData> = {
           "Most output 1024x1024 by default, with premium tiers offering 2048x2048 or higher. Upscaling tools can push resolutions to 4K and beyond.",
       },
     ],
+    keywords: [],
   },
   code: {
     title: "Best AI Coding Assistants 2025 | Code Faster & Smarter",
@@ -234,6 +238,7 @@ export const categoryContent: Record<Category, CategoryData> = {
           "Python, JavaScript, TypeScript, and Go get the best support. Niche languages have limited training data, resulting in less accurate suggestions.",
       },
     ],
+    keywords: [],
   },
   video: {
     title: "Best AI Video Generators 2025 | Text to Video Made Simple",
@@ -279,6 +284,7 @@ export const categoryContent: Record<Category, CategoryData> = {
           "OpenAI Sora is currently limited to select creators and red teamers. Public availability is expected in late 2024 or early 2025.",
       },
     ],
+    keywords: [],
   },
   audio: {
     title: "Best AI Audio Tools 2025 | Voice Generation & Enhancement",
@@ -324,6 +330,7 @@ export const categoryContent: Record<Category, CategoryData> = {
           "Leading tools like ElevenLabs support 29+ languages with native accents, enabling global content creation from a single voice model.",
       },
     ],
+    keywords: [],
   },
   music: {
     title: "Best AI Music Generators 2025 | Create Original Songs",
@@ -369,6 +376,7 @@ export const categoryContent: Record<Category, CategoryData> = {
           "Yes, if you use platforms like Soundraw or AIVA with proper licensing. Always check the specific tool's terms for platform-specific rights.",
       },
     ],
+    keywords: [],
   },
   writing: {
     title: "Best AI Writing Assistants 2025 | Write Faster & Better",
@@ -414,6 +422,7 @@ export const categoryContent: Record<Category, CategoryData> = {
           "Fact-check all claims, add personal anecdotes, restructure for flow, and inject your unique perspective—AI gives you a draft, not a finished piece.",
       },
     ],
+    keywords: [],
   },
   research: {
     title: "Best AI Research Tools 2025 | Analyze Papers & Data Faster",
@@ -459,6 +468,7 @@ export const categoryContent: Record<Category, CategoryData> = {
           "Always verify citations manually. AI occasionally hallucinates references or misattributes claims—cross-check with original sources before publishing.",
       },
     ],
+    keywords: [],
   },
   design: {
     title: "Best AI Design Tools 2025 | Create Graphics & UI Instantly",
@@ -504,6 +514,7 @@ export const categoryContent: Record<Category, CategoryData> = {
           "Figma's AI features, Uizard, and Framer AI lead for wireframing and interface design, turning sketches or prompts into clickable prototypes.",
       },
     ],
+    keywords: [],
   },
   data: {
     title: "Best AI Data Analysis Tools 2025 | Insights Without Code",
@@ -549,6 +560,7 @@ export const categoryContent: Record<Category, CategoryData> = {
           "Yes, multimodal AI tools process text documents, images, and even audio to extract structured insights and sentiment analysis.",
       },
     ],
+    keywords: [],
   },
   seo: {
     title: "Best AI SEO Tools 2025 | Rank Higher & Drive Traffic",
@@ -594,6 +606,7 @@ export const categoryContent: Record<Category, CategoryData> = {
           "AI handles technical audits and content optimization, but agencies still add value for strategy, link building, and competitive analysis in difficult niches.",
       },
     ],
+    keywords: [],
   },
   education: {
     title: "Best AI Education Tools 2025 | Learn Faster & Smarter",
@@ -639,6 +652,7 @@ export const categoryContent: Record<Category, CategoryData> = {
           "Yes, tools like Turnitin and Grammarly's AI features identify copied content and AI-generated text to maintain academic integrity.",
       },
     ],
+    keywords: [],
   },
   copywriting: {
     title: "Best AI Copywriting Tools 2025 | Write Copy That Converts",
@@ -684,6 +698,7 @@ export const categoryContent: Record<Category, CategoryData> = {
           "Yes, tools like Jasper and ActiveCampaign AI generate nurture sequences with subject lines, body copy, and CTAs based on proven frameworks like AIDA and PAS.",
       },
     ],
+    keywords: [],
   },
   translation: {
     title: "Best AI Translation Tools 2025 | Accurate & Instant",
@@ -729,6 +744,7 @@ export const categoryContent: Record<Category, CategoryData> = {
           "Enterprise tools like DeepL Pro and Smartcat offer offline processing and encryption. Avoid free tools for sensitive business or legal content.",
       },
     ],
+    keywords: [],
   },
   gaming: {
     title: "Best AI Gaming Tools 2025 | Build & Play Smarter",
@@ -774,6 +790,7 @@ export const categoryContent: Record<Category, CategoryData> = {
           "Use platforms with clean training data like Scenario or Unity Muse. Avoid tools scraping copyrighted assets to prevent legal exposure.",
       },
     ],
+    keywords: [],
   },
   legal: {
     title: "Best AI Legal Tools 2025 | Draft & Review Faster",
@@ -819,6 +836,7 @@ export const categoryContent: Record<Category, CategoryData> = {
           "Always verify citations manually. Recent incidents show AI can hallucinate fake cases—human attorneys must confirm every source before filing.",
       },
     ],
+    keywords: [],
   },
   finance: {
     title: "Best AI Finance Tools 2025 | Invest & Manage Smarter",
@@ -864,5 +882,6 @@ export const categoryContent: Record<Category, CategoryData> = {
           "Yes, Mastercard and banking AI monitor transactions millisecond-by-millisecond, blocking suspicious activity before completion.",
       },
     ],
+    keywords: [],
   },
 };

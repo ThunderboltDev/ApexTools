@@ -28,7 +28,7 @@ export async function generateMetadata({
     return {};
   }
 
-  const { title, headline, description } =
+  const { title, headline, description, keywords } =
     categoryContent[category as Category];
 
   return {
@@ -51,6 +51,7 @@ export async function generateMetadata({
         },
       ],
     },
+    keywords: keywords,
   };
 }
 
@@ -98,7 +99,7 @@ export default async function CategoryPage({ params }: PageProps) {
       <JsonLd data={getFAQJsonLd(content.faqs)} />
       <JsonLd data={getBreadcrumbJsonLd(breadcrumbs)} />
       <div className="mt-4 mb-8 space-y-3">
-        <h1 className="md:text-5xl text-center text-balance">
+        <h1 className="md:text-5xl text-4xl text-center text-balance">
           {content.headline}
         </h1>
         <p className="text-center md:text-xl text-muted-foreground max-w-2xl mx-auto">
