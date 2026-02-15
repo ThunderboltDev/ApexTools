@@ -82,7 +82,7 @@ export function Footer() {
           </ul>
         </div>
       </div>
-      <div className="flex flex-row flex-wrap items-center gap-4 py-6 border-t">
+      <div className="flex flex-row flex-wrap items-center justify-center gap-4 pt-8 border-t">
         <a
           href="https://www.proofstories.io/directory/products/apextools/"
           target="_blank"
@@ -141,13 +141,28 @@ export function Footer() {
         <a
           href="https://buildvoyage.com/products/apextools?ref=badge"
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
+          className="inline-block"
         >
-          <img
-            src="https://buildvoyage.com/images/featured_badge.png"
-            alt="Featured on BuildVoyage"
-            width="200"
-          />
+          <div
+            style={{
+              width: 200,
+              height: 56,
+              overflow: "hidden",
+            }}
+          >
+            <img
+              src="https://buildvoyage.com/images/featured_badge.png"
+              alt="Featured on BuildVoyage"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: "center 50%",
+                display: "block",
+              }}
+            />
+          </div>
         </a>
         <a
           href="https://launchigniter.com/product/apextools?ref=badge-apextools"
