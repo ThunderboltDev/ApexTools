@@ -120,6 +120,10 @@ export function Footer() {
           href="https://tinylaunchpad.com/projects/apextools"
           target="_blank"
           rel="noopener"
+          style={{
+            background: "white",
+            borderRadius: "8px",
+          }}
         >
           <img
             src="https://tinylaunchpad.com/images/badges/tinylaunchpad-badge-light.svg"
@@ -179,7 +183,7 @@ export function Footer() {
         </a>
         <a href="https://wired.business" target="_blank" rel="noopener">
           <img
-            src="https://wired.business/badge0-light.svg"
+            src="https://wired.business/badge0-white.svg"
             alt="Featured on Wired Business"
             width="200"
             height="54"
