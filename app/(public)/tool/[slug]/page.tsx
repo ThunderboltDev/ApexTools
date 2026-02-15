@@ -54,7 +54,7 @@ export default function ToolPage() {
 
       <div className="px-4 sm:px-6 mb-8">
         <div className="flex flex-col md:flex-row gap-6 items-start">
-          <div className="relative rounded-xl overflow-hidden shrink-0 size-24 md:size-28 ring-4 ring-background shadow-lg">
+          <div className="relative rounded-xl overflow-hidden shrink-0 size-24 md:size-28 ring-4 ring-background">
             <Image
               src={tool.logo}
               alt={`${tool.name} Logo`}
