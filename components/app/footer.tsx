@@ -10,6 +10,10 @@ const projects = [
     name: "PDF Pal",
     url: "https://pdfpal.thunderboltdev.site/?ref=apextools.site",
   },
+  {
+    name: "Cubit",
+    url: "https://cubit.thunderboltdev.site/?ref=apextools.site",
+  },
 ];
 
 export function Footer() {
