@@ -36,7 +36,7 @@
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.38.0",
     "babel-plugin-react-compiler": "^1.0.0",
-    "better-auth": "^1.6.20",
+    "better-auth": "^1.6.22",
     "canvas-confetti": "^1.9.4",
     "cheerio": "^1.2.0",
     "class-variance-authority": "^0.7.1",
