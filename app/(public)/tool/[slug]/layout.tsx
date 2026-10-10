@@ -8,10 +8,21 @@ import {
 } from "@/components/seo/jsonLd";
 import { ToolProvider } from "@/components/tool/tool-context";
 import { config, url } from "@/config";
+import { db } from "@/db/index";
 import { trpc } from "@/trpc/server";
 
 interface ToolLayoutProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateStaticParams() {
+  const tools = await db.query.tool.findMany({
+    columns: { slug: true },
+  });
+
+  return tools.map((tool) => ({
+    slug: tool.slug,
+  }));
 }
 
 export async function generateMetadata({

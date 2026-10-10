@@ -25,7 +25,7 @@ export default async function AuthPage({ searchParams }: AuthPageProps) {
 
   if (session) {
     const { callbackUrl } = await searchParams;
-    redirect(`/auth?callbackUrl=${normalizeCallbackUrl(callbackUrl)}`);
+    redirect(normalizeCallbackUrl(callbackUrl) || "/");
   }
 
   return (

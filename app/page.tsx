@@ -11,7 +11,7 @@ import {
 } from "@/components/seo/jsonLd";
 import { url } from "@/config";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Discover the Best AI Tools | AI Tools Directory | ApexTools",

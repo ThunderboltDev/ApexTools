@@ -10,7 +10,7 @@ import { LoadingScreen } from "@/components/ui/loading-screen";
 import { url } from "@/config";
 import { HydrateClient, trpc } from "@/trpc/server";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Browse AI Tools",
