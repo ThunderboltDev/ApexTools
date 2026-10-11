@@ -1,4 +1,5 @@
 import { initTRPC, TRPCError } from "@trpc/server";
+import type { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { headers } from "next/headers";
@@ -7,15 +8,17 @@ import { auth, type Session, type User } from "@/lib/auth";
 
 const redis = Redis.fromEnv();
 
-interface Context {
+export interface Context {
   session: Session | null;
   user: User | null;
+  isServerCaller?: boolean;
 }
 
-export async function createTRPCContext() {
-  const headersList = await headers();
-
+export async function createTRPCContext(
+  opts?: FetchCreateContextFnOptions
+): Promise<Context> {
   try {
+    const headersList = opts?.req.headers ?? (await headers());
     const res = await auth.api.getSession({
       headers: headersList,
     });
@@ -32,6 +35,7 @@ export async function createTRPCContext() {
           ...user,
           image: user?.image ?? null,
         },
+        isServerCaller: false,
       } satisfies Context;
     }
   } catch (error) {
@@ -41,6 +45,15 @@ export async function createTRPCContext() {
   return {
     session: null,
     user: null,
+    isServerCaller: false,
+  };
+}
+
+export async function createRSCContext(): Promise<Context> {
+  return {
+    session: null,
+    user: null,
+    isServerCaller: true,
   };
 }
 
@@ -56,6 +69,10 @@ export function createRateLimit(
   });
 
   return t.middleware(async ({ ctx, next, path }) => {
+    if (ctx.isServerCaller) {
+      return next();
+    }
+
     const identifier = ctx.user?.id ?? "anon";
 
     const key = `${routeName ?? path}:${identifier}`;

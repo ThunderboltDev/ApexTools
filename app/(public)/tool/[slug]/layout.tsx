@@ -75,9 +75,6 @@ export default async function ToolLayout({
 
   if (!tool) notFound();
 
-  void trpc.browse.getBySlug.prefetch({ slug });
-  void trpc.user.getById.prefetch({ id: tool.userId });
-
   const user = await trpc.user.getById({ id: tool.userId });
 
   const breadcrumbs = [
