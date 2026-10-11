@@ -10,8 +10,6 @@ import {
   PageTitle,
 } from "@/components/ui/page";
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
   title: "Bookmarks",
   description: "View and manage your bookmarked AI tools.",
