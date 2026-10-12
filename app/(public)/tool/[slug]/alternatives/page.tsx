@@ -33,8 +33,8 @@ import {
   getAlternativesFaqs,
   getAlternativesIntro,
   isIndexableAlternativesPage,
-  queryAlternativeTools,
 } from "@/lib/alternatives";
+import { queryAlternativeTools } from "@/lib/alternatives.server";
 import { categoryLabels, pricingLabels } from "@/lib/constants";
 import type { Category } from "@/lib/types";
 

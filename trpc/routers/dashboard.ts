@@ -12,13 +12,16 @@ import {
   timePeriods,
   timePeriodToDays,
 } from "@/lib/constants";
-import { dateExpression } from "@/lib/date";
 import type { AnalyticsEvent } from "@/lib/types";
 import {
   createRateLimit,
   createTRPCRouter,
   privateProcedure,
 } from "@/trpc/init";
+
+const dateExpression = sql<string>`
+  to_char(${toolAnalyticsEventsTable.createdAt}, 'YYYY-MM-DD')
+`;
 
 export const dashboardRouter = createTRPCRouter({
   getOverview: privateProcedure

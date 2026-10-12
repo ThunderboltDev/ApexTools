@@ -1,6 +1,3 @@
-import { and, arrayOverlaps, desc, ne, sql } from "drizzle-orm";
-import { db } from "@/db/index";
-import { toolsTable } from "@/db/schema";
 import {
   categoryLabels,
   platformLabels,
@@ -10,9 +7,9 @@ import type { Category, PricingModel, Tool } from "@/lib/types";
 
 export const MIN_INDEXABLE_ALTERNATIVES = 3;
 export const ALTERNATIVES_LIMIT = 12;
-const CANDIDATE_POOL = 40;
+export const CANDIDATE_POOL = 40;
 
-type RankableTool = Pick<
+export type RankableTool = Pick<
   Tool,
   "slug" | "category" | "tags" | "pricing" | "upvotes"
 >;
@@ -62,32 +59,6 @@ export function rankAlternatives<T extends RankableTool>(
     .map(({ tool }) => tool);
 }
 
-export async function queryAlternativeTools(
-  source: RankableTool,
-  limit = ALTERNATIVES_LIMIT
-): Promise<Tool[]> {
-  if (source.category.length === 0) return [];
-
-  const categoryOverlap = sql`(
-    SELECT COUNT(*)::int
-    FROM UNNEST(${toolsTable.category}) AS c(cat)
-    WHERE c.cat = ANY(${sql.param(source.category)})
-  )`;
-
-  const candidates = await db
-    .select()
-    .from(toolsTable)
-    .where(
-      and(
-        arrayOverlaps(toolsTable.category, source.category),
-        ne(toolsTable.slug, source.slug)
-      )
-    )
-    .orderBy(desc(categoryOverlap), desc(toolsTable.upvotes))
-    .limit(CANDIDATE_POOL);
-
-  return rankAlternatives(source, candidates, limit);
-}
 
 export function isIndexableAlternativesPage(count: number) {
   return count >= MIN_INDEXABLE_ALTERNATIVES;

@@ -1,6 +1,3 @@
-import { sql } from "drizzle-orm";
-import { toolAnalyticsEventsTable } from "@/db/schema";
-
 export function getDaysInMs(days: number) {
   return days * 24 * 60 * 60 * 1000;
 }
@@ -21,7 +18,3 @@ export function getDaysAgo(number: number) {
   const date = new Date();
   return new Date(date.getTime() - getDaysInMs(number));
 }
-
-export const dateExpression = sql<string>`
-  to_char(${toolAnalyticsEventsTable.createdAt}, 'YYYY-MM-DD')
-`;
