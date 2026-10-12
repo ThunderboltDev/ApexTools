@@ -89,8 +89,8 @@ export function Navbar({ children }: NavbarProps) {
             <Image
               src="/logo.webp"
               alt="ApexTools Logo"
-              width={500}
-              height={500}
+              width={32}
+              height={32}
               className="size-8"
             />
             <span className="font-bold text-xl text-foreground group-data-[collapsible=icon]:hidden transition-all duration-300">

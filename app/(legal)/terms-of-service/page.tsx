@@ -25,7 +25,7 @@ export default function TermsOfService() {
       <JsonLd data={getBreadcrumbJsonLd(breadcrumbs)} />
       <article className="section">
         <h1>Terms of Service</h1>
-        <p>Last updated: January 2026</p>
+        <p>Last updated: October 2026</p>
 
         <h2>Acceptance of Terms</h2>
         <p>
@@ -87,6 +87,14 @@ export default function TermsOfService() {
           <li>Attempt to gain unauthorized access to our systems</li>
           <li>Use the service for any illegal or harmful purpose</li>
         </ul>
+
+        <h2>Advertising</h2>
+        <p>
+          ApexTools may display third-party advertisements, including ads
+          served by Google AdSense. We do not control the content of those ads.
+          Your interactions with advertisers are solely between you and the
+          advertiser.
+        </p>
 
         <h2>Disclaimer of Warranties</h2>
         <p>

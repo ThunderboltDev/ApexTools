@@ -78,8 +78,9 @@ export function ToolGrid({
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {Array.from({ length: 6 }).map(() => (
-          <SkeletonToolCard key={crypto.randomUUID()} />
+        {Array.from({ length: 6 }).map((_, index) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: order is stable
+          <SkeletonToolCard key={`tool-grid-skeleton-${index}`} />
         ))}
       </div>
     );
@@ -92,8 +93,8 @@ export function ToolGrid({
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {tools.map((tool) => (
-          <ToolCard key={tool.id} tool={tool} />
+        {tools.map((tool, index) => (
+          <ToolCard key={tool.id} tool={tool} priority={index < 4} />
         ))}
         {showCta && <ToolCTACard />}
       </div>

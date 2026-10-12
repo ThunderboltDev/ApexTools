@@ -1,6 +1,6 @@
 "use client";
 
-import { Tag01Icon } from "@hugeicons/core-free-icons";
+import { ArrowRight01Icon, Tag01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
 import ReactMarkdown from "react-markdown";
@@ -19,6 +19,7 @@ import { VerifiedBadge } from "@/components/tool/verified-badge";
 import { ViewTracker } from "@/components/tool/view-tracker";
 import { VisitButton } from "@/components/tool/visit-button";
 import { Badge } from "@/components/ui/badge";
+import { LinkButton } from "@/components/ui/link-button";
 import { useSession } from "@/lib/auth/client";
 import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/provider";
@@ -46,9 +47,9 @@ export default function ToolPage() {
           src={tool.banner}
           alt={`${tool.name} Banner`}
           fill
+          sizes="(max-width: 768px) 100vw, 896px"
           className="object-cover"
           priority
-          unoptimized
         />
       </div>
 
@@ -59,9 +60,9 @@ export default function ToolPage() {
               src={tool.logo}
               alt={`${tool.name} Logo`}
               fill
+              sizes="(max-width: 768px) 96px, 112px"
               className="object-cover"
-              loading="eager"
-              unoptimized
+              priority
             />
           </div>
 
@@ -164,7 +165,17 @@ export default function ToolPage() {
 
       <div className="px-4 sm:px-6 mt-16 pt-8 border-t">
         <div className="space-y-6">
-          <h3 className="text-xl font-semibold">Similar Tools</h3>
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <h3 className="text-xl font-semibold">Similar Tools</h3>
+            <LinkButton
+              variant="ghost"
+              size="sm"
+              href={`/tool/${tool.slug}/alternatives`}
+            >
+              View all {tool.name} alternatives
+              <HugeiconsIcon icon={ArrowRight01Icon} />
+            </LinkButton>
+          </div>
 
           {isLoadingSimilar ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -4,13 +4,15 @@ import Script from "next/script";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { type PropsWithChildren, Suspense } from "react";
 import { Providers } from "@/components/app/providers";
-import { LoadingScreen } from "@/components/ui/loading-screen";
 import { config, url } from "@/config";
+import { adsenseClientId, adsenseEnabled } from "@/lib/adsense";
 import "./globals.css";
 
 const figtree = Figtree({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -46,6 +48,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     creator: "Thunderbolt",
   },
+  other: adsenseClientId
+    ? { "google-adsense-account": adsenseClientId }
+    : undefined,
   keywords: [
     "ai tools",
     "ai directory",
@@ -70,18 +75,39 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
   return (
     <html lang="en" className={figtree.variable} suppressHydrationWarning>
+      <head>
+        <link
+          rel="preconnect"
+          href="https://umami-orcin-six.vercel.app"
+          crossOrigin="anonymous"
+        />
+        {adsenseEnabled && adsenseClientId ? (
+          <link
+            rel="dns-prefetch"
+            href="https://pagead2.googlesyndication.com"
+          />
+        ) : null}
+      </head>
       <body>
+        {adsenseEnabled && adsenseClientId ? (
+          <Script
+            id="google-adsense"
+            strategy="lazyOnload"
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId}`}
+            crossOrigin="anonymous"
+          />
+        ) : null}
         <NuqsAdapter>
           <Providers>
-            <Suspense fallback={<LoadingScreen />}>{children}</Suspense>
+            <Suspense fallback={null}>{children}</Suspense>
           </Providers>
         </NuqsAdapter>
       </body>
       <Script
-        defer
-        src="https://cloud.umami.is/script.js"
-        data-website-id="13e97afd-bff1-46db-8ae9-d5be587709dc"
-      ></Script>
+        strategy="lazyOnload"
+        src="https://umami-orcin-six.vercel.app/script.js"
+        data-website-id="9c7b6bf8-a958-4bfb-a35e-528117e8ca12"
+      />
     </html>
   );
 }

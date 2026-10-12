@@ -3,7 +3,6 @@
 import { SearchIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { keepPreviousData } from "@tanstack/react-query";
-import { motion } from "framer-motion";
 import {
   parseAsInteger,
   parseAsString,
@@ -129,18 +128,10 @@ export function DirectoryClient({ category }: DirectoryClientProps) {
                 type="button"
                 onClick={() => handleSort(option.value)}
                 className={cn(
-                  "relative z-10 flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium transition-colors cursor-pointer text-muted-foreground hover:text-secondary-foreground",
-                  { "text-white hover:text-white": isActive }
+                  "flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium transition-colors cursor-pointer text-muted-foreground hover:text-secondary-foreground",
+                  isActive && "bg-accent text-white hover:text-white shadow-xs"
                 )}
               >
-                {isActive && (
-                  <motion.div
-                    layoutId="active-sort-pill"
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                    className="absolute inset-0 z-[-1] rounded-full bg-accent"
-                  />
-                )}
-
                 {option.icon}
                 {option.label}
               </button>

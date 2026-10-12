@@ -21,9 +21,10 @@ import type { ToolWithUpvoteStatus } from "@/lib/types";
 
 interface ToolCardProps {
   tool: ToolWithUpvoteStatus;
+  priority?: boolean;
 }
 
-export function ToolCard({ tool }: ToolCardProps) {
+export function ToolCard({ tool, priority = false }: ToolCardProps) {
   return (
     <Card className="hover:-translate-y-1 transition-transform duration-200 ease-out relative gap-3 shadow-md hover:shadow-lg pt-4">
       <ImpressionTracker toolId={tool.id} />
@@ -35,9 +36,9 @@ export function ToolCard({ tool }: ToolCardProps) {
           alt={tool.name}
           width={48}
           height={48}
-          loading="lazy"
+          priority={priority}
+          loading={priority ? undefined : "lazy"}
           className="object-cover rounded-md"
-          unoptimized
         />
         <div className="flex-1">
           <Link

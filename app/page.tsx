@@ -10,6 +10,7 @@ import {
   JsonLd,
 } from "@/components/seo/jsonLd";
 import { url } from "@/config";
+import { HydrateClient, trpc } from "@/trpc/server";
 
 export const revalidate = 3600;
 
@@ -27,23 +28,31 @@ export const metadata: Metadata = {
 const breadcrumbs = [{ name: "Home", item: url }];
 
 export default async function Home() {
+  await trpc.browse.getAll.prefetch({
+    page: 1,
+    limit: 24,
+    sort: "hot",
+  });
+
   return (
-    <Navbar>
-      <JsonLd data={getPersonJsonLd()} />
-      <JsonLd data={getWebSiteJsonLd()} />
-      <JsonLd data={getOrganizationJsonLd()} />
-      <JsonLd data={getBreadcrumbJsonLd(breadcrumbs)} />
-      <div className="mt-4 mb-8 space-y-3">
-        <h1 className="md:text-6xl text-balance text-center bg-clip-text text-transparent bg-linear-to-b from-foreground to-foreground/80">
-          Discover the <span className="text-primary">Apex</span> of AI
-        </h1>
-        <p className="text-center md:text-xl text-muted-foreground max-w-2xl mx-auto">
-          The curated directory for power users. Find the tools that are shaping
-          the future, updated in real-time.
-        </p>
-      </div>
-      <ToolDirectory />
-      <Footer />
-    </Navbar>
+    <HydrateClient>
+      <Navbar>
+        <JsonLd data={getPersonJsonLd()} />
+        <JsonLd data={getWebSiteJsonLd()} />
+        <JsonLd data={getOrganizationJsonLd()} />
+        <JsonLd data={getBreadcrumbJsonLd(breadcrumbs)} />
+        <div className="mt-4 mb-8 space-y-3">
+          <h1 className="text-4xl md:text-6xl text-balance text-center bg-clip-text text-transparent bg-linear-to-b from-foreground to-foreground/80">
+            Discover the <span className="text-primary">Apex</span> of AI
+          </h1>
+          <p className="text-center md:text-xl text-muted-foreground max-w-2xl mx-auto">
+            The curated directory for power users. Find the tools that are shaping
+            the future, updated in real-time.
+          </p>
+        </div>
+        <ToolDirectory />
+        <Footer />
+      </Navbar>
+    </HydrateClient>
   );
 }

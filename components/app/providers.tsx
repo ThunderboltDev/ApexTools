@@ -1,6 +1,5 @@
 "use client";
 
-import { MotionConfig } from "framer-motion";
 import { ThemeProvider, useTheme } from "next-themes";
 import { type ReactNode, useEffect } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -26,13 +25,11 @@ export function Providers({ children }: ProvidersProps) {
       disableTransitionOnChange
       enableColorScheme
     >
-      <MotionConfig reducedMotion="user">
-        <ThemeHotkeys />
-        <Toaster />
-        <TRPCProvider>
-          <AuthProvider>{children}</AuthProvider>
-        </TRPCProvider>
-      </MotionConfig>
+      <ThemeHotkeys />
+      <Toaster />
+      <TRPCProvider>
+        <AuthProvider>{children}</AuthProvider>
+      </TRPCProvider>
     </ThemeProvider>
   );
 }

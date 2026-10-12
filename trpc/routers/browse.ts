@@ -10,12 +10,18 @@ import {
 import { z } from "zod";
 import { db } from "@/db/index";
 import { toolsTable, upvotesTable } from "@/db/schema";
-import { categories, getToolsSchema, slugSchema } from "@/lib/constants";
+import {
+  categories,
+  getToolsSchema,
+  pricingModels,
+  slugSchema,
+} from "@/lib/constants";
 import {
   createRateLimit,
   createTRPCRouter,
   publicProcedure,
 } from "@/trpc/init";
+import { rankAlternatives } from "@/lib/alternatives";
 import { insertEvent } from "@/trpc/utils/analytics";
 import { paginateTools } from "@/trpc/utils/paginate";
 
@@ -86,8 +92,10 @@ export const browseRouter = createTRPCRouter({
     .input(
       z.object({
         categories: z.array(z.enum(categories)).min(1),
+        tags: z.array(z.string()).optional(),
+        pricing: z.enum(pricingModels).optional(),
         excludeSlug: slugSchema,
-        limit: z.number().min(1).max(10).default(6),
+        limit: z.number().min(1).max(24).default(6),
       })
     )
     .query(async ({ input, ctx }) => {
@@ -99,6 +107,12 @@ export const browseRouter = createTRPCRouter({
             AND ${upvotesTable.userId} = ${ctx.user.id}
         )`
         : sql<boolean>`FALSE`;
+
+      const categoryOverlap = sql`(
+        SELECT COUNT(*)::int
+        FROM UNNEST(${toolsTable.category}) AS c(cat)
+        WHERE c.cat = ANY(${sql.param(input.categories)})
+      )`;
 
       const tools = await db
         .select({
@@ -112,18 +126,20 @@ export const browseRouter = createTRPCRouter({
             ne(toolsTable.slug, input.excludeSlug)
           )
         )
-        .orderBy(
-          desc(
-            sql`(
-              SELECT COUNT(*)::int 
-              FROM UNNEST(${toolsTable.category}) AS c(cat)
-              WHERE c.cat = ANY(${sql.param(input.categories)})
-            )`
-          )
-        )
-        .limit(input.limit);
+        .orderBy(desc(categoryOverlap), desc(toolsTable.upvotes))
+        .limit(40);
 
-      return tools;
+      return rankAlternatives(
+        {
+          slug: input.excludeSlug,
+          category: input.categories,
+          tags: input.tags ?? [],
+          pricing: input.pricing ?? "freemium",
+          upvotes: 0,
+        },
+        tools,
+        input.limit
+      );
     }),
 
   search: publicProcedure

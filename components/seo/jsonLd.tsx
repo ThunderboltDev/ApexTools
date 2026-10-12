@@ -230,6 +230,36 @@ export function getToolJsonLd(
   return jsonLd;
 }
 
+export function getAlternativesJsonLd(
+  tool: Tool,
+  alternatives: Tool[],
+  description: string
+): WithContext<CollectionPage> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `Best ${tool.name} Alternatives`,
+    description,
+    url: `${url}/tool/${tool.slug}/alternatives`,
+    about: {
+      "@type": "SoftwareApplication",
+      name: tool.name,
+      url: `${url}/tool/${tool.slug}`,
+    },
+    mainEntity: {
+      "@type": "ItemList",
+      name: `${tool.name} alternatives`,
+      numberOfItems: alternatives.length,
+      itemListElement: alternatives.map((alternative, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: `${url}/tool/${alternative.slug}`,
+        name: alternative.name,
+      })),
+    },
+  };
+}
+
 export function getFAQJsonLd(
   faqs: Array<{ question: string; answer: string }>
 ): WithContext<FAQPage> {

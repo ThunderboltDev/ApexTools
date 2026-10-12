@@ -1,6 +1,6 @@
-/** biome-ignore-all lint/performance/noImgElement: badges */
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { ThemeDropdown } from "@/components/app/theme-dropdown";
 import { categories, categoryLabels } from "@/lib/constants";
@@ -52,6 +52,22 @@ export function Footer() {
                 Bookmarks
               </Link>
             </li>
+            <li>
+              <Link
+                href="/about"
+                className="hover:text-foreground transition-colors"
+              >
+                About
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/contact"
+                className="hover:text-foreground transition-colors"
+              >
+                Contact
+              </Link>
+            </li>
           </ul>
         </div>
 
@@ -78,7 +94,7 @@ export function Footer() {
         </div>
 
         <div>
-          <h4 className="font-semibold mb-4">From the Creator</h4>
+          <h6 className="font-semibold mb-4">From the Creator</h6>
           <ul className="space-y-2 text-sm text-muted-foreground">
             {projects.map((project) => (
               <li key={project.name}>
@@ -118,10 +134,12 @@ export function Footer() {
           target="_blank"
           rel="noopener"
         >
-          <img
+          <Image
             src="https://www.proofstories.io/directory/badges/l/apextools.svg"
             alt="ApexTools badge"
-            width="200"
+            width={200}
+            height={40}
+            loading="lazy"
           />
         </a>
         <a
@@ -129,10 +147,12 @@ export function Footer() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img
+          <Image
             src="https://foundrlist.com/api/badge/apextools"
             alt="Live on FoundrList"
-            width="140"
+            width={140}
+            height={40}
+            loading="lazy"
           />
         </a>
         <a
@@ -140,10 +160,12 @@ export function Footer() {
           target="_blank"
           rel="noopener"
         >
-          <img
+          <Image
             src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=neutral"
-            width="140"
+            width={140}
+            height={40}
             alt="Fazier badge"
+            loading="lazy"
           />
         </a>
         <a
@@ -155,17 +177,21 @@ export function Footer() {
             borderRadius: "8px",
           }}
         >
-          <img
+          <Image
             src="https://tinylaunchpad.com/images/badges/tinylaunchpad-badge-light.svg"
             alt="Featured on TinyLaunchpad"
-            width="200"
+            height={40}
+            width={200}
+            loading="lazy"
           />
         </a>
         <a href="https://tinylaunch.com" target="_blank" rel="noopener">
-          <img
+          <Image
             src="https://tinylaunch.com/tinylaunch_badge_launching_soon.svg"
             alt="TinyLaunch Badge"
-            width="200"
+            height={40}
+            width={200}
+            loading="lazy"
           />
         </a>
         <a
@@ -181,9 +207,12 @@ export function Footer() {
               overflow: "hidden",
             }}
           >
-            <img
+            <Image
               src="https://buildvoyage.com/images/featured_badge.png"
               alt="Featured on BuildVoyage"
+              width={200}
+              height={40}
+              loading="lazy"
               style={{
                 width: "100%",
                 height: "100%",
@@ -199,11 +228,12 @@ export function Footer() {
           target="_blank"
           rel="noopener"
         >
-          <img
+          <Image
             src="https://launchigniter.com/api/badge/apextools?theme=neutral"
             alt="Featured on LaunchIgniter"
-            width="200"
-            height="54"
+            width={200}
+            height={54}
+            loading="lazy"
           />
         </a>
         <a
@@ -211,27 +241,30 @@ export function Footer() {
           target="_blank"
           rel="noopener"
         >
-          <img
+          <Image
             src="https://trylaunch.ai/badges/badge-color.svg"
             alt="Launch"
-            width="200"
-            height="54"
+            width={200}
+            height={54}
+            loading="lazy"
           />
         </a>
         <a href="https://twelve.tools" target="_blank" rel="noopener">
-          <img
+          <Image
             src="https://twelve.tools/badge0-light.svg"
             alt="Featured on Twelve Tools"
-            width="200"
-            height="54"
+            width={200}
+            height={54}
+            loading="lazy"
           />
         </a>
         <a href="https://wired.business" target="_blank" rel="noopener">
-          <img
+          <Image
             src="https://wired.business/badge0-white.svg"
             alt="Featured on Wired Business"
-            width="200"
-            height="54"
+            width={200}
+            height={54}
+            loading="lazy"
           />
         </a>
         <a
@@ -239,11 +272,12 @@ export function Footer() {
           target="_blank"
           rel="noopener"
         >
-          <img
+          <Image
             src="https://frogdr.com/apextools.site/badge-white.svg"
             alt="Monitor your Domain Rating with FrogDR"
-            width="250"
-            height="54"
+            width={250}
+            height={54}
+            loading="lazy"
           />
         </a>
       </div>
