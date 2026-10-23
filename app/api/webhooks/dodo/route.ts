@@ -6,6 +6,7 @@ import { featuredPurchasesTable, toolsTable, usersTable } from "@/db/schema";
 import FeaturedActivatedEmail from "@/emails/featured/activated";
 import { dodoPayments } from "@/lib/dodopayments";
 import { sendEmail } from "@/lib/email";
+import { revalidateToolPages } from "@/lib/revalidate";
 
 interface PaymentMetadata {
   userId: string;
@@ -103,6 +104,11 @@ async function handlePaymentSucceeded(event: PaymentSucceededEvent) {
     .set({ featuredUntil: endDate })
     .where(eq(toolsTable.slug, toolSlug));
 
+  revalidateToolPages({
+    slug: toolSlug,
+    categories: tool.category,
+  });
+
   const user = await db.query.user.findFirst({
     where: eq(usersTable.id, userId),
   });
@@ -147,10 +153,18 @@ async function handleRefundSucceeded(event: RefundSucceededEvent) {
     .set({ status: "refunded" })
     .where(eq(featuredPurchasesTable.id, purchase.id));
 
-  await db
+  const [updatedTool] = await db
     .update(toolsTable)
     .set({ featuredUntil: null })
-    .where(eq(toolsTable.id, purchase.toolId));
+    .where(eq(toolsTable.id, purchase.toolId))
+    .returning();
+
+  if (updatedTool) {
+    revalidateToolPages({
+      slug: updatedTool.slug,
+      categories: updatedTool.category,
+    });
+  }
 }
 
 export async function POST(req: Request) {

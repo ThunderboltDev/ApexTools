@@ -15,7 +15,7 @@ interface ToolLayoutProps {
   params: Promise<{ slug: string }>;
 }
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export async function generateStaticParams() {
   const tools = await db.query.tool.findMany({
@@ -34,6 +34,13 @@ export async function generateMetadata({
 
   try {
     const tool = await trpc.browse.getBySlug({ slug });
+
+    if (!tool) {
+      return {
+        title: "Tool Not Found",
+        description: "The tool you are looking for does not exist.",
+      };
+    }
 
     return {
       title: `${tool.name}`,

@@ -5,6 +5,7 @@ import { db } from "@/db/index";
 import { toolsTable, upvotesTable } from "@/db/schema";
 import { getToolsSchema, slugSchema, toolSchema } from "@/lib/constants";
 import { generateVerificationCode, getDomain } from "@/lib/domain-verification";
+import { revalidateToolPages } from "@/lib/revalidate";
 import {
   createRateLimit,
   createTRPCRouter,
@@ -21,6 +22,8 @@ export const toolRouter = createTRPCRouter({
         where: eq(toolsTable.id, input.toolId),
         columns: {
           id: true,
+          slug: true,
+          category: true,
           url: true,
           userId: true,
           verifiedAt: true,
@@ -82,6 +85,11 @@ export const toolRouter = createTRPCRouter({
           })
           .where(eq(toolsTable.id, input.toolId))
           .returning();
+
+        revalidateToolPages({
+          slug: tool.slug,
+          categories: tool.category,
+        });
 
         return { success: true, message: "Tool claimed successfully!" };
       } catch (error) {
@@ -264,6 +272,11 @@ export const toolRouter = createTRPCRouter({
         });
       }
 
+      revalidateToolPages({
+        slug: newTool.slug,
+        categories: newTool.category,
+      });
+
       return newTool;
     }),
 
@@ -321,6 +334,11 @@ export const toolRouter = createTRPCRouter({
         });
       }
 
+      revalidateToolPages({
+        slug: updateTool.slug,
+        categories: [...existingTool.category, ...updateTool.category],
+      });
+
       return updateTool;
     }),
 
@@ -348,6 +366,11 @@ export const toolRouter = createTRPCRouter({
 
       await db.delete(toolsTable).where(eq(toolsTable.slug, input.slug));
 
+      revalidateToolPages({
+        slug: existingTool.slug,
+        categories: existingTool.category,
+      });
+
       return { success: true };
     }),
 
@@ -362,6 +385,8 @@ export const toolRouter = createTRPCRouter({
         ),
         columns: {
           id: true,
+          slug: true,
+          category: true,
           url: true,
           verificationCode: true,
           verifiedAt: true,
@@ -407,6 +432,11 @@ export const toolRouter = createTRPCRouter({
             verificationCode: generateVerificationCode(),
           })
           .where(eq(toolsTable.id, input.toolId));
+
+        revalidateToolPages({
+          slug: tool.slug,
+          categories: tool.category,
+        });
 
         return { success: true, message: "Domain verified successfully!" };
       } catch (error) {

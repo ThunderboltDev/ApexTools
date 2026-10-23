@@ -19,17 +19,22 @@ interface PageProps {
   params: Promise<{ category: string }>;
 }
 
+function isCategory(value: string): value is Category {
+  return categories.some((c) => c === value);
+}
+
+export const dynamicParams = false;
+
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { category } = await params;
 
-  if (!categories.includes(category as Category)) {
+  if (!isCategory(category)) {
     return {};
   }
 
-  const { title, headline, description, keywords } =
-    categoryContent[category as Category];
+  const { title, headline, description, keywords } = categoryContent[category];
 
   return {
     title: title,
@@ -64,14 +69,14 @@ export async function generateStaticParams() {
 export default async function CategoryPage({ params }: PageProps) {
   const { category } = await params;
 
-  if (!categories.includes(category as Category)) {
+  if (!isCategory(category)) {
     notFound();
   }
 
-  const content = categoryContent[category as Category];
+  const content = categoryContent[category];
 
   const toolsData = await trpc.browse.getAll({
-    category: category as Category,
+    category: category,
     limit: 24,
   });
 
@@ -106,7 +111,7 @@ export default async function CategoryPage({ params }: PageProps) {
           {content.subheadline}
         </p>
       </div>
-      <ToolDirectory category={category as Category} />
+      <ToolDirectory category={category} />
       <FAQ items={content.faqs} />
       <Footer />
     </>

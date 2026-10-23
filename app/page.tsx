@@ -12,7 +12,7 @@ import {
 import { url } from "@/config";
 import { HydrateClient, trpc } from "@/trpc/server";
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 
 export const metadata: Metadata = {
   title: "Discover the Best AI Tools | AI Tools Directory | ApexTools",
